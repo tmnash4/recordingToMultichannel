@@ -7,7 +7,7 @@
     "start": "node quickRecord.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Jesse Allison",
+  "author": "Treya Nash",
   "license": "ISC",
   "dependencies": {
     "ambisonics": "^0.4.0",

@@ -11,11 +11,34 @@ context.onstatechange = function() {
     if (context.state === "suspended") { context.resume(); }
 }
 
-var soundUrl = "http://127.0.0.1:3001/uploads/whisper_Sample2.mp3";
+let soundUrl = "http://127.0.0.1:3001/uploads/whisper_Sample2.mp3";
+
 
 var maxOrder = 3;
 var orderOut = 3;
 var soundBuffer, sound;
+
+var socketName = 'ambisonic';
+var socket = io(); 
+
+let tone = Tone;
+
+async function startAudio() {  //This code starts the audio 
+    await Tone.start()
+    console.log("ready")
+  }
+  
+
+let playerArray = [];
+
+
+socket.emit('register', 'ambisonic')
+socket.on('newFile', (data) => {
+    console.log(data.fileName)
+    //nameArray.push((data.fileName))
+    let mySample = new Tone.Player('/uploads/' + data.fileName + '.mp3')
+    playerArray.push(mySample)
+})
 
 // define HOA encoder (panner)
 var encoder = new ambisonics.monoEncoder(context, maxOrder);
@@ -60,6 +83,11 @@ context.destination.channelCount = decoder.nSpk;
 var assignSample2SoundBuffer = function(decodedBuffer) {
     soundBuffer = decodedBuffer;
     document.getElementById('play').disabled = false;
+}
+
+function onDecodeAudioDataError(error) {
+    var url = 'hjre';
+  alert("Browser cannot decode audio data..." + "\n\nError: " + error + "\n\n(If you re using Safari and get a null error, this is most likely due to Apple's shady plan going on to stop the .ogg format from easing web developer's life :)");
 }
 
 // function to load samples
@@ -119,12 +147,13 @@ window.onload = () => {
 
 let myNum;
 let myNum1;
+let myNumArray = []
 function getTheSamples() {
     myNum = localStorage.getItem("PLAYER");
     myNum1 = Number(myNum)
-    console.log(myNum)
+    console.log(myNum1)
     makeList()
-
+  
 }
 
 
@@ -133,28 +162,22 @@ function getTheSamples() {
 function makeList() {
 
     // adapt common html elements to specific example
-    document.getElementById('div-mirror').outerHTML = '';
-
+    //document.getElementById('div-mirror').outerHTML = '';
+ 
     // update sample list for selection
-    var sampleList = {  "whisper1": "http://127.0.0.1:3001/uploads/whisper_Sample2.mp3",
-                        "whisper2": "http://127.0.0.1:3001/uploads/whisper_Sample3.mp3"
+    var sampleList = { 
     };
    
-    for (i=1; i<myNum1; i++) {
-
+    for (i=(myNumArray.length); i<myNum1; i++) {
         let mySample = i + ".mp3"
         sampleList['whisper' + i]  = "http://127.0.0.1:3001/uploads/whisper_Sample" + mySample
-        console.log("hello")
-
+        let sampleLink = "http://127.0.0.1:3001/uploads/whisper_Sample" + mySample
+        //console.log("hello")
+        myNumArray.push(sampleLink)
+        console.log(myNumArray)
     }
 
     
-    
-
-
-    
-
-
 
     var $el = $("#sample_no");
     $el.empty(); // remove old options
@@ -176,8 +199,8 @@ function makeList() {
     input.style.visibility = "hidden"
     setSpkPosContainer.appendChild(input); // put it into the DOM
     //var button = document.createElement("button");
-   // button.setAttribute("id", 'spkButton');
-   // button.innerHTML = 'set';
+    // button.setAttribute("id", 'spkButton');
+    // button.innerHTML = 'set';
     // button.addEventListener('click', () => {
     //     let str = document.getElementById('spkpos').value;
     //     let tmp = str.split(",");
@@ -221,13 +244,14 @@ function makeList() {
     // Order control buttons
     orderValue.innerHTML = maxOrder;
     var orderButtons = document.getElementById("div-order");
-    for (var i=1; i<=maxOrder; i++) {
+    for (var k=1; k<=maxOrder; k++) {
         var button = document.createElement("button");
-        button.setAttribute("id", 'N'+i);
-        button.setAttribute("value", i);
-        button.innerHTML = 'N'+i;
+        button.setAttribute("id", 'N'+k);
+        button.setAttribute("value", k);
+        button.innerHTML = 'N'+k;
         button.addEventListener('click', function() {
             orderOut = parseInt(this.value);
+            //orderOut = 3;
             orderValue.innerHTML = orderOut;
             limiter.updateOrder(orderOut);
             limiter.out.connect(decoder.in);

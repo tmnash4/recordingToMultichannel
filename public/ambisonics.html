@@ -1,11 +1,14 @@
 
 <html>
 <head>
+  <script src="/socket.io/socket.io.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js" integrity="sha512-jduERlz7En1IUZR54bqzpNI64AbffZWR//KJgF71SJ8D8/liKFZ+s1RxmUmB+bhCnIfzebdZsULwOrbVB5f3nQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="//code.jquery.com/jquery-3.0.0.min.js"></script>
   <script type="text/javascript" src="ambisonics.umd.js"></script>
   <script type="text/javascript" src="ambisonics.js"></script>
+ 
+  
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js" integrity="sha512-jduERlz7En1IUZR54bqzpNI64AbffZWR//KJgF71SJ8D8/liKFZ+s1RxmUmB+bhCnIfzebdZsULwOrbVB5f3nQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -30,7 +33,7 @@ Start / Stop audio: &nbsp;
 <button id="stop" disabled="">Stop</button>
 </p>
 </div>
-<button id="getSamples"> Get Number of Samples </button>
+<button id="getSamples" onclick="startAudio()"> Get Number of Samples </button>
 <!-- SAMPLE SELECTOR -->
 <p>
 <!-- Sample: whisper_Sample.mp3 -->
@@ -259,10 +262,7 @@ function updateCircles(params, cnv) {
 
 
 // function called when audiocontext.decodeAudioData fails to decode a given audio file, e.g. in Safari with .ogg vorbis format
-function onDecodeAudioDataError(error) {
-    var url = 'hjre';
-  alert("Browser cannot decode audio data..." + "\n\nError: " + error + "\n\n(If you re using Safari and get a null error, this is most likely due to Apple's shady plan going on to stop the .ogg format from easing web developer's life :)");
-}
+
 
 $.holdReady( false ); // to force awaiting on common.html loading
 

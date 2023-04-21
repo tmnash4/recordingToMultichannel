@@ -29,7 +29,7 @@ if (!Object.entries) {
 
 var express = require('express');
 var http = require('http');
-var serverPort = process.env.PORT || 3001;
+var serverPort = process.env.PORT || 3002;
 console.log("Port: " + serverPort);
 
 var app = express();
@@ -66,9 +66,11 @@ app.post('/upload', upload.single('soundBlob'), function(req, res, next) {
   console.log("Seems to have uploaded...", req.body.id, req.body.user, req.file.originalname);
 
   mp3(req.file.originalname);
-  fileNameEnd++
+    ambiSocket.emit('newFile', {'fileName': req.file.originalname + fileNameEnd})
+    fileNameEnd++
   // Could transmit the load sample from here:
   // hub.transmit('sample', null, { 'user': req.body.user, 'val': 'load', 'sample': true, 'url': req.file.originalname + '.mp3', 'id': req.body.id });
+  
 })
 
 
@@ -99,4 +101,17 @@ function mp3(fileName) {
   // console.log('done mp3');
 };
 
+let ambiSocket;
 
+io.on('connection', (socket) => {
+  socket.on('register', (data)=> {
+    if (data == 'ambisonic') {
+      ambiSocket = socket
+    } 
+    // if (data) {
+    //   ambiSocket = socket
+    // }
+  })
+
+
+})
