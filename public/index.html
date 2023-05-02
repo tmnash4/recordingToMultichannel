@@ -8,7 +8,7 @@
 </head>
 <body>
 
-  <button id="record" onclick="startRecording()">Record</button> | <button id="play" onclick="playRecording()">Play</button> | <button id="upload" onclick="uploadSample('whisper', 1, soundBlob)">Upload Latest</button>
+  <button id="record" onclick="startRecording()">Record</button> | <button id="play" onclick="playRecording()">Play</button> | <button id="upload" onclick="uploadSample('whisper', userNumber = u, soundBlob)">Upload Latest</button>
 <div id="sound-clips">
   <audio id="sound-recording" controls>
     No Audio
@@ -27,6 +27,8 @@
 
   let recorder; // our mediaRecorder
   let soundBlob;  // our audio blob once recorded
+  //let userNumber;
+  let u = 0;
   let chunks = [];  // samples of audio 
   
   // Uncomment if you want a list of devices
@@ -91,7 +93,8 @@
 
 
 
-let myAudio = new Tone.Buffer("uploads/whisper_Sample6.mp3")
+
+let myAudio = new Tone.Buffer("uploads/whisper_Sample.mp3")
 let playAudio = new Tone.Player(myAudio)
 
   
@@ -99,7 +102,8 @@ let playAudio = new Tone.Player(myAudio)
 
   function playRecording(){
     // audio.play();
-    distortRecording()
+   // distortRecording()
+   granular()
   }
 
   function distortRecording() {
@@ -110,13 +114,26 @@ let playAudio = new Tone.Player(myAudio)
     console.log("hfff")
     playAudio.start()
   }
+
+  function granular() {
+
+  let grain = new Tone.GrainPlayer(myAudio);
+  grain.grainSize = 0.9;
+  grain.overlap = 2;
+  grain.reverse = true;
+  grain.toDestination()
+  grain.start()
+
+
+  }
+
+  let i = 0;
   let fileNameArray = [];
 
-  function uploadSample(user = 'bob', userNumber = 0, soundBlob) {
-      
-
+  function uploadSample(user = 'bob', userNumber = u, soundBlob) {
+    console.log(u)
     let formdata = new FormData(); //create a from to of data to upload to the server
-    let soundFileName = user  + '_Sample';
+    let soundFileName = user  + '_Sample' + u;
     formdata.append('user', user);
     formdata.append('id', userNumber);
     formdata.append('soundBlob', soundBlob, soundFileName ); // append the sound blob and the name of the file. third argument will show up on the server as req.file.originalname
@@ -141,10 +158,14 @@ let playAudio = new Tone.Player(myAudio)
     });
 
     console.log('recording sent');
-    userNumber++
-    fileNameArray.push(soundFileName)
+    u++
+    fileNameArray.push(soundFileName + userNumber + ".mp3")
+    i++
     handleSubmit()
+
   };
+
+
 
   let idArray = [];
 

@@ -56,18 +56,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // *** adding in audio file upload...
-let fileNameEnd = 1
+//let fileNameEnd = 0
 app.post('/upload', upload.single('soundBlob'), function(req, res, next) {
   console.log('upload', req.file); // see what got uploaded
-  let uploadLocation = __dirname + '/public/uploads/' + req.file.originalname + fileNameEnd + ".wav" // where to save the file to. make sure the incoming name has a .wav extension
+  let uploadLocation = __dirname + '/public/uploads/' + req.file.originalname + ".wav" // where to save the file to. make sure the incoming name has a .wav extension
 
   fs.writeFileSync(uploadLocation, Buffer.from(new Uint8Array(req.file.buffer))); // write the blob to the server as a file
   res.sendStatus(200); //send back that everything went ok
   console.log("Seems to have uploaded...", req.body.id, req.body.user, req.file.originalname);
-
+  //fileNameEnd++
   mp3(req.file.originalname);
-    ambiSocket.emit('newFile', {'fileName': req.file.originalname + fileNameEnd})
-    fileNameEnd++
+    ambiSocket.emit('newFile', {'fileName': req.file.originalname})
+   
   // Could transmit the load sample from here:
   // hub.transmit('sample', null, { 'user': req.body.user, 'val': 'load', 'sample': true, 'url': req.file.originalname + '.mp3', 'id': req.body.id });
   
@@ -78,13 +78,13 @@ app.post('/upload', upload.single('soundBlob'), function(req, res, next) {
 function mp3(fileName) {
   console.log('MP3: ', fileName);
   try {
-    let process = new ffmpeg(__dirname + '/public/uploads/' + fileName + fileNameEnd + ".wav");
+    let process = new ffmpeg(__dirname + '/public/uploads/' + fileName  + ".wav");
     // console.log('process: ', process);
     process.then(function(audio) {
       // callback mode
       audio.setAudioBitRate(128);
       // console.log('Audio', audio);
-      audio.fnExtractSoundToMP3(__dirname + '/public/uploads/' + fileName + fileNameEnd + ".mp3", function(error, file) {
+      audio.fnExtractSoundToMP3(__dirname + '/public/uploads/' + fileName  + ".mp3", function(error, file) {
         if (!error) {
           console.log('Audio file: ', file);
         } else {
