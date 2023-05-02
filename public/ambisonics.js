@@ -11,7 +11,7 @@ context.onstatechange = function() {
     if (context.state === "suspended") { context.resume(); }
 }
 
-let soundUrl = "http://127.0.0.1:3002/uploads/whisper_Sample0.mp3";
+let soundUrl = "/uploads/whisper_Sample0.mp3";
 
 
 
@@ -37,7 +37,8 @@ socket.emit('register', 'ambisonic')
 socket.on('newFile', (data) => {
     console.log(data.fileName)
     //nameArray.push((data.fileName))
-    let mySample = new Tone.Player('/uploads/' + data.fileName + '.mp3')
+    //let mySample = new Tone.Player('/uploads/' + data.fileName + '.mp3')
+    let mySample = '/uploads/' + data.fileName
     playerArray.push(mySample)
 })
 
