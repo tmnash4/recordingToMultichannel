@@ -6,12 +6,12 @@ const bodyParser = require('body-parser');
 const upload = multer(); // set multer to be the upload variable (just like express, see above ( include it, then use it/set it up))
 const fs = require('fs'); //use the file system so we can save files
 const directoryPath = 'public/uploads';
-const files = fs.readdirSync(directoryPath);
-let fileCount = files.length;
+//const files = fs.readdirSync(directoryPath);
+//let fileCount = files.length;
 
 // setInterval(countFiles, 1000)
 
-console.log(`There are ${fileCount} files in the directory.`);
+//console.log(`There are ${fileCount} files in the directory.`);
 
 const { Server } = require('socket.io');
 var publicFolder = __dirname + '/public';
@@ -129,16 +129,16 @@ io.on('connection', (socket) => {
     // }
   })
   
-  console.log(socket.id)
+  // console.log(socket.id)
  
-  socket.id = i 
-  idArray.push(socket.id);
-  i++
+  // socket.id = i 
+  // idArray.push(socket.id);
+  // i++
 
 
-  socket.on("connect", () => {
-    console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-  })
+  // socket.on("connect", () => {
+  //   console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+  // })
   // socket.emit("room", 1)
   // socket.join('room1')
   // console.log("room1")
@@ -150,9 +150,12 @@ io.on('connection', (socket1) => {
       index = socket1
     }
     //for (i=0; i < fileCount; i++) {
-    socket1.on('file-count', () => {
-      socket1.emit('send-count', fileCount)
-      console.log(fileCount)
+    //   socket1.on('file-count', () => {
+    //   // socket1.emit('send-count', fileCount)
+    //   console.log(fileCount)
+    // })
+    socket1.on('counter', (data) => {
+      console.log(data)
     })
   
   })

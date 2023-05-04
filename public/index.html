@@ -1,8 +1,11 @@
 <html>
 <head>
+  <link rel="shortcut icon" href="#">
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js" integrity="sha512-jduERlz7En1IUZR54bqzpNI64AbffZWR//KJgF71SJ8D8/liKFZ+s1RxmUmB+bhCnIfzebdZsULwOrbVB5f3nQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script type="text/javascript" src="ambisonics.umd.js"></script>
+  
+
   <!-- <script src="http://127.0.0.1:3003/socket.io/socket.io.js"></script> -->
 
 </head>
@@ -88,8 +91,11 @@ var socket = io();
   // Tone.UserMedia.enumerateDevices().then((devices) => {
   //   console.log(devices)
   // })
-
   
+  let test = document.getElementById("testing")
+  test.addEventListener('click', () => {
+    socket.emit("counter", u)
+  })
   
   //GetFolder("/uploads")
 
@@ -161,20 +167,20 @@ var socket = io();
   
 
 
-  function playRecording(){
-    // audio.play();
-   // distortRecording()
-   granular()
-  }
+  // function playRecording(){
+  //   // audio.play();
+  //  // distortRecording()
+  //  granular()
+  // }
 
-  function distortRecording() {
-   let filter = new Tone.Filter(100, "lowpass").toDestination();
-   //const dist = new Tone.Distortion(1).connect(filter);
-  // const crusher = new Tone.BitCrusher(10).toDestination();
-    playAudio.connect(filter)
-    console.log("hfff")
-    playAudio.start()
-  }
+  // function distortRecording() {
+  //  let filter = new Tone.Filter(100, "lowpass").toDestination();
+  //  //const dist = new Tone.Distortion(1).connect(filter);
+  // // const crusher = new Tone.BitCrusher(10).toDestination();
+  //   playAudio.connect(filter)
+  //   console.log("hfff")
+  //   playAudio.start()
+  // }
 
   // function granular() {
 
@@ -260,10 +266,10 @@ let poemDiv = document.getElementById("text");
 
   };
 
-  let test = document.getElementById("testing")
+
 
   // test.addEventListener('click', emit)
-  //socket.emit('register', 'index')
+  socket.emit('register', 'index')
   // document.addEventListener('keydown', (e) => {
   //   if (e.key == "k") {
   //     socket.emit('file-count', true)
@@ -288,10 +294,10 @@ let poemDiv = document.getElementById("text");
 
 //socket.emit('')
 
-// socket.on('send-count', (fileCount) => {
-//   numberOfFiles = fileCount
-//   console.log(numberOfFiles)
-// })
+socket.on('send-count', (fileCount) => {
+  numberOfFiles = fileCount
+  console.log(numberOfFiles)
+})
 
 </script>
 
