@@ -58,6 +58,7 @@ var server = http.createServer(app)
 // start socket.io listening on the server
 const io = new Server(server);
 
+let fileNameArray = [];
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -74,15 +75,25 @@ app.post('/upload', upload.single('soundBlob'), function(req, res, next) {
   //fileNameEnd++
   mp3(req.file.originalname);
   index.emit('newFile', {'fileName': req.file.originalname})
-   
+  fileNameArray.push(req.file.originalname);
+ 
+  
   // Could transmit the load sample from here:
   // hub.transmit('sample', null, { 'user': req.body.user, 'val': 'load', 'sample': true, 'url': req.file.originalname + '.mp3', 'id': req.body.id });
   
 })
 
 
+
+
 // Could spin off into it's own node app or spork a thread.
 function mp3(fileName) {
+//   console.log(fileNameArray)
+//  for (f=0; f< fileNameArray.length; f++) {
+//     let myVar = fileNameArray[f].slice(14, 15);
+//     console.log(myVar + "heheh")
+//  }
+//   console.log(fileNameArray[f])
   console.log('MP3: ', fileName);
   try {
     let process = new ffmpeg(__dirname + '/public/uploads/' + fileName  + ".wav");
@@ -112,6 +123,8 @@ let i = 0;
 let ambiSocket;
 let index;
 let idArray = []
+let numberOfAudioFiles = [];
+let myCount;
 
 io.on('connection', (socket) => {
   socket.on('register', (data)=> {
@@ -149,21 +162,25 @@ io.on('connection', (socket1) => {
     if (data == 'index') {
       index = socket1
     }
+
+    
     //for (i=0; i < fileCount; i++) {
     //   socket1.on('file-count', () => {
     //   // socket1.emit('send-count', fileCount)
     //   console.log(fileCount)
     // })
-    let numberOfAudioFiles = [];
+  
 
     socket1.on('counter', (data) => {
       console.log(data)
       numberOfAudioFiles.push(data)
-      //data++
+      myCount = numberOfAudioFiles.length 
+
+     
     })
    
     socket1.on('sendBack', () => {
-      socket1.emit('send-back', numberOfAudioFiles)
+      socket1.emit('send-back', myCount)
     })
 
 

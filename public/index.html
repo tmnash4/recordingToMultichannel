@@ -12,7 +12,7 @@
 <body>
 <div id="flex-container">
 
-  <button id="record" onclick="startRecording()" >Record</button> | <button id="play" onclick="playRecording()">Play</button> | <button id="upload" onclick="uploadSample('whisper', userNumber = u, soundBlob)">Upload Latest</button>
+  <button id="record" onclick="startRecording()" >Record</button> | <button id="play" onclick="playRecording()">Play</button> | <button id="upload" onclick="uploadSample('whisper', userNumber = myCount, soundBlob)">Upload Latest</button>
   <button id="testing"> Testing Socket</button>
   <p id="text"> Wait for your poetry </p>
   <div id="sound-clips">
@@ -78,6 +78,7 @@ var socket = io();
 
   let tone = Tone;
   let fileNameArray = [];
+  let myCount = 0;
 
   // ---- Audio Input
   let liveFeed = new Tone.UserMedia();  // the microphone just call .open
@@ -104,7 +105,7 @@ var socket = io();
 
   socket.on('send-back', (data) => {
     console.log(data)
-    //u = data
+    myCount = data
   })
   //GetFolder("/uploads")
 
@@ -239,10 +240,10 @@ let poemDiv = document.getElementById("text");
   
   let uArray = [];
 
-  function uploadSample(user = 'bob', userNumber = u, soundBlob) {
-    console.log(u)
+  function uploadSample(user = 'bob', userNumber = myCount, soundBlob) {
+    //console.log(u)
     let formdata = new FormData(); //create a from to of data to upload to the server
-    let soundFileName = user  + '_Sample' + u;
+    let soundFileName = user  + '_Sample' + myCount;
     formdata.append('user', user);
     formdata.append('id', userNumber);
     formdata.append('soundBlob', soundBlob, soundFileName ); // append the sound blob and the name of the file. third argument will show up on the server as req.file.originalname
@@ -267,11 +268,11 @@ let poemDiv = document.getElementById("text");
     });
 
     console.log('recording sent');
-    u++
+   // u++
     fileNameArray.push(soundFileName + ".mp3")
-    i++
+    //i++
     handleSubmit()
-    uArray.push(u)
+    //uArray.push(u)
 
   };
 
