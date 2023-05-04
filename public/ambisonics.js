@@ -11,18 +11,23 @@ context.onstatechange = function() {
     if (context.state === "suspended") { context.resume(); }
 }
 
-let soundUrl = "/uploads/whisper_Sample0.mp3";
+let soundUrl = "/uploads/whisper_Sample";
 
 
 
 var maxOrder = 3;
 var orderOut = 3;
 var soundBuffer, sound;
+let soundBuffer1, sound1;
 
 var socketName = 'ambisonic';
 var socket = io(); 
 
 let tone = Tone;
+
+let myNum;
+let myNum1;
+let myNumArray = []
 
 async function startAudio() {  //This code starts the audio 
     await Tone.start()
@@ -41,6 +46,8 @@ socket.on('newFile', (data) => {
     let mySample = '/uploads/' + data.fileName
     playerArray.push(mySample)
 })
+
+
 
 // define HOA encoder (panner)
 var encoder = new ambisonics.monoEncoder(context, maxOrder);
@@ -80,12 +87,35 @@ context.destination.channelCount = decoder.nSpk;
 // decoder.out.channelInterpretation = "discrete";
 // context.destination.channelCountMode = "explicit";
 // context.destination.channelInterpretation = "discrete";
+let grain = new Tone.GrainPlayer(myNumArray[0]);
+
 
 // function to assign sample to the sound buffer for playback (and enable playbutton)
 var assignSample2SoundBuffer = function(decodedBuffer) {
     soundBuffer = decodedBuffer;
     document.getElementById('play').disabled = false;
 }
+
+var assignSample2SoundBuffer1 = function(decodedBuffer) {
+    soundBuffer1 = decodedBuffer;
+    document.getElementById('play').disabled = false;
+}
+
+//ew GrainPlayer
+
+// function makeGrain() {
+    
+// let grain = new Tone.GrainPlayer(myNumArray[0])
+// //let player = new Tone.Player(myNumArray[0])
+//     grain.grainSize = 0.5;
+//     grain.overlap = 0.5;
+//     grain.reverse = true;
+//     grain.connect(encoder.in)
+//     grain.start()
+// }
+
+
+
 
 function onDecodeAudioDataError(error) {
     var url = 'hjre';
@@ -102,21 +132,82 @@ function loadSample(url, doAfterLoading) {
     }
     fetchSound.send();
 }
-loadSample(soundUrl, assignSample2SoundBuffer);
+
+
+
+// function granular() {
+
+  
+    // grain.toDestination()
+    // grain.start()
+  
+  
+    // }
+
+function playMoreSounds() {
+    // for (i=0; i< myNumArray.length; i++) {
+    // loadSample((myNumArray[i]),assignSample2SoundBuffer);
+    let rand = Math.floor(Math.random() * myNumArray.length)
+    loadSample(myNumArray[rand], assignSample2SoundBuffer);
+    let rand1 = Math.floor(Math.random() * myNumArray.length)
+    loadSample(myNumArray[rand1], assignSample2SoundBuffer1);
+  
+
+    setAzim()
+            //grain.toDestination()
+            console.log(encoder.azim)
+            sound = context.createBufferSource();
+            sound1 = context.createBufferSource()
+            console.log(sound)
+    
+    //let player 
+            //encoder.azim = -180;
+            sound.buffer = soundBuffer;
+            sound1.buffer = soundBuffer1;
+            //sound.loop = true;
+            sound.fadeIn = 0.5
+            sound.fadeOut = 0.5
+            
+            sound.connect(encoder.in);
+            sound.start(0);
+            sound1.fadeIn = 0.5
+            sound1.fadeOut = 0.5
+            sound1.connect(encoder.in);
+            sound1.start(0)
+            sound.isPlaying = true;
+            sound1.isPlaying = true;
+            //player.connect(encoder.in)
+            // document.getElementById('play1').disabled = true;
+            // document.getElementById('stop').disabled = false;
+    
+    
+    console.log(myNumArray[i])
+    
+    }
+    
+
+
 
 
 // function to change sample from select box
 function changeSample() {
     document.getElementById('play').disabled = true;
     document.getElementById('stop').disabled = true;
+
+    for (a=0; a<myNumArray.length; i++) {
     soundUrl = document.getElementById("sample_no").value;
+       // soundUrl = myNumArray[]
+    }
+
     if (typeof sound != 'undefined' && sound.isPlaying) {
         sound.stop(0);
         sound.isPlaying = false;
     }
-    loadSample(soundUrl, assignSample2SoundBuffer);
-}
+   
+ 
 
+
+}
 // Define mouse drag on spatial map .png local impact
 
 let randAzim = Math.random() * 360
@@ -147,9 +238,7 @@ window.onload = () => {
     getButton.addEventListener("click", getTheSamples)
 }
 
-let myNum;
-let myNum1;
-let myNumArray = []
+
 function getTheSamples() {
     myNum = localStorage.getItem("PLAYER");
     myNum1 = Number(myNum)
@@ -172,11 +261,11 @@ function makeList() {
    
     for (i=(myNumArray.length); i<myNum1; i++) {
         let mySample = i + ".mp3"
-        sampleList['whisper' + i]  = "http://127.0.0.1:3001/uploads/whisper_Sample" + mySample
-        let sampleLink = "http://127.0.0.1:3001/uploads/whisper_Sample" + mySample
+        sampleList['whisper' + i]  = "http://127.0.0.1:3003/uploads/whisper_Sample" + mySample
+        let sampleLink = "http://127.0.0.1:3003/uploads/whisper_Sample" + mySample
         //console.log("hello")
         myNumArray.push(sampleLink)
-        console.log(myNumArray)
+        //console.log(myNumArray)
     }
 
     
@@ -228,7 +317,7 @@ function makeList() {
         sound = context.createBufferSource();
         //encoder.azim = -180;
         sound.buffer = soundBuffer;
-        sound.loop = true;
+        //sound.loop = true;
         sound.connect(encoder.in);
         sound.start(0);
         sound.isPlaying = true;
@@ -236,6 +325,8 @@ function makeList() {
         document.getElementById('stop').disabled = false;
 
     });
+
+
     document.getElementById('stop').addEventListener('click', function() {
         sound.stop(0);
         sound.isPlaying = false;

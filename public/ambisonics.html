@@ -31,15 +31,18 @@
 Start / Stop audio: &nbsp;
 <button id="play" >Play</button>
 <button id="stop" disabled="">Stop</button>
+<button id="play1" onclick="playMoreSounds()" > Play More SOunds</button>
+<button id="grain" onclick="makeGrain()"> Make Grain</button>
 </p>
 </div>
 <button id="getSamples" onclick="startAudio()"> Get Number of Samples </button>
 <!-- SAMPLE SELECTOR -->
 <p>
 <!-- Sample: whisper_Sample.mp3 -->
-<select id="sample_no" onchange="changeSample()">
-    <option value=""></option>
-</select>
+<button id="sample_no" onchange="changeSample()"> 
+    <!-- <select id="sample_no" onchange="changeSample()"></select> -->
+    <!-- <option value=""></option> -->
+</button>
 
 </p>
 

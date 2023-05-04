@@ -3,24 +3,78 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js" integrity="sha512-jduERlz7En1IUZR54bqzpNI64AbffZWR//KJgF71SJ8D8/liKFZ+s1RxmUmB+bhCnIfzebdZsULwOrbVB5f3nQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script type="text/javascript" src="ambisonics.umd.js"></script>
-  <script src="http://127.0.0.1:3001/socket.io/socket.io.js"></script>
+  <!-- <script src="http://127.0.0.1:3003/socket.io/socket.io.js"></script> -->
 
 </head>
 <body>
+<div id="flex-container">
 
-  <button id="record" onclick="startRecording()">Record</button> | <button id="play" onclick="playRecording()">Play</button> | <button id="upload" onclick="uploadSample('whisper', userNumber = u, soundBlob)">Upload Latest</button>
-<div id="sound-clips">
+  <button id="record" onclick="startRecording()" >Record</button> | <button id="play" onclick="playRecording()">Play</button> | <button id="upload" onclick="uploadSample('whisper', userNumber = u, soundBlob)">Upload Latest</button>
+  <button id="testing"> Testing Socket</button>
+  <p id="text"> Wait for your poetry </p>
+  <div id="sound-clips">
   <audio id="sound-recording" controls>
     No Audio
   </audio>
 </div>
 
+</div>
+
+<style>
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+#record {
+  background-color:black;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+#sound-recording {
+  visibility: hidden;
+  width: 2px;
+}
+
+
+</style>
 
 <script type="text/javascript">
+var socketName = 'index';
+var socket = io(); 
+
+
+  let recordButton = document.getElementById("record")
+
+  recordButton.style.backgroundColor = "black"
+
+  function changeColor() {
+  let randNum = Math.floor(Math.random() * hardy.length)
+
+    if (recordButton.style.backgroundColor == "black") {
+      recordButton.style.backgroundColor = "red";
+      poemDiv.innerHTML = "Please whisper:" + hardy[randNum] 
+      recordButton.style.boxShadow = "0 0 5px 5px red"
+    } else {
+      recordButton.style.backgroundColor = "black"
+      recordButton.style.boxShadow = "0 0 0px 0px white"
+    }
+  }
+  
+  
+
+  // function startPiece() {
+
+  // }
+
   let soundClips = document.getElementById('sound-clips') // for adding audio to page
   let audio = document.getElementById('sound-recording'); // the default audio, can change src with new recordings
 
   let tone = Tone;
+  let fileNameArray = [];
 
   // ---- Audio Input
   let liveFeed = new Tone.UserMedia();  // the microphone just call .open
@@ -30,11 +84,17 @@
   //let userNumber;
   let u = 0;
   let chunks = [];  // samples of audio 
-  
   // Uncomment if you want a list of devices
   // Tone.UserMedia.enumerateDevices().then((devices) => {
   //   console.log(devices)
   // })
+
+  
+  
+  //GetFolder("/uploads")
+
+
+
 
   liveFeed.open().then(()=>{
     //promise resolves when input is available
@@ -89,13 +149,14 @@
       recording = true;
       console.log('started recording')
     }
+    changeColor()
   }
 
 
 
 
-let myAudio = new Tone.Buffer("uploads/whisper_Sample.mp3")
-let playAudio = new Tone.Player(myAudio)
+//let myAudio = new Tone.Buffer("uploads/whisper_Sample.mp3")
+//let playAudio = new Tone.Player(myAudio)
 
   
 
@@ -115,20 +176,53 @@ let playAudio = new Tone.Player(myAudio)
     playAudio.start()
   }
 
-  function granular() {
+  // function granular() {
 
-  let grain = new Tone.GrainPlayer(myAudio);
-  grain.grainSize = 0.9;
-  grain.overlap = 2;
-  grain.reverse = true;
-  grain.toDestination()
-  grain.start()
+  // let grain = new Tone.GrainPlayer(myAudio);
+  // grain.grainSize = 0.9;
+  // grain.overlap = 2;
+  // grain.reverse = true;
+  // grain.toDestination()
+  // grain.start()
 
 
-  }
+  // }
+
+let hardy = [
+"That whisper takes the voice", 
+"Of a Spirit, speaking to me", 
+"Close, but invisible", 
+"And throws me under a spell",
+"At the kindling vision it brings",
+"And for a moment I rejoice",
+"And believe in transcendent things",
+"That would make of this muddy earth",
+"A spot for the splendid birth",
+"Of everlasting lives",
+"Whereto no night arrives",
+"And this gaunt gray gallery",
+"A tabernacle of worth",
+"On this drab-aired afternoon",
+"When you can barely see",
+"Across its hazed lacune",
+"If opposite aught there be",
+"Of fleshed humanity",
+"Wherewith I may commune",
+"Or if the voice so near",
+"Be a soul’s voice floating here.",
+]
+// let pieceStarted = false;
+let pieceStarted
+
+let poemDiv = document.getElementById("text");
+
+
+
+//recordButton.addEventListener("click", lineOfPoetry)
 
   let i = 0;
-  let fileNameArray = [];
+  
+  let uArray = [];
 
   function uploadSample(user = 'bob', userNumber = u, soundBlob) {
     console.log(u)
@@ -137,7 +231,7 @@ let playAudio = new Tone.Player(myAudio)
     formdata.append('user', user);
     formdata.append('id', userNumber);
     formdata.append('soundBlob', soundBlob, soundFileName ); // append the sound blob and the name of the file. third argument will show up on the server as req.file.originalname
-
+    
     // Now we can send the blob to a server...
     let serverUrl = '/upload'; //we've made a POST endpoint on the server at /upload
     let httpRequestOptions = { //build a HTTP POST request
@@ -162,9 +256,24 @@ let playAudio = new Tone.Player(myAudio)
     fileNameArray.push(soundFileName + ".mp3")
     i++
     handleSubmit()
+    uArray.push(u)
 
   };
 
+  let test = document.getElementById("testing")
+
+  // test.addEventListener('click', emit)
+  //socket.emit('register', 'index')
+  // document.addEventListener('keydown', (e) => {
+  //   if (e.key == "k") {
+  //     socket.emit('file-count', true)
+  //     console.log("h")
+  //   }
+  // })
+  // function emit() {
+  //   socket.emit('file-count', true);
+  //   console.log("f")
+  // }
 
 
   let idArray = [];
@@ -177,7 +286,12 @@ let playAudio = new Tone.Player(myAudio)
   return;
 }
 
-socket.emit('')
+//socket.emit('')
+
+// socket.on('send-count', (fileCount) => {
+//   numberOfFiles = fileCount
+//   console.log(numberOfFiles)
+// })
 
 </script>
 
