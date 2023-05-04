@@ -73,7 +73,7 @@ app.post('/upload', upload.single('soundBlob'), function(req, res, next) {
   console.log("Seems to have uploaded...", req.body.id, req.body.user, req.file.originalname);
   //fileNameEnd++
   mp3(req.file.originalname);
-  ambiSocket.emit('newFile', {'fileName': req.file.originalname})
+  index.emit('newFile', {'fileName': req.file.originalname})
    
   // Could transmit the load sample from here:
   // hub.transmit('sample', null, { 'user': req.body.user, 'val': 'load', 'sample': true, 'url': req.file.originalname + '.mp3', 'id': req.body.id });
@@ -154,11 +154,12 @@ io.on('connection', (socket1) => {
     //   // socket1.emit('send-count', fileCount)
     //   console.log(fileCount)
     // })
-    let numberOfAudioFiles = 0;
+    let numberOfAudioFiles = [];
 
     socket1.on('counter', (data) => {
       console.log(data)
-      numberOfAudioFiles = data
+      numberOfAudioFiles.push(data)
+      //data++
     })
    
     socket1.on('sendBack', () => {
