@@ -154,10 +154,18 @@ io.on('connection', (socket1) => {
     //   // socket1.emit('send-count', fileCount)
     //   console.log(fileCount)
     // })
+    let numberOfAudioFiles = 0;
+
     socket1.on('counter', (data) => {
       console.log(data)
+      numberOfAudioFiles = data
     })
-  
+   
+    socket1.on('sendBack', () => {
+      socket1.emit('send-back', numberOfAudioFiles)
+    })
+
+
   })
 
 })

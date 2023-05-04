@@ -91,12 +91,21 @@ var socket = io();
   // Tone.UserMedia.enumerateDevices().then((devices) => {
   //   console.log(devices)
   // })
-  
+  let uploadButton = document.getElementById("upload")
   let test = document.getElementById("testing")
-  test.addEventListener('click', () => {
+  uploadButton.addEventListener('click', () => {
     socket.emit("counter", u)
+    console.log(u)
   })
   
+  recordButton.addEventListener('click', () => {
+    socket.emit('sendBack', true)
+  })
+
+  socket.on('send-back', (data) => {
+    console.log(data)
+    u = data
+  })
   //GetFolder("/uploads")
 
 
