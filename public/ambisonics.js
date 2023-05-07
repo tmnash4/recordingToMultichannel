@@ -4,6 +4,11 @@ console.log(ambisonics);
 var AudioContext = window.AudioContext // Default
     || window.webkitAudioContext; // Safari and old versions of Chrome
 var context = new AudioContext; // Create and Initialize the Audio Context
+Tone.setContext(context);
+let tone = Tone;
+tone.setContext(context);
+
+//var context = tone.getContext()
 
 // added resume context to handle Firefox suspension of it when new IR loaded
 // see: http://stackoverflow.com/questions/32955594/web-audio-scriptnode-not-called-after-button-onclick
@@ -22,8 +27,6 @@ let soundBuffer1, sound1;
 
 var socketName = 'ambisonic';
 var socket = io(); 
-
-let tone = Tone;
 
 let myNum;
 let myNum1;
@@ -76,6 +79,7 @@ limiter.out.connect(decoder.in);
 decoder.out.connect(gainOut);
 gainOut.connect(context.destination);
 
+
 // setup audio context number of channel 
 var maxChannelCount = context.destination.maxChannelCount;
 console.log('max channel in AudioContext:', maxChannelCount, 'required:', decoder.nSpk);
@@ -87,7 +91,7 @@ context.destination.channelCount = decoder.nSpk;
 // decoder.out.channelInterpretation = "discrete";
 // context.destination.channelCountMode = "explicit";
 // context.destination.channelInterpretation = "discrete";
-let grain = new Tone.GrainPlayer(myNumArray[0]);
+//et grain = new Tone.GrainPlayer(myNumArray[0]);
 
 
 // function to assign sample to the sound buffer for playback (and enable playbutton)
@@ -97,6 +101,7 @@ var assignSample2SoundBuffer = function(decodedBuffer) {
 }
 
 var assignSample2SoundBuffer1 = function(decodedBuffer) {
+  
     soundBuffer1 = decodedBuffer;
     document.getElementById('play').disabled = false;
 }
@@ -144,6 +149,9 @@ function loadSample(url, doAfterLoading) {
   
     // }
 
+
+let myGrainPlayer;
+
 function playMoreSounds() {
     // for (i=0; i< myNumArray.length; i++) {
     // loadSample((myNumArray[i]),assignSample2SoundBuffer);
@@ -151,7 +159,15 @@ function playMoreSounds() {
     loadSample(myNumArray[rand], assignSample2SoundBuffer);
     let rand1 = Math.floor(Math.random() * myNumArray.length)
     loadSample(myNumArray[rand1], assignSample2SoundBuffer1);
-  
+   
+    myGrainPlayer = new tone.GrainPlayer(myNumArray[rand1], () => {
+        myGrainPlayer.start()
+    })
+    myGrainPlayer.grainSize = 0.5;
+    myGrainPlayer.overlap = 0.5;
+    myGrainPlayer.loop = true;
+    myGrainPlayer.connect(encoder.in)
+ 
 
     setAzim()
             //grain.toDestination()
@@ -160,26 +176,30 @@ function playMoreSounds() {
             sound1 = context.createBufferSource()
             console.log(sound)
     
-    //let player 
             //encoder.azim = -180;
             sound.buffer = soundBuffer;
             sound1.buffer = soundBuffer1;
             //sound.loop = true;
-            sound.fadeIn = 0.5
-            sound.fadeOut = 0.5
+            sound.fadeIn = 0.05
+            sound.fadeOut = 0.05
             
             sound.connect(encoder.in);
             sound.start(0);
-            sound1.fadeIn = 0.5
-            sound1.fadeOut = 0.5
+            //sound1.fadeIn = 0.05
+            sound1.fadeOut = 0.05
+    
+
             sound1.connect(encoder.in);
-            sound1.start(0)
+            //sound1.start(0)
+  
+            //myGrainPlayer.buffer = soundBuffer1
+      
             sound.isPlaying = true;
             sound1.isPlaying = true;
             //player.connect(encoder.in)
             // document.getElementById('play1').disabled = true;
             // document.getElementById('stop').disabled = false;
-    
+            
     
     console.log(myNumArray[i])
     
