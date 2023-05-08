@@ -24,6 +24,8 @@ var maxOrder = 3;
 var orderOut = 3;
 var soundBuffer, sound;
 let soundBuffer1, sound1;
+let soundBuffer2, sound2;
+let soundBuffer3, sound3
 
 var socketName = 'ambisonic';
 var socket = io(); 
@@ -101,24 +103,19 @@ var assignSample2SoundBuffer = function(decodedBuffer) {
 }
 
 var assignSample2SoundBuffer1 = function(decodedBuffer) {
-  
     soundBuffer1 = decodedBuffer;
     document.getElementById('play').disabled = false;
 }
 
-//ew GrainPlayer
+var assignSample2SoundBuffer2 = function(decodedBuffer) {
+    soundBuffer2 = decodedBuffer;
+    document.getElementById('play').disabled = false;
+}
 
-// function makeGrain() {
-    
-// let grain = new Tone.GrainPlayer(myNumArray[0])
-// //let player = new Tone.Player(myNumArray[0])
-//     grain.grainSize = 0.5;
-//     grain.overlap = 0.5;
-//     grain.reverse = true;
-//     grain.connect(encoder.in)
-//     grain.start()
-// }
-
+var assignSample2SoundBuffer3 = function(decodedBuffer) {
+    soundBuffer3 = decodedBuffer;
+    document.getElementById('play').disabled = false;
+}
 
 
 
@@ -140,45 +137,54 @@ function loadSample(url, doAfterLoading) {
 
 
 
-// function granular() {
-
-  
-    // grain.toDestination()
-    // grain.start()
-  
-  
-    // }
 
 
+let myFilez = []
+let myFilez1 = []
 let myGrainPlayer;
+
+function playGrainSounds() {
+    let rand1 = Math.floor(Math.random() * myFilez1.length)
+    console.log(myFilez1[rand1])
+    console.log(rand1)
+    myGrainPlayer = new tone.GrainPlayer(myFilez1[rand1], () => {
+        myGrainPlayer.start()
+    })
+    myGrainPlayer.grainSize = 0.1;
+    myGrainPlayer.overlap = 0.9;
+    myGrainPlayer.loop = true;
+    myGrainPlayer.reverse = true;
+    myGrainPlayer.connect(encoder.in)
+    setAzim()
+}
+
 
 function playMoreSounds() {
     // for (i=0; i< myNumArray.length; i++) {
     // loadSample((myNumArray[i]),assignSample2SoundBuffer);
-    let rand = Math.floor(Math.random() * myNumArray.length)
-    loadSample(myNumArray[rand], assignSample2SoundBuffer);
-    let rand1 = Math.floor(Math.random() * myNumArray.length)
-    loadSample(myNumArray[rand1], assignSample2SoundBuffer1);
+    let rand = Math.floor(Math.random() * myFilez.length)
+    loadSample(myFilez[rand], assignSample2SoundBuffer);
+    let rand1 = Math.floor(Math.random() * myFilez.length)
+    loadSample(myFilez[rand1], assignSample2SoundBuffer1);
+    let rand2 = Math.floor(Math.random() * myFilez.length)
+    loadSample(myFilez[rand2], assignSample2SoundBuffer2);
+    let rand3 = Math.floor(Math.random() * myFilez.length)
+    loadSample(myFilez[rand3], assignSample2SoundBuffer3);
    
-    myGrainPlayer = new tone.GrainPlayer(myNumArray[rand1], () => {
-        myGrainPlayer.start()
-    })
-    myGrainPlayer.grainSize = 0.5;
-    myGrainPlayer.overlap = 0.5;
-    myGrainPlayer.loop = true;
-    myGrainPlayer.connect(encoder.in)
- 
-
-    setAzim()
             //grain.toDestination()
             console.log(encoder.azim)
             sound = context.createBufferSource();
             sound1 = context.createBufferSource()
+            sound2 = context.createBufferSource()
+            sound3 = context.createBufferSource()
+
             console.log(sound)
     
             //encoder.azim = -180;
             sound.buffer = soundBuffer;
             sound1.buffer = soundBuffer1;
+            sound2.buffer = soundBuffer2;
+            sound3.buffer = soundBuffer3;
             //sound.loop = true;
             sound.fadeIn = 0.05
             sound.fadeOut = 0.05
@@ -201,7 +207,7 @@ function playMoreSounds() {
             // document.getElementById('stop').disabled = false;
             
     
-    console.log(myNumArray[i])
+    //console.log(myNumArray[i])
     
     }
     
@@ -255,17 +261,54 @@ let myVariable = "hello"
 
 window.onload = () => {
     const getButton = document.querySelector("#getSamples")
-    getButton.addEventListener("click", getTheSamples)
-}
-
-
-function getTheSamples() {
-    myNum = localStorage.getItem("PLAYER");
-    myNum1 = Number(myNum)
-    console.log(myNum1)
-    makeList()
+    getButton.addEventListener("click", makeList)
   
 }
+
+
+
+//let myNum1 = 0;
+
+  socket.on('send-back', (data) => {
+    console.log(data)
+    myNum1 = data
+  })
+
+document.addEventListener('keydown', (e)=> {
+    if (e.key == "l") {
+        socket.emit('sendBack', true)
+        console.log("l")
+        socket.emit('sendFileName', true)
+    }
+})
+
+socket.on('send-FN', (data) => {
+    myFilez = data
+    console.log(myFilez)
+    document.addEventListener('keydown', (e) =>{
+        if (e.key == "s") {
+            socket.emit('sendBack1', true)
+            myFilez1 = data
+        }
+    })
+  })
+
+
+
+
+// function getTheSamples() {
+//     // myNum = localStorage.getItem("PLAYER");
+//     // myNum1 = Number(myNum)
+//     // 
+//     //myNum1 = myCount;
+//     console.log(myNum1)
+//     makeList()
+// }
+
+
+
+
+
 
 
 //$.holdReady( true ); // to force awaiting on common.html loading
@@ -276,26 +319,26 @@ function makeList() {
     //document.getElementById('div-mirror').outerHTML = '';
  
     // update sample list for selection
-    var sampleList = { 
-    };
+    // var sampleList = { 
+    // };
    
-    for (i=(myNumArray.length); i<myNum1; i++) {
-        let mySample = i + ".mp3"
-        sampleList['whisper' + i]  = "http://127.0.0.1:3003/uploads/whisper_Sample" + mySample
-        let sampleLink = "http://127.0.0.1:3003/uploads/whisper_Sample" + mySample
-        //console.log("hello")
-        myNumArray.push(sampleLink)
-        //console.log(myNumArray)
-    }
+    // for (i=(myNumArray.length); i<myNum1; i++) {
+    //     let mySample = i + ".mp3"
+    //     sampleList['whisper' + i]  = "http://127.0.0.1:3003/uploads/whisper_Sample" + mySample
+    //     let sampleLink = "http://127.0.0.1:3003/uploads/whisper_Sample" + mySample
+    //     //console.log("hello")
+    //     myNumArray.push(sampleLink)
+    //     //console.log(myNumArray)
+    // }
 
     
 
-    var $el = $("#sample_no");
-    $el.empty(); // remove old options
-    $.each(sampleList, function(key,value) {
-         $el.append($("<option></option>")
-                    .attr("value", value).text(key));
-         });
+    // var $el = $("#sample_no");
+    // $el.empty(); // remove old options
+    // $.each(sampleList, function(key,value) {
+    //      $el.append($("<option></option>")
+    //                 .attr("value", value).text(key));
+    //      });
 
     
 
@@ -357,7 +400,7 @@ function makeList() {
     // Order control buttons
     orderValue.innerHTML = maxOrder;
     var orderButtons = document.getElementById("div-order");
-    for (var k=1; k<=maxOrder; k++) {
+    for (var k=1; k<=3; k++) {
         var button = document.createElement("button");
         button.setAttribute("id", 'N'+k);
         button.setAttribute("value", k);
@@ -370,6 +413,7 @@ function makeList() {
             limiter.out.connect(decoder.in);
         });
         orderButtons.appendChild(button);
+        
     }
     
 };

@@ -74,7 +74,8 @@ app.post('/upload', upload.single('soundBlob'), function(req, res, next) {
   console.log("Seems to have uploaded...", req.body.id, req.body.user, req.file.originalname);
   //fileNameEnd++
   mp3(req.file.originalname);
-  index.emit('newFile', {'fileName': req.file.originalname})
+  //index.emit('newFile', {'fileName': req.file.originalname})
+  //ambiSocket.emit('newFile', {'fileName': req.file.originalname})
   fileNameArray.push(req.file.originalname);
  
   
@@ -83,7 +84,7 @@ app.post('/upload', upload.single('soundBlob'), function(req, res, next) {
   
 })
 
-
+let fileName2 = [];
 
 
 // Could spin off into it's own node app or spork a thread.
@@ -116,6 +117,11 @@ function mp3(fileName) {
     console.log('Error: ', e.code);
     console.log(e.msg);
   }
+
+  let fileName1 = "./uploads/" + fileName  + ".mp3"
+  fileName2.push(fileName1)
+  console.log(fileName1)
+  console.log(fileName2)
   // console.log('done mp3');
 };
 
@@ -125,12 +131,36 @@ let index;
 let idArray = []
 let numberOfAudioFiles = [];
 let myCount;
+let myCount1;
+let fileName = [];
+
+let recordState = {
+  section: "start"
+}
 
 io.on('connection', (socket) => {
   socket.on('register', (data)=> {
     if (data == 'ambisonic') {
       ambiSocket = socket
     } 
+    socket.on('counter', (data) => {
+      console.log(data)
+      //numberOfAudioFiles.push(data)
+      myCount1 = numberOfAudioFiles.length 
+    })
+   
+    socket.on('sendBack', () => {
+      socket.emit('send-back', myCount1)
+    })
+
+    socket.on('sendBack1', () => {
+      socket.emit('send-back', myCount1)
+    })
+
+    socket.on('sendFileName', () => {
+      //fileName.split(',')
+      socket.emit('send-FN', fileName2)
+    })
 
   
 
@@ -183,7 +213,25 @@ io.on('connection', (socket1) => {
       socket1.emit('send-back', myCount)
     })
 
+    socket1.on('file-name', (data) => {
+      fileName.push(upload.originalname)
+      console.log(fileName)
+    })
 
+    socket1.on("begin", () => {
+      // socket.broadcast.emit("end_piece", true);
+       recordState.section = "startRecording";
+       io.emit("set_section", recordState.section)
+
+   })
+
+   socket1.on("sec2", () => {
+    // socket.broadcast.emit("end_piece", true);
+     recordState.section = "secondSection";
+     io.emit("set_section", recordState.section)
+
+ })
+   socket1.emit("set_section", recordState.section)
   })
 
 })

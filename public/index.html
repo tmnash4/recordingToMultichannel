@@ -12,9 +12,9 @@
 <body>
 <div id="flex-container">
 
-  <button id="record" onclick="startRecording()" >Record</button> | <button id="play" onclick="playRecording()">Play</button> | <button id="upload" onclick="uploadSample('whisper', userNumber = myCount, soundBlob)">Upload Latest</button>
-  <button id="testing"> Testing Socket</button>
-  <p id="text"> Wait for your poetry </p>
+  <button id="record" onclick="startRecording()" >Record</button> <button id="upload" onclick="uploadSample('whisper', userNumber = myCount, soundBlob)">Upload Latest</button>
+
+  <p id="text"> When you hit the record button, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you press it again, upload it.  </p>
   <div id="sound-clips">
   <audio id="sound-recording" controls>
     No Audio
@@ -24,6 +24,11 @@
 </div>
 
 <style>
+
+body {
+  font-family: 'Times New Roman', Times, serif;
+}
+
 .flex-container {
   display: flex;
   flex-wrap: wrap;
@@ -32,14 +37,37 @@
 
 #record {
   background-color:black;
-  width: 50px;
-  height: 50px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
+  visibility: hidden;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+#upload {
+  position: relative;
+  background-color: lightskyblue;
+  width: 200px;
+  height: 200px;
+  border: 5px darkblue solid;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 30px
+
+  
 }
 
 #sound-recording {
   visibility: hidden;
   width: 2px;
+}
+
+#text {
+  visibility: hidden;
+  font-size: 3em;
+}
+
+#upload {
+  visibility: hidden
 }
 
 
@@ -53,21 +81,101 @@ var socket = io();
   let recordButton = document.getElementById("record")
 
   recordButton.style.backgroundColor = "black"
+  recordButton.style.color = "white"
+  recordButton.innerHTML = "Start Recording"
+  recordButton.style.fontSize = "30px"
+  let uploadButton = document.getElementById("upload");
+  let poemLine = 0;
 
   function changeColor() {
   let randNum = Math.floor(Math.random() * hardy.length)
-
+  //poemLine = 0;
+  poemLine ++
     if (recordButton.style.backgroundColor == "black") {
       recordButton.style.backgroundColor = "red";
-      poemDiv.innerHTML = "Please whisper:" + hardy[randNum] 
+     // poemDiv.innerHTML = hardy[randNum] 
       recordButton.style.boxShadow = "0 0 5px 5px red"
+      recordButton.innerHTML = "stop recording"
+      uploadButton.style.visibility = "hidden"
+      //poemLine = 0;
+      //poemLine++
+      if (poemLine <=24) {
+        poemDiv.innerHTML = hardy[randNum]
+      } else {
+        poemDiv.innerHTML = "That's good for now, thanks!"
+        recordButton.style.visibility = "hidden"
+      }
     } else {
       recordButton.style.backgroundColor = "black"
       recordButton.style.boxShadow = "0 0 0px 0px white"
+      recordButton.style.color = "white"
+      recordButton.innerHTML = "start recording"
+      uploadButton.style.visibility = "visible"
+    }
+    //poemLine++
+    console.log(poemLine + "hehe")
+  }
+
+
+  function changeColor1() {
+    if (recordButton.style.backgroundColor == "black") {
+      recordButton.style.backgroundColor = "red";
+      recordButton.style.boxShadow = "0 0 5px 5px red"
+      recordButton.innerHTML = "stop recording"
+      uploadButton.style.visibility = "hidden"
+    } else {
+      recordButton.style.backgroundColor = "black"
+      recordButton.style.boxShadow = "0 0 0px 0px white"
+      recordButton.style.color = "white"
+      recordButton.innerHTML = "start recording"
+      uploadButton.style.visibility = "visible"
     }
   }
+
+  uploadButton.addEventListener("click", () => {
+    uploadButton.style.visibility = "hidden"
+  })
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key == "b") {
+    socket.emit("begin", true)
+    } else if (e.key =="s") {
+    socket.emit("sec2", true)
+    }
+  })
   
+  socket.on("set_section", (data) => {
+  if (data == "startRecording") {
+  console.log("its beginning")
+  startPiece()
   
+  } else if (data == "secondSection") {
+    section2()
+  
+  }
+})
+
+let text = document.querySelector("#text")
+
+
+function startPiece() {
+  poemDiv.innerHTML = "When you hit the record button, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you press it again, upload it."
+  recordButton.style.visibility = "visible";
+  text.style.visibility = "visible";
+  recordButton.removeEventListener("click", changeColor1)
+  recordButton.addEventListener("click", changeColor)
+  poemLine = 0
+  //uploadButton.style.visibility = "visible"
+
+}
+
+function section2() {
+  poemDiv.innerHTML = "Please record your own whispered words/phrases into your phone and upload them. When they are played back, the words will be obscured."
+  recordButton.style.visibility = "visible";
+  text.style.visibility = "visible";
+  recordButton.removeEventListener("click", changeColor)
+  recordButton.addEventListener("click", changeColor1)
+}
 
   // function startPiece() {
 
@@ -79,6 +187,8 @@ var socket = io();
   let tone = Tone;
   let fileNameArray = [];
   let myCount = 0;
+
+  
 
   // ---- Audio Input
   let liveFeed = new Tone.UserMedia();  // the microphone just call .open
@@ -92,11 +202,14 @@ var socket = io();
   // Tone.UserMedia.enumerateDevices().then((devices) => {
   //   console.log(devices)
   // })
-  let uploadButton = document.getElementById("upload")
   let test = document.getElementById("testing")
   uploadButton.addEventListener('click', () => {
     socket.emit("counter", u)
     console.log(u)
+  })
+
+  uploadButton.addEventListener('click', () => {
+    socket.emit('file-name', fileNameArray.toString())
   })
   
   recordButton.addEventListener('click', () => {
@@ -148,8 +261,10 @@ var socket = io();
     soundClips.appendChild(newAudio);
     newAudio.controls = true;
     const audioURL = URL.createObjectURL(soundBlob);
+    newAudio.style.visibility = "hidden"
     newAudio.src = audioURL;
     newAudio.id = "soundPlayer" + j++
+    
   }
 
   // ------ Toggle recording ------
@@ -165,7 +280,7 @@ var socket = io();
       recording = true;
       console.log('started recording')
     }
-    changeColor()
+  
   }
 
 
@@ -240,9 +355,15 @@ let poemDiv = document.getElementById("text");
   
   let uArray = [];
 
+  let replaceSample = '_Sample'
+
   function uploadSample(user = 'bob', userNumber = myCount, soundBlob) {
     //console.log(u)
     let formdata = new FormData(); //create a from to of data to upload to the server
+    // if (myCount == null) {
+    //   myCount = 0;
+    //   myCount++
+    // } 
     let soundFileName = user  + '_Sample' + myCount;
     formdata.append('user', user);
     formdata.append('id', userNumber);
