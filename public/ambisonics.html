@@ -34,11 +34,13 @@
 Start / Stop audio: &nbsp;
 <button id="play" >Play</button>
 <button id="stop" disabled="">Stop</button>
-<button id="play1" onclick="playMoreSounds()" > Play More SOunds</button>
-<button id="grain" onclick="playGrainSounds()"> Make Grain</button>
+<button id="play1" onclick="playMoreSounds()" > Play Unprocessed Sounds</button>
+<button id="grain" onclick="playGrainSounds()"> Play Granulated Sounds</button>
+<button id="play2" onclick="playOneSound()"> Play One Sound</button>
 </p>
 </div>
-<button id="getSamples" onclick="startAudio()"> Get Number of Samples </button>
+<button id="getSamples" onclick="startAudio()"> Start Audio Context </button>
+<button id="updateList" onclick="updateList()"> Update Sample List</button>
 <!-- SAMPLE SELECTOR -->
 <p>
 <!-- Sample: whisper_Sample.mp3 -->

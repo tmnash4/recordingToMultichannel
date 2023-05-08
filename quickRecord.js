@@ -83,8 +83,9 @@ app.post('/upload', upload.single('soundBlob'), function(req, res, next) {
   // hub.transmit('sample', null, { 'user': req.body.user, 'val': 'load', 'sample': true, 'url': req.file.originalname + '.mp3', 'id': req.body.id });
   
 })
-
+let counter = 0;
 let fileName2 = [];
+let fileName3 = [];
 
 
 // Could spin off into it's own node app or spork a thread.
@@ -120,8 +121,14 @@ function mp3(fileName) {
 
   let fileName1 = "./uploads/" + fileName  + ".mp3"
   fileName2.push(fileName1)
+  //fileName3.push()
   console.log(fileName1)
   console.log(fileName2)
+
+  if (counter == "3") {
+    fileName3.push(fileName1)
+  }
+
   // console.log('done mp3');
 };
 
@@ -160,6 +167,12 @@ io.on('connection', (socket) => {
     socket.on('sendFileName', () => {
       //fileName.split(',')
       socket.emit('send-FN', fileName2)
+    })
+
+    socket.on('sendFileName1', () => {
+      //fileName.split(',')
+      counter = 3
+      socket.emit('send-FN1', fileName3)
     })
 
   

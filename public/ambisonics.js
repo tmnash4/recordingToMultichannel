@@ -100,21 +100,25 @@ context.destination.channelCount = decoder.nSpk;
 var assignSample2SoundBuffer = function(decodedBuffer) {
     soundBuffer = decodedBuffer;
     document.getElementById('play').disabled = false;
+    setAzim()
 }
 
 var assignSample2SoundBuffer1 = function(decodedBuffer) {
     soundBuffer1 = decodedBuffer;
     document.getElementById('play').disabled = false;
+    setAzim()
 }
 
 var assignSample2SoundBuffer2 = function(decodedBuffer) {
     soundBuffer2 = decodedBuffer;
     document.getElementById('play').disabled = false;
+    setAzim()
 }
 
 var assignSample2SoundBuffer3 = function(decodedBuffer) {
     soundBuffer3 = decodedBuffer;
     document.getElementById('play').disabled = false;
+    setAzim()
 }
 
 
@@ -152,8 +156,10 @@ function playGrainSounds() {
     })
     myGrainPlayer.grainSize = 0.1;
     myGrainPlayer.overlap = 0.9;
-    myGrainPlayer.loop = true;
+    //myGrainPlayer.loop = true;
     myGrainPlayer.reverse = true;
+    myGrainPlayer.fadeIn = 0.5;
+    myGrainPlayer.fadeOut = 0.5
     myGrainPlayer.connect(encoder.in)
     setAzim()
 }
@@ -210,7 +216,20 @@ function playMoreSounds() {
     //console.log(myNumArray[i])
     
     }
-    
+
+function playOneSound() {
+    let rand = Math.floor(Math.random() * myFilez.length)
+    loadSample(myFilez[rand], assignSample2SoundBuffer);
+            setAzim()
+            console.log(encoder.azim)
+            sound = context.createBufferSource();
+            sound.buffer = soundBuffer;
+            sound.fadeIn = 0.05
+            sound.fadeOut = 0.05
+            sound.connect(encoder.in);
+            sound.start(0);
+            sound.isPlaying = true;
+}
 
 
 
@@ -279,18 +298,30 @@ document.addEventListener('keydown', (e)=> {
         socket.emit('sendBack', true)
         console.log("l")
         socket.emit('sendFileName', true)
+    } else if (e.key == "s") {
+        socket.emit('sendFileName1', true)
+        console.log("2go")
     }
 })
+
+//let listButton = document.getElementById("updateList");
+//listButton.addEventListener('click', updateList)
+
+function updateList() {
+    socket.emit('sendBack', true)
+    console.log("l")
+    socket.emit('sendFileName', true)
+}
+
 
 socket.on('send-FN', (data) => {
     myFilez = data
     console.log(myFilez)
-    document.addEventListener('keydown', (e) =>{
-        if (e.key == "s") {
-            socket.emit('sendBack1', true)
-            myFilez1 = data
-        }
-    })
+  })
+
+  socket.on('send-FN1', (data) => {
+    myFilez1 = data;
+    console.log(myFilez1)
   })
 
 
