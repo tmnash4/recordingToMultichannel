@@ -199,8 +199,8 @@ function playMoreGrainSounds1() {
     myGrainPlayer2.overlap = 1.5;
     //myGrainPlayer.loop = true;
     myGrainPlayer2.reverse = true;
-    myGrainPlayer2.fadeIn = 0.5;
-    myGrainPlayer2.fadeOut = 0.5
+    myGrainPlayer2.fadeIn = 0.7;
+    myGrainPlayer2.fadeOut = 0.7;
     myGrainPlayer2.connect(encoder.in)
    
 }
@@ -240,21 +240,21 @@ function playMoreSounds() {
             sound2.buffer = soundBuffer2;
             sound3.buffer = soundBuffer3;
             //sound.loop = true;
-            sound.fadeIn = 0.05
-            sound.fadeOut = 0.05
+            sound.fadeIn = 0.09
+            sound.fadeOut = 0.09
             sound.connect(encoder.in);
             sound.start(0);
-            sound1.fadeIn = 0.05
-            sound1.fadeOut = 0.05
+            sound1.fadeIn = 0.09
+            sound1.fadeOut = 0.09
             sound1.connect(encoder.in);
             sound1.start(0)
 
-            sound2.fadeIn = 0.05
-            sound2.fadeOut = 0.05
+            sound2.fadeIn = 0.09
+            sound2.fadeOut = 0.09
             sound2.connect(encoder.in);
             sound2.start(0)
-            sound3.fadeIn = 0.05
-            sound3.fadeOut = 0.05
+            sound3.fadeIn = 0.09
+            sound3.fadeOut = 0.09
             sound3.connect(encoder.in);
             sound3.start(0)
 
@@ -284,8 +284,8 @@ function playOneSound() {
             console.log(encoder.azim)
             sound = context.createBufferSource();
             sound.buffer = soundBuffer;
-            sound.fadeIn = 0.05
-            sound.fadeOut = 0.05
+            sound.fadeIn = 0.09
+            sound.fadeOut = 0.09
             sound.connect(encoder.in);
             sound.start(0);
             sound.isPlaying = true;
