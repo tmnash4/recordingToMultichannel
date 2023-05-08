@@ -99,25 +99,25 @@ context.destination.channelCount = decoder.nSpk;
 // function to assign sample to the sound buffer for playback (and enable playbutton)
 var assignSample2SoundBuffer = function(decodedBuffer) {
     soundBuffer = decodedBuffer;
-    document.getElementById('play').disabled = false;
+    //document.getElementById('play').disabled = false;
     setAzim()
 }
 
 var assignSample2SoundBuffer1 = function(decodedBuffer) {
     soundBuffer1 = decodedBuffer;
-    document.getElementById('play').disabled = false;
+    //document.getElementById('play').disabled = false;
     setAzim()
 }
 
 var assignSample2SoundBuffer2 = function(decodedBuffer) {
     soundBuffer2 = decodedBuffer;
-    document.getElementById('play').disabled = false;
+    //document.getElementById('play').disabled = false;
     setAzim()
 }
 
 var assignSample2SoundBuffer3 = function(decodedBuffer) {
     soundBuffer3 = decodedBuffer;
-    document.getElementById('play').disabled = false;
+    //document.getElementById('play').disabled = false;
     setAzim()
 }
 
@@ -236,8 +236,8 @@ function playOneSound() {
 
 // function to change sample from select box
 function changeSample() {
-    document.getElementById('play').disabled = true;
-    document.getElementById('stop').disabled = true;
+    //document.getElementById('play').disabled = true;
+   // document.getElementById('stop').disabled = true;
 
     for (a=0; a<myNumArray.length; i++) {
     soundUrl = document.getElementById("sample_no").value;
@@ -405,28 +405,28 @@ function makeList() {
     // setSpkPosContainer.appendChild(button); // put it into the DOM
 
     // Init event listeners
-    document.getElementById('play').addEventListener('click', function() {
-        setAzim()
-        console.log(encoder.azim)
-        sound = context.createBufferSource();
-        //encoder.azim = -180;
-        sound.buffer = soundBuffer;
-        //sound.loop = true;
-        sound.connect(encoder.in);
-        sound.start(0);
-        sound.isPlaying = true;
-        document.getElementById('play').disabled = true;
-        document.getElementById('stop').disabled = false;
+    // document.getElementById('play').addEventListener('click', function() {
+    //     setAzim()
+    //     console.log(encoder.azim)
+    //     sound = context.createBufferSource();
+    //     //encoder.azim = -180;
+    //     sound.buffer = soundBuffer;
+    //     //sound.loop = true;
+    //     sound.connect(encoder.in);
+    //     sound.start(0);
+    //     sound.isPlaying = true;
+    //     document.getElementById('play').disabled = true;
+    //     document.getElementById('stop').disabled = false;
 
-    });
+    // });
 
 
-    document.getElementById('stop').addEventListener('click', function() {
-        sound.stop(0);
-        sound.isPlaying = false;
-        document.getElementById('play').disabled = false;
-        document.getElementById('stop').disabled = true;
-    });
+    // document.getElementById('stop').addEventListener('click', function() {
+    //     sound.stop(0);
+    //     sound.isPlaying = false;
+    //     document.getElementById('play').disabled = false;
+    //     document.getElementById('stop').disabled = true;
+    // });
 
     // Order control buttons
     orderValue.innerHTML = maxOrder;
