@@ -16,7 +16,7 @@
   <img id="img" src="./upload.png">
   </button>
 
-  <p id="text"> When you hit the record button, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you press it again, upload it.  </p>
+  <p id="text"> When you hit the record button, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you have stopped recording, you can upload your whisper. Repeat  </p>
   <div id="sound-clips">
   <audio id="sound-recording" controls>
     No Audio
@@ -168,7 +168,7 @@ let text = document.querySelector("#text")
 
 
 function startPiece() {
-  poemDiv.innerHTML = "When you hit the record button, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you press it again, upload it."
+  poemDiv.innerHTML = "When you hit the record button, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you have stopped recording, you can upload your whisper. Repeat."
   recordButton.style.visibility = "visible";
   text.style.visibility = "visible";
   recordButton.removeEventListener("click", changeColor1)
