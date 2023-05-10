@@ -12,12 +12,16 @@
 <body>
 <div id="flex-container">
 
-  <button id="record" onclick="startRecording()" >Record</button> <button id="upload" onclick="uploadSample('whisper', userNumber = myCount, soundBlob)">Upload Latest
-  <img id="img" src="./upload.png">
+  <button id="record" onclick="startRecording()" >Record</button> <button id="upload" onclick="uploadSample('whisper', userNumber = myCount, soundBlob)">Upload Latest 
+ 
+  <img class="img" src="./upload.png">
   </button>
+   <button id="delete" onclick="deleteAudio()"> Delete Latest
+    <img class="img" id="img1" src="./images/delete.png"></button>
 
-  <p id="text"> When you hit the record button, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you have stopped recording, you can upload your whisper. Repeat  </p>
+  <p id="text"> When you begin to record, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you have stopped recording, you can listen to your audio and then upload or delete it. Repeat  </p>
   <div id="sound-clips">
+    <p id="myTitle"> Listen here before uploading </p>
   <audio id="sound-recording" controls>
     No Audio
   </audio>
@@ -58,10 +62,26 @@ body {
   left: 220px
 }
 
-#img {
+#delete {
+  position: absolute;
+  background-color: rgb(239, 132, 132);
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 5px rgb(239, 132, 132) solid;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 20px;
+  left: 432px;
+  visibility: hidden;
+}
+.img {
   position: relative;
   width: 100px;
   height: 100px
+}
+
+#img1 {
+  top: 5px;
 }
 
 
@@ -79,6 +99,9 @@ body {
   visibility: hidden
 }
 
+#myTitle {
+  visibility: hidden;
+}
 
 </style>
 
@@ -94,18 +117,23 @@ var socket = io();
   recordButton.innerHTML = "Start Recording"
   recordButton.style.fontSize = "30px"
   let uploadButton = document.getElementById("upload");
+  let deleteButton = document.getElementById("delete");
   let poemLine = 0;
 
   function changeColor() {
   let randNum = Math.floor(Math.random() * hardy.length)
   //poemLine = 0;
-  poemLine ++
+  recordButton.style.opacity = 0.9;
+  let refreshIntervalId = setInterval(flashColor, 1000);
+  poemLine++
     if (recordButton.style.backgroundColor == "black") {
       recordButton.style.backgroundColor = "red";
+       
      // poemDiv.innerHTML = hardy[randNum] 
       recordButton.style.boxShadow = "0 0 5px 5px red"
       recordButton.innerHTML = "stop recording"
       uploadButton.style.visibility = "hidden"
+      deleteButton.style.visibility = "hidden"
       //poemLine = 0;
       //poemLine++
       if (poemLine <=24) {
@@ -114,16 +142,31 @@ var socket = io();
         poemDiv.innerHTML = "That's good for now, thanks!"
         recordButton.style.visibility = "hidden"
       }
-    } else {
+    } else if (recordButton.style.backgroundColor =="red") {
+      recordButton.style.opacity = 1;
+      clearInterval(refreshIntervalId)
       recordButton.style.backgroundColor = "black"
       recordButton.style.boxShadow = "0 0 0px 0px white"
       recordButton.style.color = "white"
       recordButton.innerHTML = "start recording"
       uploadButton.style.visibility = "visible"
+      deleteButton.style.visibility = "visible"
+      myTitle.style.visibility = "visible"
+    
     }
     //poemLine++
     console.log(poemLine + "hehe")
   }
+
+function flashColor() {
+  if (recordButton.style.opacity == 0.9) {
+    recordButton.style.opacity = 0.5
+  } else if (recordButton.style.opacity == 0.5) {
+    recordButton.style.opacity = 0.9
+  }
+}
+
+
 
 
   function changeColor1() {
@@ -132,16 +175,25 @@ var socket = io();
       recordButton.style.boxShadow = "0 0 5px 5px red"
       recordButton.innerHTML = "stop recording"
       uploadButton.style.visibility = "hidden"
+      deleteButton.style.visibility = "hidden"
     } else {
       recordButton.style.backgroundColor = "black"
       recordButton.style.boxShadow = "0 0 0px 0px white"
       recordButton.style.color = "white"
       recordButton.innerHTML = "start recording"
       uploadButton.style.visibility = "visible"
+      deleteButton.style.visibility = "visible"
+       myTitle.style.visibility = "visible"
     }
   }
 
   uploadButton.addEventListener("click", () => {
+    uploadButton.style.visibility = "hidden"
+    deleteButton.style.visibility = "hidden"
+  })
+
+  deleteButton.addEventListener("click", () => {
+    deleteButton.style.visibility = "hidden"
     uploadButton.style.visibility = "hidden"
   })
 
@@ -263,18 +315,41 @@ function section2() {
   });
 
   let j = 0;
-
+  let k = 0;
+  let srcArray = [];
+  let newAudio;
+  let myTitle = document.getElementById("myTitle")
   function makeNewAudio(soundBlob) {
-    const newAudio = document.createElement("audio");
+    // let newTitle = document.createElement("p");
+    // soundClips.appendChild(newTitle);
+    // newTitle.innerHTML = "Listen here before uploading"
+    //myTitle.style.visibility = "hidden"
+    newAudio = document.createElement("audio");
     newAudio.setAttribute("controls", "");
     soundClips.appendChild(newAudio);
+    console.log(newAudio)
     newAudio.controls = true;
     const audioURL = URL.createObjectURL(soundBlob);
-    newAudio.style.visibility = "hidden"
+    //newAudio.style.visibility = "hidden"
     newAudio.src = audioURL;
-    newAudio.id = "soundPlayer" + j++
+    newAudio.id = "soundPlayer" + k++
+  
+    srcArray.push(newAudio.id);
+    console.log(srcArray)
+   
     
   }
+
+let soundP = 0
+
+function deleteAudio() {
+    //let soundP = 0;
+    let id1 = "soundPlayer" + soundP++
+    let deleteAudio = document.getElementById(id1)
+    console.log(id1)
+    deleteAudio.remove()
+}
+
 
   // ------ Toggle recording ------
   let recording = false;
@@ -402,6 +477,7 @@ let poemDiv = document.getElementById("text");
     fileNameArray.push(soundFileName + ".mp3")
     //i++
     handleSubmit()
+    deleteAudio()
     //uArray.push(u)
 
   };
