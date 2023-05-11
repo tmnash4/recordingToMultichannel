@@ -84,7 +84,10 @@ body {
   top: 5px;
 }
 
-
+.audioClass {
+  width: 600px;
+ 
+}
 #sound-recording {
   visibility: hidden;
   width: 2px;
@@ -92,7 +95,7 @@ body {
 
 #text {
   visibility: hidden;
-  font-size: 3em;
+  font-size: 60px;
 }
 
 #upload {
@@ -101,7 +104,9 @@ body {
 
 #myTitle {
   visibility: hidden;
+  font-size: 30px;
 }
+
 
 </style>
 
@@ -137,7 +142,7 @@ var socket = io();
       //poemLine = 0;
       //poemLine++
       if (poemLine <=24) {
-        poemDiv.innerHTML = hardy[randNum]
+        poemDiv.innerHTML = "Please whisper the following phrase: " + hardy[randNum].italics()
       } else {
         poemDiv.innerHTML = "That's good for now, thanks!"
         recordButton.style.visibility = "hidden"
@@ -333,6 +338,7 @@ function section2() {
     //newAudio.style.visibility = "hidden"
     newAudio.src = audioURL;
     newAudio.id = "soundPlayer" + k++
+    newAudio.classList.add('audioClass')
   
     srcArray.push(newAudio.id);
     console.log(srcArray)
