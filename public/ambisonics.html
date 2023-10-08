@@ -23,7 +23,7 @@
 <body>
     <div id="main-column">
 
-    <h1>Send Audio to multichannels</h1> 
+    <h1 id="head">Player Controls for Whisper </h1> 
 
     <!-- Load html and js elements common to all examples -->
     <div id="common">
@@ -36,38 +36,39 @@
 &nbsp;
 <!-- <button id="play" >Play</button>
 <button id="stop" disabled="">Stop</button> -->
-<button id="play2" onclick="playOneSound()"> Play One Sound</button>
-<button id="play1" onclick="playMoreSounds()" > Play Multiple Sounds</button>
-<button id="grain" onclick="playGrainSounds()"> Play One Granulated Sound</button>
-<button id="grain1" onclick="playGrains()"> Play Multiple Granuated Sounds</button>
+<button class= "buttonClass1" id="play2" onclick="playOneSound()"> Play1</button>
+<button class= "buttonClass1" id="play1" onclick="playMoreSounds()" > Play2</button>
+<button class= "buttonClass1" id="grain" onclick="playGrainSounds()"> Play3</button>
+<button class= "buttonClass1" id="grain1" onclick="playGrains()"> Play4</button>
 
 </p>
 </div>
-<button id="getSamples" onclick="startAudio()"> Start Audio Context </button>
-<button id="updateList" onclick="updateList()"> Update Sample List</button>
+<button class= "buttonClass" id="getSamples" onclick="startAudio()"> Start Audio Context </button>
+<button class= "buttonClass" id="updateList" onclick="updateList()"> Update Sample List</button>
 <!-- SAMPLE SELECTOR -->
 <p>
 <!-- Sample: whisper_Sample.mp3 -->
 <!-- <button id="sample_no" onchange="changeSample()">  -->
     <!-- <select id="sample_no" onchange="changeSample()"></select> -->
     <!-- <option value=""></option> -->
-</button>
+
 
 </p>
 
 <!-- AMBISONIC ORDER -->
 <div id="div-order">
 <p>
-Set Ambisonic order: <span id="order-value"></span> &nbsp;
+Set Ambisonic order:
 </p>
 </div>
 
 <!-- AMBISONIC DECODING -->
-<div id="div-decoder"><p> Set speaker pos (spherical coords: azim1, elev1, dist1, ... azimN, elevN, distN ):<span id="decoder-value"></span> &nbsp; </p><input type="text" id="spkpos" value="0,0,1,45,0,1,90,0,1,135,0,1,180,0,1,225,0,1,270,0,1,315,0,1,0,90,1,0,-90,1" size="100"><button id="spkButton">set</button></div>
-
+<div id="div-decoder"><p> Set speaker position: azim1, elev1, dist1 etc. <span id="decoder-value"></span> &nbsp; </p><input type="text" id="spkpos" value="0,0,1,45,0,1,90,0,1,135,0,1,180,0,1,225,0,1,270,0,1,315,0,1,0,90,1,0,-90,1" size="100"><button class= "buttonClass2" id="spkButton">set</button></div>
+<br>
 <!-- OUTPUT VOLUME -->
 <div id="div-volume">
-<label for="volume-slider">Volume</label> &nbsp;
+<!-- <label for="volume-slider">Volume</label> &nbsp; -->
+<div id="volume"> Volume </div>
 <input id="volume-slider" type="range" min="0.1" max="10" value="1" step="0.1">
 </div>
 
@@ -121,6 +122,62 @@ Elevation: <span id="elev-value">-12</span>
 #Canvas2 {
     visibility: hidden;
 }
+
+#volume-slider {
+    background-color: black
+}
+
+#volume {
+    position: relative;
+    /* //right: 35px; */
+}
+
+#div-decoder {
+    color:  darkblue;
+}
+
+#head {
+    color: darkblue
+}
+#spkpos {
+    color: darkblue;
+    border: 2px darkblue solid;
+    position: relative;
+    bottom: 1px;
+}
+.buttonClass1 {
+  border: 5px darkblue solid;
+  font-size: 1.2em;
+  background-color: darkblue;
+  border-radius: 95%;
+  color: white
+ 
+}
+.buttonClass {
+  border: 2px white solid;
+  margin: 2px;
+  font-size: 1.2em;
+  background-color: white;
+  color: darkblue
+  
+}
+
+.buttonClass4 {
+  margin: 2px;
+  font-size: 1em;
+  background-color: darkblue;
+  color: white;
+  
+}
+
+.buttonClass2 {
+    margin: 2px;
+  font-size: 1em;
+  background-color: darkblue;
+  color: white;
+  
+}
+
 </style>
 <script>
 
@@ -140,7 +197,7 @@ var mirrorValue = document.getElementById('mirror-value');
 
 // Map sprite
 var mapSprite = new Image();
-mapSprite.src = "images/map.jpeg";
+mapSprite.src = "images/mymap.jpeg";
 
 // Create a basic class which will be used to create a marker
 var Marker = function () {

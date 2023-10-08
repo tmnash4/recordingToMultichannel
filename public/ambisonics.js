@@ -494,7 +494,7 @@ function makeList() {
     // });
 
     // Order control buttons
-    orderValue.innerHTML = maxOrder;
+    //orderValue.innerHTML = maxOrder;
     var orderButtons = document.getElementById("div-order");
     for (var k=1; k<=3; k++) {
         var button = document.createElement("button");
@@ -504,11 +504,12 @@ function makeList() {
         button.addEventListener('click', function() {
             orderOut = parseInt(this.value);
             //orderOut = 3;
-            orderValue.innerHTML = orderOut;
+            //orderValue.innerHTML = orderOut;
             limiter.updateOrder(orderOut);
             limiter.out.connect(decoder.in);
         });
         orderButtons.appendChild(button);
+        button.classList.add("buttonClass4")
         
     }
     

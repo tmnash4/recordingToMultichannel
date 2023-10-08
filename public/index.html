@@ -1,47 +1,158 @@
 <html>
 <head>
   <link rel="shortcut icon" href="#">
-  <script src="/socket.io/socket.io.js"></script>
+  <!-- <script src="/socket.io/socket.io.js"></script> -->
+  <script src="socket.io/socket.io.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js" integrity="sha512-jduERlz7En1IUZR54bqzpNI64AbffZWR//KJgF71SJ8D8/liKFZ+s1RxmUmB+bhCnIfzebdZsULwOrbVB5f3nQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script type="text/javascript" src="ambisonics.umd.js"></script>
   
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <!-- <script src="http://127.0.0.1:3003/socket.io/socket.io.js"></script> -->
 
 </head>
 <body>
-<div id="flex-container">
+<div class="flex-container1">
+  <div class="flex-items1" id="instruction">
+    <h1>Whisper by Treya Nash</h1>
+    <h2>with poetry by Thomas Hardy</h2>
+  </div>
+<div class="flex-items1" id="instructions">
+ Whisper is an interactive piece that asks you to record snippets of whispered speech into your phone. You may then listen to your recorded audio, and choose to upload it or delete it. Once it is uploaded, it will become part of the collective sound played through speakers. In the first section, you will be give lines of a Thomas Hardy poem to record. In the second, you will be able to choose what to record, but your words will be obscured through various audio reshufling techniques.
+  </div>
+<div class="flex-items1">
+  <button class="flex-items1" id="start" onclick="startPiece()"> Start Piece</button>
+</div>
+</div>
+<div class="flex-container">
+<div class="flex-items"> 
+  <button id="record" onclick="startRecording()" >Record</button> 
+</div>
+<div class="flex-items">  
 
-  <button id="record" onclick="startRecording()" >Record</button> <button id="upload" onclick="uploadSample('whisper', userNumber = myCount, soundBlob)">Upload Latest 
- 
-  <img class="img" src="./upload.png">
+  <button id="play" > <p id="playAud" style="position: relative; top: 10px"> Play Audio </p> <p id="playSymb" style="font-size: 100px; position: relative; top: -90px">  &#9658 </p> </button> 
+  <!-- <img class="img" id="img2" src="./images/play.png"> -->
+</div>
+<div class="flex-items">  
+
+  <button id="upload" onclick="uploadSample('whisper', userNumber = myCount, soundBlob)">Upload Latest 
+    <img class="img" src="./upload.png">
   </button>
+  </div>
+  <div class="flex-items"> 
+
+ 
    <button id="delete" onclick="deleteAudio()"> Delete Latest
     <img class="img" id="img1" src="./images/delete.png"></button>
+  </div>
+  </div>
 
-  <p id="text"> When you begin to record, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you have stopped recording, you can listen to your audio and then upload or delete it. Repeat  </p>
+    <div id="volume-visualizer"></div>
+<!-- <button id="stop"> Stoah</button> -->
+  <p id="text" style="display:none"> 
+    Step 1: Press 'start recording' once to start recording </p>
+    <p id="text1" style="display:none">Step 2: Once you hit record, a line of poetry will appear here. Whisper it into your phone.</p>
+      <p id="text2" style="display:none"> Step 3: Press 'stop recording' once to stop recording</p>
+        <p id="text3" style="display:none"> Step 4: Play your audio back, then decide whether to upload or delete it</p>
+          <p id="text4" style="display:none">  Step 5: Repeat!</p>
+    
+    
+    
+    <!-- When you begin to record, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you have stopped recording, you can listen to your audio and then upload or delete it. Repeat  </p> -->
   <div id="sound-clips">
-    <p id="myTitle"> Listen here before uploading </p>
-  <audio id="sound-recording" controls>
+    <p id="myTitle"> </p>
+  <audio id="sound-recording" >
     No Audio
   </audio>
 </div>
 
-</div>
+
+<!-- <button id="start">Start</button>
+<button id="stop">Stop</button> -->
 
 <style>
 
 body {
   font-family: 'Times New Roman', Times, serif;
+  background-color: rgb(255, 255, 247);
+  font-size: 2em;
+  border: 1px black solid;
+
 }
 
 .flex-container {
   display: flex;
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
   flex-wrap: wrap;
-  flex-direction: column;
+  justify-content: space-evenly;
+  align-content: center;
+  flex-direction: row;
+  text-align: center
+  /* background-color: blue; */
+  /* flex-direction: column; */
+}
+
+ .flex-items {
+  flex: 1 0 25%;
+  max-width: 25%;
+  overflow: hidden;
+  margin-top: 50px;
+  margin-bottom: 60px
+  /* background-color: red */
+  /* position: absolute */
+} 
+
+.flex-container1 {
+  display: flex;
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  /* align-content: center; */
+  flex-direction: row;
+  text-align: center
+  /* background-color: blue; */
+  /* flex-direction: column; */
+}
+
+ .flex-items1 {
+  flex: 1 0 100%;
+  max-width: 100%;
+  /* overflow: hidden; */
+  margin-top: 100px
+  /* background-color: red */
+  /* position: absolute */
+} 
+
+#instructions {
+  width: 30px;
+  font-size: 1.75em;
+  margin-top: -80px; 
+  margin-left: 40px;
+  margin-right: 40px
+}
+
+#start {
+  /* width: 10%;
+  height: 20%; */
+  font-size: 1.8em;
+  font-family: inherit;
+  border: none;
+  background-color: green;
+  border-radius: 5%;
+  color: white;
+  margin-top: -100px
+  /* margin-top: -1000px */
 }
 
 #record {
+    /* position: relative; */
+
   background-color:black;
   width: 200px;
   height: 200px;
@@ -50,8 +161,23 @@ body {
   font-family: 'Times New Roman', Times, serif;
 }
 
+#play {
+  /* position: relative; */
+  /* position: absolute; */
+  background-color: rgb(26, 209, 26);
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 5px rgb(26, 209, 26) solid;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 20px;
+  /* left: 220px; */
+  visibility: hidden;
+}
+
 #upload {
-  position: absolute;
+  /* position: relative; */
+  /* position: absolute; */
   background-color: lightskyblue;
   width: 200px;
   height: 200px;
@@ -59,11 +185,12 @@ body {
   border: 5px lightskyblue solid;
   font-family: 'Times New Roman', Times, serif;
   font-size: 20px;
-  left: 220px
+  /* left: 432px */
 }
 
 #delete {
-  position: absolute;
+  /* position: relative; */
+  /* position: absolute; */
   background-color: rgb(239, 132, 132);
   width: 200px;
   height: 200px;
@@ -71,7 +198,7 @@ body {
   border: 5px rgb(239, 132, 132) solid;
   font-family: 'Times New Roman', Times, serif;
   font-size: 20px;
-  left: 432px;
+  /* left: 642px; */
   visibility: hidden;
 }
 .img {
@@ -83,7 +210,9 @@ body {
 #img1 {
   top: 5px;
 }
-
+#img2 {
+  left: 5px;
+}
 .audioClass {
   width: 600px;
  
@@ -95,8 +224,32 @@ body {
 
 #text {
   visibility: hidden;
-  font-size: 60px;
+  font-size: 35px;
+  margin-left: 15px
 }
+#text1 {
+  visibility: hidden;
+  font-size: 35px;
+  white-space: pre-wrap;
+  margin-left: 15px
+}
+#text2 {
+  visibility: hidden;
+  font-size: 35px;
+  margin-left: 15px
+}
+#text3 {
+  visibility: hidden;
+  font-size: 35px;
+  margin-left: 15px
+}
+
+#text4 {
+  /* visibility: hidden; */
+  font-size: 35px;
+  margin-left: 15px
+}
+
 
 #upload {
   visibility: hidden
@@ -107,6 +260,35 @@ body {
   font-size: 30px;
 }
 
+#volume-visualizer {
+  display: none;
+  --volume: 0%;
+  position: relative;
+  width: 50%;
+  height: 20px;
+  margin-top: 50px;
+  background-color: #DDD;
+}
+
+#volume-visualizer::before {
+   content: '';
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   width: var(--volume);
+   background-color: green;
+   transition: width 100ms linear;
+}
+
+/* button {
+  margin-left: 50px;
+} */
+
+h3 {
+  margin: 20px;
+  font-family: sans-serif;
+}
 
 </style>
 
@@ -117,13 +299,18 @@ var socket = io();
 
   let recordButton = document.getElementById("record")
 
-  recordButton.style.backgroundColor = "black"
-  recordButton.style.color = "white"
-  recordButton.innerHTML = "Start Recording"
-  recordButton.style.fontSize = "30px"
+
+
   let uploadButton = document.getElementById("upload");
   let deleteButton = document.getElementById("delete");
   let poemLine = 0;
+  let text = document.querySelector("#text")
+
+  text.style.color = "blue"
+  // text3.style.color = "black"
+  recordButton.style.boxShadow = "0 0 2px 2px white"
+
+  let test1 = 0
 
   function changeColor() {
   let randNum = Math.floor(Math.random() * hardy.length)
@@ -131,32 +318,40 @@ var socket = io();
   recordButton.style.opacity = 0.9;
   let refreshIntervalId = setInterval(flashColor, 1000);
   poemLine++
-    if (recordButton.style.backgroundColor == "black") {
+    if (!test1) {
       recordButton.style.backgroundColor = "red";
-       
-     // poemDiv.innerHTML = hardy[randNum] 
-      recordButton.style.boxShadow = "0 0 5px 5px red"
+       text.style.color = "black";
+       text1.style.color = "blue";
+       text2.style.color = "blue"
+      recordButton.style.boxShadow = "0 0 2px 2px red"
       recordButton.innerHTML = "stop recording"
       uploadButton.style.visibility = "hidden"
       deleteButton.style.visibility = "hidden"
+      playButton.style.visibility = "hidden"
+      test1 = 1;
       //poemLine = 0;
       //poemLine++
+     
       if (poemLine <=24) {
-        poemDiv.innerHTML = "Please whisper the following phrase: " + hardy[randNum].italics()
+        // text1.style.width = "100%"
+       text1.innerHTML = "Step 2: Whisper the following line of poetry into your phone: " + "<br>" + "<br>" + "         " + '"' + hardy[randNum] + '"'
+        // let newLine = document.createElement("div");
+        // text1.appendChild(newLine)
       } else {
-        poemDiv.innerHTML = "That's good for now, thanks!"
+        poemDiv1.innerHTML = "That's good for now, thanks!"
         recordButton.style.visibility = "hidden"
       }
     } else if (recordButton.style.backgroundColor =="red") {
-      recordButton.style.opacity = 1;
+      recordButton.style.visibility = "hidden";
       clearInterval(refreshIntervalId)
-      recordButton.style.backgroundColor = "black"
-      recordButton.style.boxShadow = "0 0 0px 0px white"
-      recordButton.style.color = "white"
-      recordButton.innerHTML = "start recording"
+      text1.style.color = "black"
+      text2.style.color = "black"
+      text3.style.color = "blue"
       uploadButton.style.visibility = "visible"
       deleteButton.style.visibility = "visible"
+      playButton.style.visibility = 'visible'
       myTitle.style.visibility = "visible"
+      test1 = 0;
     
     }
     //poemLine++
@@ -181,25 +376,48 @@ function flashColor() {
       recordButton.innerHTML = "stop recording"
       uploadButton.style.visibility = "hidden"
       deleteButton.style.visibility = "hidden"
-    } else {
-      recordButton.style.backgroundColor = "black"
-      recordButton.style.boxShadow = "0 0 0px 0px white"
-      recordButton.style.color = "white"
-      recordButton.innerHTML = "start recording"
+      playButton.style.visibility = "hidden"
+   
+
+    } else  {
+      recordButton.style.visibility = "hidden"
+
+ 
       uploadButton.style.visibility = "visible"
       deleteButton.style.visibility = "visible"
        myTitle.style.visibility = "visible"
+      playButton.style.visibility = "visible"
+
     }
   }
 
   uploadButton.addEventListener("click", () => {
+    recordButton.style.visibility = "visible"
+    recordButton.style.backgroundColor = "black"
+      recordButton.style.boxShadow = "0 0 0px 0px white"
+      recordButton.style.color = "white"
+      recordButton.innerHTML = "start recording"
+    text3.style.color = "black"
+    text.style.color = "blue"
     uploadButton.style.visibility = "hidden"
     deleteButton.style.visibility = "hidden"
+    playButton.style.visibility = "hidden"
+    recordButton.style.opacity = 1
+    // myImg.src = "./images/play.png"
   })
 
   deleteButton.addEventListener("click", () => {
+    recordButton.style.visibility = "visible"
+    recordButton.style.backgroundColor = "black"
+      recordButton.style.boxShadow = "0 0 0px 0px white"
+      recordButton.style.color = "white"
+      recordButton.innerHTML = "start recording"
+    text3.style.color = "black"
+    text.style.color = "blue"
     deleteButton.style.visibility = "hidden"
     uploadButton.style.visibility = "hidden"
+    playButton.style.visibility = "hidden"
+    recordButton.style.opacity = 1
   })
 
   document.addEventListener("keydown", (e) => {
@@ -220,14 +438,46 @@ function flashColor() {
   
   }
 })
+let secondFlex = document.querySelector(".flex-container")
+let firstFlex = document.querySelector(".flex-container1")
+secondFlex.style.display = "none"
 
-let text = document.querySelector("#text")
+let poemDiv1 = document.getElementById("text1")
+// poemDiv1.style.textAlign = "left"
+
+let startButton = document.getElementById("start");
+startButton.addEventListener("click", () => {
+  piecePreview()
+})
+function piecePreview() {
+  firstFlex.style.display = "none"
+  secondFlex.style.display = "flex"
+
+  text.style.display= "flex";
+  text1.style.display= "flex";
+  text2.style.display= "flex";
+  text3.style.display= "flex";
+  text4.style.display="flex"
+
+  startPiece()
+  
+  // } else if (data == "secondSection") {
+  //   section2()
+  
+  // }
+}
+
+
+
 
 
 function startPiece() {
-  poemDiv.innerHTML = "When you hit the record button, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you have stopped recording, you can upload your whisper. Repeat."
+  //poemDiv1.innerHTML = "Whisper the following line of text into your phone" + 
   recordButton.style.visibility = "visible";
   text.style.visibility = "visible";
+  text1.style.visibility = "visible";
+  text2.style.visibility = "visible";
+  text3.style.visibility = "visible";
   recordButton.removeEventListener("click", changeColor1)
   recordButton.addEventListener("click", changeColor)
   poemLine = 0
@@ -289,7 +539,9 @@ function section2() {
   //GetFolder("/uploads")
 
 
-
+let playButton = document.getElementById("play");
+let playText = document.getElementById("playAud");
+let playSymbol = document.getElementById("playSymb");
 
   liveFeed.open().then(()=>{
     //promise resolves when input is available
@@ -318,33 +570,122 @@ function section2() {
   	// promise is rejected when the user doesn't have or allow mic access
   	console.log("mic not open");
   });
-
+  let men1 = 0;
   let j = 0;
   let k = 0;
   let srcArray = [];
   let newAudio;
-  let myTitle = document.getElementById("myTitle")
+  let newAudio1
+  let myTitle = document.getElementById("myTitle");
+  let myImg = document.getElementById("img2")
   function makeNewAudio(soundBlob) {
     // let newTitle = document.createElement("p");
     // soundClips.appendChild(newTitle);
     // newTitle.innerHTML = "Listen here before uploading"
     //myTitle.style.visibility = "hidden"
+    men1 = 0;
+    newAudio1 = new Tone.Buffer(soundBlob)
     newAudio = document.createElement("audio");
-    newAudio.setAttribute("controls", "");
-    soundClips.appendChild(newAudio);
+    newAudio.type = "audio/mpeg"
+    //newAudio.setAttribute("controls", "");
+    playButton.appendChild(newAudio);
+    newAudio.style.width = "0px"
+    
+
+      // if (men == 1) {
+
+      // playButton.addEventListener('click', ()=> {
+      //   // if (men == 1) {
+        
+      //     setTimeout(() => {
+      //       "./images/Pause.png"
+      //       playButton.addEventListener('click', () => {
+      //       newAudio.play()
+            
+      //     })
+        
+        
+        // } else {
+        //   newAudio.play()
+        //   console.log("else")
+        //   myImg.src = "./images/Pause.png"
+        //   men = 1
+       
+        // }
+      // })
+
+      // let bat = 1
+      // if (bat = 1) {
+      //   newAudio.paused
+      //   myImg.src = "./images/play.png"
+      //   bat = 2
+      // } else  {
+      //   bat = 2
+      //   newAudio.play()
+      //   myImg.src = "./images/Pause.png"
+      // }
+    // })
+    
+  
+
     console.log(newAudio)
-    newAudio.controls = true;
+    newAudio.controls = false;
+    newAudio.preload = "metadata";
     const audioURL = URL.createObjectURL(soundBlob);
     //newAudio.style.visibility = "hidden"
-    newAudio.src = audioURL;
+    var sourceElement = document.createElement('source') //THIS ALLOWS SAFARI TO PLAY IT!!!
+    newAudio.appendChild(sourceElement)
+    //newAudio.src = audioURL;
+    sourceElement.src = audioURL
+    sourceElement.type = 'audio/mp3' // or whatever
+    newAudio.type = 'audio/mp3'
     newAudio.id = "soundPlayer" + k++
     newAudio.classList.add('audioClass')
   
     srcArray.push(newAudio.id);
     console.log(srcArray)
-   
+    //console.log(newAudio.duration)
+    
     
   }
+
+  playButton.addEventListener('click', () => {
+      if (men1 == 0) {
+      playText.innerHTML = "pause recording";
+      playSymbol.innerHTML = "&#9612; &#9612";
+      playSymbol.style.left = "10px";
+      playSymbol.style.fontSize = "60px";
+      playSymbol.style.top = "-30px"
+      playSymbol.style.position = "relative"
+      newAudio.play()
+       men1 = 1
+      } else if (men1 == 1) {
+        // myImg.src = "./images/play.png"
+        newAudio.pause()
+        men1 = 0;
+        playText.innerHTML = "play recording";
+        playSymbol.innerHTML = "&#9658";
+        playSymbol.style.fontSize = "100px";
+        playSymbol.style.top = "-90px"
+      playSymbol.style.position = "relative"
+
+      }
+      // let duration = newAudio.duration;
+
+      function switch1() {
+        newAudio.pause()
+        men1 = 0;
+        playText.innerHTML = "play recording";
+        playSymbol.innerHTML = "&#9658";
+        playSymbol.style.fontSize = "100px";
+        playSymbol.style.top = "-90px"
+      playSymbol.style.position = "relative"
+
+      }
+      console.log(Math.abs(timeElapsed))
+      setTimeout(switch1, timeElapsed + 1000)
+
+      })
 
 let soundP = 0
 
@@ -354,9 +695,12 @@ function deleteAudio() {
     let deleteAudio = document.getElementById(id1)
     console.log(id1)
     deleteAudio.remove()
+
+
 }
 
-
+let timeElapsed;
+let startTime;
   // ------ Toggle recording ------
   let recording = false;
   function startRecording() {
@@ -365,10 +709,13 @@ function deleteAudio() {
       recorder.stop();
       recording = false;
       console.log('stopped recording')
+      men1 = 0
+      timeElapsed = new Date().getTime() - startTime
     } else {
       recorder.start();
       recording = true;
       console.log('started recording')
+      startTime = new Date().getTime()
     }
   
   }
@@ -439,7 +786,6 @@ let poemDiv = document.getElementById("text");
 
 
 
-//recordButton.addEventListener("click", lineOfPoetry)
 
   let i = 0;
   
@@ -514,14 +860,98 @@ let poemDiv = document.getElementById("text");
   return;
 }
 
+let numz = 0;
 //socket.emit('')
 
 socket.on('send-count', (fileCount) => {
   numberOfFiles = fileCount
   console.log(numberOfFiles)
 })
+async function myFunction() {
+  let volumeCallback = null;
+  let volumeInterval = null;
+  const volumeVisualizer = document.getElementById('volume-visualizer');
+  let recordButton1 = document.getElementById('record');
+  // const stopButton = document.getElementById('stop');
+  // Initialize
+  try {
+    const audioStream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true
+      }
+    });
+    const audioContext = new AudioContext();
+    const audioSource = audioContext.createMediaStreamSource(audioStream);
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 512;
+    analyser.minDecibels = -127;
+    analyser.maxDecibels = 0;
+    analyser.smoothingTimeConstant = 0.4;
+    audioSource.connect(analyser);
+    const volumes = new Uint8Array(analyser.frequencyBinCount);
+    volumeCallback = () => {
+      analyser.getByteFrequencyData(volumes);
+      let volumeSum = 0;
+      for(const volume of volumes) 
+        volumeSum += volume;
+      const averageVolume = volumeSum / volumes.length;
+    //   stopButton.addEventListener('click', () => {
+    //   console.log(averageVolume * 100 / 127)
+    // })
+      // Value range: 127 = analyser.maxDecibels - analyser.minDecibels;
+      volumeVisualizer.style.setProperty('--volume', (averageVolume * 100 / 127) + '%');
+    };
+  } catch(e) {
+    console.error('Failed to initialize volume visualizer, simulating instead...', e);
+    // Simulation
+    //TODO remove in production!
+    let lastVolume = 50;
+    volumeCallback = () => {
+      const volume = Math.min(Math.max(Math.random() * 100, 0.8 * lastVolume), 1.2 * lastVolume);
+      lastVolume = volume;
+      volumeVisualizer.style.setProperty('--volume', volume + '%');
+    };
+  }
+  // Use
+  recordButton1.addEventListener('click', () => {
+  
+    if (!numz) {
+    // Updating every 100ms (should be same as CSS transition speed)
+    if(volumeCallback !== null && volumeInterval === null) {
+      volumeInterval = setInterval(volumeCallback, 100);
+      numz = 1
+    } 
+  }else {
+      if(volumeInterval !== null) {
+      clearInterval(volumeInterval);
+      volumeInterval = null;
+      numz = 0
+    }
+
+    }
+  });
+;
+}
+
+myFunction()
+
+
+
+
 
 </script>
+
+<style>
+ #record {
+    background-color: black;
+    color: white;
+    font-size: 30px;
+  }
+
+
+
+
+</style>
 
 </body>
 </html>
