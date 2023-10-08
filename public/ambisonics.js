@@ -295,25 +295,25 @@ function playOneSound() {
 
 
 // function to change sample from select box
-function changeSample() {
-    //document.getElementById('play').disabled = true;
-   // document.getElementById('stop').disabled = true;
+// function changeSample() {
+//     //document.getElementById('play').disabled = true;
+//    // document.getElementById('stop').disabled = true;
 
-    for (a=0; a<myNumArray.length; i++) {
-    soundUrl = document.getElementById("sample_no").value;
-       // soundUrl = myNumArray[]
-    }
+//     for (a=0; a<myNumArray.length; i++) {
+//     soundUrl = document.getElementById("sample_no").value;
+//        // soundUrl = myNumArray[]
+//     }
 
-    if (typeof sound != 'undefined' && sound.isPlaying) {
-        sound.stop(0);
-        sound.isPlaying = false;
-    }
+//     if (typeof sound != 'undefined' && sound.isPlaying) {
+//         sound.stop(0);
+//         sound.isPlaying = false;
+//     }
    
  
 
 
-}
-// Define mouse drag on spatial map .png local impact
+// }
+// // Define mouse drag on spatial map .png local impact
 
 let randAzim = Math.random() * 360
 
