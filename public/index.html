@@ -304,7 +304,11 @@ var socket = io();
   let uploadButton = document.getElementById("upload");
   let deleteButton = document.getElementById("delete");
   let poemLine = 0;
-  let text = document.querySelector("#text")
+  let text = document.querySelector("#text");
+  let text1 = document.querySelector("#text1");
+  let text2 = document.querySelector("#text2");
+  let text3 = document.querySelector("#text3");
+  let text4 = document.querySelector("#text4");
 
   text.style.color = "blue"
   // text3.style.color = "black"
@@ -432,6 +436,7 @@ function flashColor() {
   if (data == "startRecording") {
   console.log("its beginning")
   startPiece()
+
   
   } else if (data == "secondSection") {
     section2()
@@ -472,8 +477,8 @@ function piecePreview() {
 
 
 function startPiece() {
-  //poemDiv1.innerHTML = "Whisper the following line of text into your phone" + 
   recordButton.style.visibility = "visible";
+  text.innerHTML = "Step 1: Press 'start recording' once to start recording"
   text.style.visibility = "visible";
   text1.style.visibility = "visible";
   text2.style.visibility = "visible";
@@ -481,22 +486,22 @@ function startPiece() {
   recordButton.removeEventListener("click", changeColor1)
   recordButton.addEventListener("click", changeColor)
   poemLine = 0
-  //uploadButton.style.visibility = "visible"
-
 }
 
+
 function section2() {
-  poemDiv.innerHTML = "Please record your own whispered words/phrases into your phone and upload them. When they are played back, the words will be obscured."
+
   recordButton.style.visibility = "visible";
   text.style.visibility = "visible";
   recordButton.removeEventListener("click", changeColor)
-  recordButton.addEventListener("click", changeColor1)
+  recordButton.addEventListener("click", changeColor1);
+  text.innerHTML = "For this section, record yourself whispering whatever words/phrases you like. Your words will be obscured using audio processing techniques."
+  text1.style.visibility = "hidden"
+  text2.style.visibility = "hidden"
+  text3.style.visibility = "hidden"
+  text4.style.visibility = "hidden"
+
 }
-
-  // function startPiece() {
-
-  // }
-
   let soundClips = document.getElementById('sound-clips') // for adding audio to page
   let audio = document.getElementById('sound-recording'); // the default audio, can change src with new recordings
 
