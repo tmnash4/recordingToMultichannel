@@ -165,8 +165,8 @@ function playGrainSounds() {
     myGrainPlayer.overlap = 2.9;
     //myGrainPlayer.loop = true;
     myGrainPlayer.reverse = true;
-    myGrainPlayer.fadeIn = 0.5;
-    myGrainPlayer.fadeOut = 0.5
+    myGrainPlayer.fadeIn = 0.05;
+    myGrainPlayer.fadeOut = 0.05
     myGrainPlayer.connect(encoder.in)
 }
 
@@ -224,7 +224,7 @@ function playMoreSounds() {
     loadSample(myFilez[rand2], assignSample2SoundBuffer2);
     let rand3 = Math.floor(Math.random() * myFilez.length)
     loadSample(myFilez[rand3], assignSample2SoundBuffer3);
-    console.log(rand, rand1, rand2)
+    // console.log(rand, rand1, rand2)
             //grain.toDestination()
             console.log(encoder.azim)
             sound = context.createBufferSource();
