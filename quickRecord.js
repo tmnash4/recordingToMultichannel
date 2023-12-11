@@ -67,7 +67,7 @@ fs.readdir(directoryPath, (err, files) => {
   })
 })
 
-app.use('viewuploads', serveIndex(_dirname + directoryPath));
+app.use('viewuploads', serveIndex(__dirname + directoryPath));
 
 // app.get('/viewuploads', (req, res) => {
 //   const files = fs.readdirSync(path.join(__dirname, directoryPath));
