@@ -165,8 +165,8 @@ function playGrainSounds() {
     myGrainPlayer.overlap = 2.9;
     //myGrainPlayer.loop = true;
     myGrainPlayer.reverse = true;
-    myGrainPlayer.fadeIn = 0.05;
-    myGrainPlayer.fadeOut = 0.05
+    myGrainPlayer.fadeIn = 0.5;
+    myGrainPlayer.fadeOut = 0.5
     myGrainPlayer.connect(encoder.in)
 }
 

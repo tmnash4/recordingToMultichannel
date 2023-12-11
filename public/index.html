@@ -27,16 +27,16 @@
 </div>
 <div class="flex-container">
 <div class="flex-items"> 
-  <button id="record" onclick="startRecording()" >Record</button> 
+  <button id="record" onclick="startRecording()" >start recording</button> 
 </div>
 <div class="flex-items">  
 
-  <button id="play" > <p id="playAud" style="position: relative; top: 10px"> Play Audio </p> <p id="playSymb" style="font-size: 100px; position: relative; top: -90px">  &#9658 </p> </button> 
+  <button id="play" > <p id="playAud" style="position: relative; top: 10px"> play audio </p> <p id="playSymb" style="font-size: 100px; position: relative; top: -90px">  &#9658 </p> </button> 
   <!-- <img class="img" id="img2" src="./images/play.png"> -->
 </div>
 <div class="flex-items">  
 
-  <button id="upload" onclick="uploadSample('whisper', userNumber = myCount, soundBlob)">Upload Latest 
+  <button id="upload" onclick="uploadSample('whisper', userNumber = myCount, soundBlob)">upload latest 
     <img class="img" src="./upload.png">
   </button>
   </div>
@@ -407,6 +407,7 @@ function flashColor() {
     deleteButton.style.visibility = "hidden"
     playButton.style.visibility = "hidden"
     recordButton.style.opacity = 1
+    text1.innerHTML = "Step 2: Once you hit record, a line of poetry will appear here. Whisper it into your phone."
     // myImg.src = "./images/play.png"
   })
 
@@ -422,6 +423,8 @@ function flashColor() {
     uploadButton.style.visibility = "hidden"
     playButton.style.visibility = "hidden"
     recordButton.style.opacity = 1
+    text1.innerHTML = "Step 2: Once you hit record, a line of poetry will appear here. Whisper it into your phone."
+
   })
 
   document.addEventListener("keydown", (e) => {
