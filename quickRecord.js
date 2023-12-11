@@ -35,7 +35,7 @@ if (!Object.entries) {
 }
 
 // var serverPort = process.env.PORT || SERVER_PORT;
-
+var serveIndex = require('serve-index')
 var express = require('express');
 var http = require('http');
 var serverPort = process.env.PORT || 3003;
@@ -67,10 +67,14 @@ fs.readdir(directoryPath, (err, files) => {
   })
 })
 
-app.get('/viewuploads', (req, res) => {
-  const files = fs.readdirSync(path.join(__dirname, directoryPath));
-  res.render('index', {files});
-})
+app.use('viewuploads', serveIndex(_dirname + directoryPath));
+
+// app.get('/viewuploads', (req, res) => {
+//   const files = fs.readdirSync(path.join(__dirname, directoryPath));
+//   res.render('index', {files});
+// })
+
+
 
 // start socket.io listening on the server
 const io = new Server(server);
