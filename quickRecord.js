@@ -67,7 +67,7 @@ fs.readdir(directoryPath, (err, files) => {
   })
 })
 
-app.use('viewuploads', serveIndex('https://whisper.treyanash.com/public/uploads'));
+app.use('viewuploads', serveIndex(__dirname + '/uploads'));
 
 // app.get('/viewuploads', (req, res) => {
 //   const files = fs.readdirSync(path.join(__dirname, directoryPath));
