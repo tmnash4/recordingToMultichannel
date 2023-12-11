@@ -9,6 +9,8 @@ const directoryPath = 'public/uploads';
 //const files = fs.readdirSync(directoryPath);
 //let fileCount = files.length;
 
+
+
 // setInterval(countFiles, 1000)
 
 //console.log(`There are ${fileCount} files in the directory.`);
@@ -54,6 +56,21 @@ var server = http.createServer(app)
     if (uid) process.setuid(uid); // Set our server's uid to that user
     console.log('Server\'s UID is now ' + process.getuid());
   });
+//showing files
+fs.readdir(directoryPath, (err, files) => {
+  if(err) {
+    return console.log(err)
+  }
+  
+  files.forEach((file) => {
+    console.log(file)
+  })
+})
+
+app.get('/viewuploads', (req, res) => {
+  const files = fs.readdirSync(path.join(__dirname, directoryPath));
+  res.render('index', {files});
+})
 
 // start socket.io listening on the server
 const io = new Server(server);
@@ -248,3 +265,4 @@ io.on('connection', (socket1) => {
   })
 
 })
+
