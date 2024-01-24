@@ -302,11 +302,15 @@ let myList = updateList
 
 setInterval(myList, 5000);
 
+let info;
 
 if (myFilez.length >= 1) {
     let info = new Tone.Buffer(myFilez[myFilez.length]);
     console.log(info)
 }
+
+
+
 
 function playOneSound() {
     setAzim()
