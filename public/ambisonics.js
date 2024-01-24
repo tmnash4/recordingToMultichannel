@@ -303,6 +303,11 @@ let myList = updateList
 setInterval(myList, 5000);
 
 
+if (myFilez.length >= 1) {
+    let info = new Tone.Buffer(myFilez[myFilez.length]);
+    console.log(info)
+}
+
 function playOneSound() {
     setAzim()
     let rand = Math.floor(Math.random() * myFilez.length)

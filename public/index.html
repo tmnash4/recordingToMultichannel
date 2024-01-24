@@ -531,6 +531,7 @@ function section2() {
 
 function endPiece() {
   secondFlex.style.display = "none";
+  text.style.display = "none"
   firstFlex.style.display = "flex"
   firstFlex.style.top = "47%"
   firstFlex.innerHTML = "The piece is now ending, listen to the whispers as they fade out! Thanks for participating! :)"
@@ -985,6 +986,7 @@ socket.on("set_section", (data) => {
     console.log("This is the first section")
     startPiece()
     piecePreview()
+
   } else if (data =="second") {
     section2()
     // piecePreview()
