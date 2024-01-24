@@ -303,12 +303,14 @@ let myList = updateList
 
 setInterval(myList, 5000);
 
+info = new Tone.Buffer(myFilez[myFilez.length - 1]);
+
 function printAudio() {
 
 if (myFilez.length >= 1) {
-    info = new Tone.Buffer(myFilez[myFilez.length - 1]);
-    console.log(info)
-    console.log(myFilez[myFilez.length])
+    console.log(info.duration)
+    console.log(info.length)
+    
 }
 
 }
