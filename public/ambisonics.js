@@ -33,6 +33,7 @@ var socket = io();
 let myNum;
 let myNum1;
 let myNumArray = []
+let myFFT;
 
 async function startAudio() {  //This code starts the audio 
     await Tone.start()
@@ -156,7 +157,7 @@ let myGrainPlayer2;
 function playGrainSounds() {
     setAzim()
     let rand1 = Math.floor(Math.random() * myFilez1.length)
-    console.log(myFilez1[rand1])
+    //console.log(myFilez1[rand1])
     console.log(rand1)
     myGrainPlayer = new tone.GrainPlayer(myFilez1[rand1], () => {
         myGrainPlayer.start()
@@ -173,7 +174,7 @@ function playGrainSounds() {
 function playMoreGrainSounds() {
     setAzim()
     let rand1 = Math.floor(Math.random() * myFilez1.length)
-    console.log(myFilez1[rand1])
+    //console.log(myFilez1[rand1])
     console.log(rand1)
     myGrainPlayer1 = new tone.GrainPlayer(myFilez1[rand1], () => {
         myGrainPlayer1.start()
@@ -190,7 +191,7 @@ function playMoreGrainSounds() {
 function playMoreGrainSounds1() {
     setAzim()
     let rand1 = Math.floor(Math.random() * myFilez1.length)
-    console.log(myFilez1[rand1])
+    //console.log(myFilez1[rand1])
     console.log(rand1)
     myGrainPlayer2 = new tone.GrainPlayer(myFilez1[rand1], () => {
         myGrainPlayer2.start()
@@ -275,20 +276,54 @@ function playMoreSounds() {
     //console.log(myNumArray[i])
     
     }
+const meter = new Tone.Meter();
+
+let n = 0;
+document.addEventListener('keydown', (e) => {
+    if (e.key == "1") {
+        playOneSound()
+    } else if (e.key == "2") {
+        playMoreSounds()
+    } else if (e.key == "3") {
+        let myInt = setInterval(() => {
+            playOneSound()
+            n++
+            if (n >= 15) {
+                clearInterval(myInt)
+            }
+        } ,3000
+             
+
+        )
+    } 
+})
+
+let myList = updateList
+
+setInterval(myList, 5000);
+
 
 function playOneSound() {
     setAzim()
     let rand = Math.floor(Math.random() * myFilez.length)
     loadSample(myFilez[rand], assignSample2SoundBuffer);
-           
             console.log(encoder.azim)
             sound = context.createBufferSource();
             sound.buffer = soundBuffer;
             sound.fadeIn = 0.09
             sound.fadeOut = 0.09
+           
             sound.connect(encoder.in);
             sound.start(0);
             sound.isPlaying = true;
+            myFFT = new Tone.FFT(128)
+            //myFilez[rand].connect(myFFT)
+            //console.log(myFilez[rand].connect(myFFT))
+            //console.log(sound.connect(myFFT)
+           
+            //console.log(meter.getValue())
+            
+            
 }
 
 
@@ -354,7 +389,7 @@ window.onload = () => {
 //let myNum1 = 0;
 
   socket.on('send-back', (data) => {
-    console.log(data)
+    //console.log(data)
     myNum1 = data
   })
 
@@ -363,9 +398,12 @@ document.addEventListener('keydown', (e)=> {
         socket.emit('sendBack', true)
         console.log("l")
         socket.emit('sendFileName', true)
+        myList = updateList
     } else if (e.key == "s") {
         socket.emit('sendFileName1', true)
         console.log("2go")
+       
+
     }
 })
 
@@ -374,32 +412,37 @@ document.addEventListener('keydown', (e)=> {
 
 function updateList() {
     socket.emit('sendBack', true)
-    console.log("l")
     socket.emit('sendFileName', true)
 }
 
+function updateList1() {
+    socket.emit('sendBack1', true)
+    socket.emit('sendFileName1', true)
+}
+
+let myFilez2;
 
 socket.on('send-FN', (data) => {
     myFilez = data
-    console.log(myFilez)
+    if (myList != updateList) {
+      socket.off('send-FN')
+      console.log("I can't hear you!")
+    }
+    // console.log(myFilez)
   })
 
   socket.on('send-FN1', (data) => {
     myFilez1 = data;
-    console.log(myFilez1)
+    myList = updateList1
+    //console.log(myFilez1)
+    console.log("getting in message back");
+
+
+   
   })
 
 
 
-
-// function getTheSamples() {
-//     // myNum = localStorage.getItem("PLAYER");
-//     // myNum1 = Number(myNum)
-//     // 
-//     //myNum1 = myCount;
-//     console.log(myNum1)
-//     makeList()
-// }
 
 
 
@@ -422,10 +465,7 @@ function makeList() {
     //     let mySample = i + ".mp3"
     //     sampleList['whisper' + i]  = "http://127.0.0.1:3003/uploads/whisper_Sample" + mySample
     //     let sampleLink = "http://127.0.0.1:3003/uploads/whisper_Sample" + mySample
-    //     //console.log("hello")
-    //     myNumArray.push(sampleLink)
-    //     //console.log(myNumArray)
-    // }
+    //
 
     
 
