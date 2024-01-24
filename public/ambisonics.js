@@ -25,7 +25,8 @@ var orderOut = 3;
 var soundBuffer, sound;
 let soundBuffer1, sound1;
 let soundBuffer2, sound2;
-let soundBuffer3, sound3
+let soundBuffer3, sound3;
+let soundBuffer4, sound4;
 let info = "hello"
 
 var socketName = 'ambisonic';
@@ -126,6 +127,15 @@ var assignSample2SoundBuffer3 = function(decodedBuffer) {
     //document.getElementById('play').disabled = false;
     
 }
+
+var assignSample2SoundBuffer4 = function(decodedBuffer) {
+    // setAzim()
+    soundBuffer4 = decodedBuffer;
+    //document.getElementById('play').disabled = false;
+    
+}
+
+
 
 
 
@@ -277,6 +287,90 @@ function playMoreSounds() {
     //console.log(myNumArray[i])
     
     }
+
+function playSoundsSpaced() {
+
+    setAzim()
+    // for (i=0; i< myNumArray.length; i++) {
+    // loadSample((myNumArray[i]),assignSample2SoundBuffer);
+    let rand = Math.floor(Math.random() * myFilez.length)
+    loadSample(myFilez[rand], assignSample2SoundBuffer);
+    let rand1 = Math.floor(Math.random() * myFilez.length)
+    loadSample(myFilez[rand1], assignSample2SoundBuffer1);
+    let rand2 = Math.floor(Math.random() * myFilez.length)
+    loadSample(myFilez[rand2], assignSample2SoundBuffer2);
+    let rand3 = Math.floor(Math.random() * myFilez.length)
+    loadSample(myFilez[rand3], assignSample2SoundBuffer3);
+    let rand4 = Math.floor(Math.random() * myFilez.length)
+    loadSample(myFilez[rand4], assignSample2SoundBuffer4);
+    // console.log(rand, rand1, rand2)
+    let bf = context.createBufferSource()
+            //grain.toDestination()
+            console.log(encoder.azim)
+            sound = bf
+            sound1 = bf
+            sound2 = bf
+            sound3 = bf
+            sound4 = bf
+
+            console.log(sound)
+    
+            //encoder.azim = -180;
+            sound.buffer = soundBuffer;
+            sound1.buffer = soundBuffer1;
+            sound2.buffer = soundBuffer2;
+            sound3.buffer = soundBuffer3;
+            sound4.buffer = soundBuffer4;
+            //sound.loop = true;
+
+            sound.fadeIn = 0.09
+            sound.fadeOut = 0.09
+            sound.connect(encoder.in);
+
+
+            sound.start(0);
+
+            sound1.fadeIn = 0.09
+            sound1.fadeOut = 0.09
+            sound1.connect(encoder.in);
+
+            setTimeout(() => {
+                sound1.start(0)
+            }, 1000)
+        
+
+            sound2.fadeIn = 0.09
+            sound2.fadeOut = 0.09
+            sound2.connect(encoder.in);
+            setTimeout(() => {
+                sound2.start(0)
+            }, 1700)
+            sound3.fadeIn = 0.09
+            sound3.fadeOut = 0.09
+            sound3.connect(encoder.in);
+            setTimeout(() => {
+                sound3.start(0)
+            }, 2500)
+
+            sound4.fadeIn = 0.09
+            sound4.fadeOut = 0.09
+            sound4.connect(encoder.in);
+            setTimeout(() => {
+                sound4.start(0)
+            }, 3600)
+
+            //sound1.start(0)
+  
+            //myGrainPlayer.buffer = soundBuffer1
+      
+            sound.isPlaying = true;
+            sound1.isPlaying = true;
+
+}
+
+
+
+
 const meter = new Tone.Meter();
 
 let n = 0;
