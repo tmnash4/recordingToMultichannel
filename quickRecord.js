@@ -192,8 +192,7 @@ io.on('connection', (socket) => {
     socket.on('sendFileName', () => {
       //fileName.split(',')
       socket.emit('send-FN', fileName2)
-      whisperSection.section = "first"
-      io.emit("set_section", "first")
+  
     })
 
     socket.on('sendFileName1', () => {
