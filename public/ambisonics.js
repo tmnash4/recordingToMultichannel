@@ -303,14 +303,14 @@ let myList = updateList
 
 setInterval(myList, 5000);
 
-
+function printAudio() {
 
 if (myFilez.length >= 1) {
-    let info = new Tone.Buffer(myFilez[myFilez.length]);
+    info = new Tone.Buffer(myFilez[myFilez.length]);
     console.log(info)
 }
 
-
+}
 
 
 function playOneSound() {
@@ -423,6 +423,7 @@ document.addEventListener('keydown', (e)=> {
 function updateList() {
     socket.emit('sendBack', true)
     socket.emit('sendFileName', true)
+  
 }
 
 function updateList1() {
