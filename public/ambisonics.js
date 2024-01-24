@@ -26,6 +26,7 @@ var soundBuffer, sound;
 let soundBuffer1, sound1;
 let soundBuffer2, sound2;
 let soundBuffer3, sound3
+let info = "hello"
 
 var socketName = 'ambisonic';
 var socket = io(); 
@@ -302,7 +303,7 @@ let myList = updateList
 
 setInterval(myList, 5000);
 
-let info;
+
 
 if (myFilez.length >= 1) {
     let info = new Tone.Buffer(myFilez[myFilez.length]);
