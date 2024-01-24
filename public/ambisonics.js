@@ -407,11 +407,12 @@ let getLink = myFilez[myFilez.length = 1];
 let slicedLink = getLink.slice(1, getLink.length);
 let fullLink = "https://whisper.treyanash.com" + slicedLink
 console.log(fullLink)
-let myBuff = new Tone.Buffer(fullLink)
+let myBuff = new Tone.Buffer(fullLink);
+
 
 if (myFilez.length >= 1) {
-    console.log(info.duration)
-    console.log(info.length)
+    console.log(myBuff.duration)
+    console.log(myBuff.length)
     
 }
 
