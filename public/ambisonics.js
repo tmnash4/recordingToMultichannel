@@ -308,10 +308,10 @@ function playSoundsSpaced() {
             //grain.toDestination()
             console.log(encoder.azim)
             sound = bf
-            sound1 = bf
-            sound2 = bf
-            sound3 = bf
-            sound4 = bf
+            sound1 = context.createBufferSource()
+            sound2 = context.createBufferSource()
+            sound3 = context.createBufferSource()
+            sound4 = context.createBufferSource()
 
             console.log(sound)
     
