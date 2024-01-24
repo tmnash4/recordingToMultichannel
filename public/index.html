@@ -980,10 +980,11 @@ myFunction()
 socket.on("set_section", (data) => {
   if (data == "pre") {
     console.log("This is the pre section")
+
   } else if (data =="first") {
     console.log("This is the first section")
-    // startPiece()
-    // piecePreview()
+    startPiece()
+    piecePreview()
   } else if (data =="second") {
     section2()
     // piecePreview()

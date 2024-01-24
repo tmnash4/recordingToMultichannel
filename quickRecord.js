@@ -245,52 +245,52 @@ io.on('connection', (socket) => {
 
 })
 
-io.on('connection', (socket1) => {
-  socket1.on('register', (data)=> {
-    if (data == 'index') {
-      index = socket1
-    }
+// io.on('connection', (socket1) => {
+//   socket1.on('register', (data)=> {
+//     if (data == 'index') {
+//       index = socket1
+//     }
 
     
-    //for (i=0; i < fileCount; i++) {
-    //   socket1.on('file-count', () => {
-    //   // socket1.emit('send-count', fileCount)
-    //   console.log(fileCount)
-    // })
+//     //for (i=0; i < fileCount; i++) {
+//     //   socket1.on('file-count', () => {
+//     //   // socket1.emit('send-count', fileCount)
+//     //   console.log(fileCount)
+//     // })
   
 
-    socket1.on('counter', (data) => {
-      console.log(data)
-      numberOfAudioFiles.push(data)
-      myCount = numberOfAudioFiles.length 
+//     socket1.on('counter', (data) => {
+//       console.log(data)
+//       numberOfAudioFiles.push(data)
+//       myCount = numberOfAudioFiles.length 
 
      
-    })
+//     })
    
-    socket1.on('sendBack', () => {
-      socket1.emit('send-back', myCount)
-    })
+//     socket1.on('sendBack', () => {
+//       socket1.emit('send-back', myCount)
+//     })
 
-    socket1.on('file-name', (data) => {
-      fileName.push(upload.originalname)
-      console.log(fileName)
-    })
+//     socket1.on('file-name', (data) => {
+//       fileName.push(upload.originalname)
+//       console.log(fileName)
+//     })
 
-  //   socket1.on("begin", () => {
-  //     // socket.broadcast.emit("end_piece", true);
-  //      recordState.section = "startRecording";
-  //      io.emit("set_section", recordState.section)
+//   //   socket1.on("begin", () => {
+//   //     // socket.broadcast.emit("end_piece", true);
+//   //      recordState.section = "startRecording";
+//   //      io.emit("set_section", recordState.section)
 
-  //  })
+//   //  })
 
-   socket1.on("sec2", () => {
-    // socket.broadcast.emit("end_piece", true);
-     recordState.section = "secondSection";
-     io.emit("set_section", recordState.section)
+//    socket1.on("sec2", () => {
+//     // socket.broadcast.emit("end_piece", true);
+//      recordState.section = "secondSection";
+//      io.emit("set_section", recordState.section)
 
- })
-   socket1.emit("set_section", recordState.section)
-  })
+//  })
+//    socket1.emit("set_section", recordState.section)
+//   })
 
-})
+// })
 
