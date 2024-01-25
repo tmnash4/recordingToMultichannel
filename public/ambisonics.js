@@ -40,6 +40,7 @@ let myFFT;
 async function startAudio() {  //This code starts the audio 
     await Tone.start()
     console.log("ready")
+    // loadSounds()
   }
   
 
@@ -59,6 +60,9 @@ socket.on('newFile', (data) => {
 
 // define HOA encoder (panner)
 var encoder = new ambisonics.monoEncoder(context, maxOrder);
+var encoder1 = new ambisonics.monoEncoder(context, maxOrder);
+var encoder2 = new ambisonics.monoEncoder(context, maxOrder);
+var encoder3 = new ambisonics.monoEncoder(context, maxOrder);
 encoder.azim = -90;
 console.log(encoder);
 // define HOA order limiter (to show the effect of order)
@@ -155,10 +159,6 @@ function loadSample(url, doAfterLoading) {
     fetchSound.send();
 }
 
-
-
-
-
 let myFilez = []
 let myFilez1 = []
 let myGrainPlayer;
@@ -224,59 +224,133 @@ async function playGrains() {
 }
 
 
+function loadSounds() {
+    sound = context.createBufferSource();
+    sound1 = context.createBufferSource()
+    sound2 = context.createBufferSource()
+    sound3 = context.createBufferSource()
+
+    console.log(sound)
+
+    //encoder.azim = -180;
+    sound.buffer = soundBuffer;
+    sound1.buffer = soundBuffer1;
+    sound2.buffer = soundBuffer2;
+    sound3.buffer = soundBuffer3;
+
+
+
+
+
+    
+}
+
+let whichSample = 0;
+
 function playMoreSounds() {
-    setAzim()
+   
     // for (i=0; i< myNumArray.length; i++) {
     // loadSample((myNumArray[i]),assignSample2SoundBuffer);
-    let rand = Math.floor(Math.random() * myFilez.length)
-    loadSample(myFilez[rand], assignSample2SoundBuffer);
+
+    if (whichSample == 0) {
+        setAzim()
+       // sound.stop()
+        let rand = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand], assignSample2SoundBuffer);
+        sound = context.createBufferSource();
+        sound.buffer = soundBuffer;
+        sound.fadeIn = 0.09
+        sound.fadeOut = 0.09
+        sound.connect(encoder.in);
+        whichSample++
+        sound.start(0);
+        console.log(encoder.azim)
+
+    } else if (whichSample == 1) {
+        setAzim(1)
+    //sound1.stop()
     let rand1 = Math.floor(Math.random() * myFilez.length)
     loadSample(myFilez[rand1], assignSample2SoundBuffer1);
-    let rand2 = Math.floor(Math.random() * myFilez.length)
-    loadSample(myFilez[rand2], assignSample2SoundBuffer2);
-    let rand3 = Math.floor(Math.random() * myFilez.length)
-    loadSample(myFilez[rand3], assignSample2SoundBuffer3);
+    sound1 = context.createBufferSource()
+    sound1.fadeIn = 0.09
+    sound1.fadeOut = 0.09
+    sound1.connect(encoder.in);
+ 
+    sound1.buffer = soundBuffer1;
+
+    whichSample++
+    sound1.start(0)
+    console.log(encoder1.azim)
+
+    } else if (whichSample == 2) {
+
+        setAzim(2)
+       // sound2.start()
+        let rand2 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand2], assignSample2SoundBuffer2);
+        sound2 = context.createBufferSource()
+        
+       
+        sound2.buffer = soundBuffer2;
+        sound2.fadeIn = 0.09
+        sound2.fadeOut = 0.09
+        sound2.connect(encoder.in);
+   
+    
+        whichSample++
+        sound2.start(0)
+        console.log(encoder2.azim)
+
+    } else if (whichSample == 3) {
+        setAzim(3)
+        //sound3.stop()
+        let rand3 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand3], assignSample2SoundBuffer3);
+        sound3 = context.createBufferSource()
+        sound3.buffer = soundBuffer3;
+
+        sound3.fadeIn = 0.09
+        sound3.fadeOut = 0.09
+        sound3.connect(encoder.in);
+        whichSample = 0
+        sound3.start(0)
+        console.log(encoder3.azim)
+
+
+    } 
+      
+
+  
+    
+  
+ 
     // console.log(rand, rand1, rand2)
             //grain.toDestination()
-            console.log(encoder.azim)
-            sound = context.createBufferSource();
-            sound1 = context.createBufferSource()
-            sound2 = context.createBufferSource()
-            sound3 = context.createBufferSource()
+            //console.log(encoder.azim)
+            // sound = context.createBufferSource();
+            // sound1 = context.createBufferSource()
+            // sound2 = context.createBufferSource()
+            // sound3 = context.createBufferSource()
 
-            console.log(sound)
+            // console.log(sound)
     
-            //encoder.azim = -180;
-            sound.buffer = soundBuffer;
-            sound1.buffer = soundBuffer1;
-            sound2.buffer = soundBuffer2;
-            sound3.buffer = soundBuffer3;
+            // //encoder.azim = -180;
+            // sound.buffer = soundBuffer;
+            // sound1.buffer = soundBuffer1;
+            // sound2.buffer = soundBuffer2;
+            // sound3.buffer = soundBuffer3;
             //sound.loop = true;
-            sound.fadeIn = 0.09
-            sound.fadeOut = 0.09
-            sound.connect(encoder.in);
-            sound.start(0);
-            sound1.fadeIn = 0.09
-            sound1.fadeOut = 0.09
-            sound1.connect(encoder.in);
-            sound1.start(0)
+            
 
-            sound2.fadeIn = 0.09
-            sound2.fadeOut = 0.09
-            sound2.connect(encoder.in);
-            sound2.start(0)
-            sound3.fadeIn = 0.09
-            sound3.fadeOut = 0.09
-            sound3.connect(encoder.in);
-            sound3.start(0)
+          
 
 
             //sound1.start(0)
   
             //myGrainPlayer.buffer = soundBuffer1
       
-            sound.isPlaying = true;
-            sound1.isPlaying = true;
+            // sound.isPlaying = true;
+            // sound1.isPlaying = true;
             // encoder.setAzim = 30;
             // encoder.updateGains()
             //player.connect(encoder.in)
@@ -431,8 +505,8 @@ function playOneSound() {
            
             sound.connect(encoder.in);
             sound.start(0);
-            sound.isPlaying = true;
-            myFFT = new Tone.FFT(128)
+            //sound.isPlaying = true;
+           // myFFT = new Tone.FFT(128)
             //myFilez[rand].connect(myFFT)
             //console.log(myFilez[rand].connect(myFFT))
             //console.log(sound.connect(myFFT)
@@ -470,14 +544,28 @@ let randAzim = Math.random() * 360
 
 // let myAzim;
 
-function setAzim() {
- 
+function setAzim(encoderNumber = 0) {
     let randAzim = Math.random() * 360
     // console.log(marker.innerHTML)
     // myAzim = Number(marker.innerHTML)
-    encoder.azim = randAzim
-    encoder.updateGains()
+    if (!encoderNumber) {
+        encoder.azim = randAzim
+        encoder.updateGains()
+    } else if (encoderNumber == 1) {
+        encoder1.azim = randAzim
+        encoder1.updateGains()
+    } else if (encoderNumber == 2) {
+        encoder2.azim = randAzim
+        encoder2.updateGains()
+    } else if (encoderNumber == 3) {
+        encoder3.azim = randAzim
+        encoder3.updateGains()
+    }
+    
+    
 }
+
+
 
 function mouseActionLocal(angleXY) {
     encoder.azim = angleXY[0];
