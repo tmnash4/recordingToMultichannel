@@ -509,7 +509,6 @@ function playOneSound() {
            
             sound.connect(encoder.in);
             sound.start(0);
-            console.log(sound.getChannelData())
 
             //sound.isPlaying = true;
            // myFFT = new Tone.FFT(128)
