@@ -58,6 +58,7 @@ socket.on('newFile', (data) => {
 
 
 
+
 // define HOA encoder (panner)
 var encoder = new ambisonics.monoEncoder(context, maxOrder);
 var encoder1 = new ambisonics.monoEncoder(context, maxOrder);
@@ -246,6 +247,9 @@ function loadSounds() {
 }
 
 let whichSample = 0;
+
+//let norm = new Tone.Normalize(0,5);
+//norm.toDestination()
 
 function playMoreSounds() {
    
@@ -505,6 +509,8 @@ function playOneSound() {
            
             sound.connect(encoder.in);
             sound.start(0);
+            console.log(sound.getChannelData())
+
             //sound.isPlaying = true;
            // myFFT = new Tone.FFT(128)
             //myFilez[rand].connect(myFFT)
