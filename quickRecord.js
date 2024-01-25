@@ -144,7 +144,7 @@ function mp3(fileName) {
     console.log(e.msg);
   }
 
-  let fileName1 = "./uploads/" + fileName  + ".mp3"
+  let fileName1 = "./uploads/" + fileName  + ".wav"
   fileName2.push(fileName1)
   //fileName3.push()
   console.log(fileName1)
