@@ -123,16 +123,16 @@ encoder5.out.connect(analyser.in);
 encoder5.out.connect(limiter.in);
 encoder6.out.connect(analyser.in);
 encoder6.out.connect(limiter.in);
-// encoder7.out.connect(analyser.in);
-// encoder7.out.connect(limiter.in);
-// encoder8.out.connect(analyser.in);
-// encoder8.out.connect(limiter.in);
-// encoder9.out.connect(analyser.in);
-// encoder9.out.connect(limiter.in);
-// encoder10.out.connect(analyser.in);
-// encoder10.out.connect(limiter.in);
-// encoder11.out.connect(analyser.in);
-// encoder11.out.connect(limiter.in);
+encoder7.out.connect(analyser.in);
+encoder7.out.connect(limiter.in);
+encoder8.out.connect(analyser.in);
+encoder8.out.connect(limiter.in);
+encoder9.out.connect(analyser.in);
+encoder9.out.connect(limiter.in);
+encoder10.out.connect(analyser.in);
+encoder10.out.connect(limiter.in);
+encoder11.out.connect(analyser.in);
+encoder11.out.connect(limiter.in);
 limiter.out.connect(decoder.in);
 decoder.out.connect(gainOut);
 gainOut.connect(context.destination);
@@ -316,9 +316,9 @@ let whichSample = 0;
 
 function playMoreSounds1() {
         setAzim()
-        setAzim(1)
-        setAzim(2)
-        setAzim(3)
+        // setAzim(1)
+        // setAzim(2)
+        // setAzim(3)
         let rand = Math.floor(Math.random() * myFilez.length)
         loadSample(myFilez[rand], assignSample2SoundBuffer);
         let rand1 = Math.floor(Math.random() * myFilez.length)
