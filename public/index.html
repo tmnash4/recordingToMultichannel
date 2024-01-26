@@ -310,7 +310,7 @@ var socket = io();
   let text4 = document.querySelector("#text4");
   uploadButton.style.color = "white"
   deleteButton.style.color = "white"
-
+  
 
   //text.style.color = "blue"
   // text3.style.color = "black"
@@ -451,6 +451,12 @@ function flashColor() {
    
     } else if (e.key == "d") {
       socket.emit("secEnd", true)
+    } else if (e.key == "f") {
+      socket.emit("justListen", true)
+    } else if (e.key == "g") {
+      socket.emit("justListen1", true)
+    } else if (e.key == "h") {
+      socket.emit("startSec", true)
     }
   })
   
@@ -473,6 +479,7 @@ let poemDiv1 = document.getElementById("text1")
 // poemDiv1.style.textAlign = "left"
 
 let startButton = document.getElementById("start");
+startButton.style.visibility = "hidden"
 startButton.addEventListener("click", () => {
   piecePreview()
 })
@@ -532,10 +539,32 @@ function section2() {
 function endPiece() {
   secondFlex.style.display = "none";
   text.style.display = "none"
+  text1.style.display = "none"
+  text2.style.display = "none"
+  text3.style.display = "none"
   firstFlex.style.display = "flex"
   firstFlex.style.top = "47%"
   firstFlex.innerHTML = "The piece is now ending, listen to the whispers as they fade out! Thanks for participating! :)"
 
+}
+
+function justListen() {
+  secondFlex.style.display = "none";
+  text.style.display = "none"
+  text1.style.display = "none"
+  text2.style.display = "none"
+  text3.style.display = "none"
+  firstFlex.style.display = "flex"
+  firstFlex.style.top = "47%"
+  firstFlex.innerHTML = "Let's take a break from recording and just listen for a few moments."
+}
+
+function justListen1() {
+  secondFlex.style.display = "none";
+  text.style.display = "none"
+  firstFlex.style.display = "flex"
+  firstFlex.style.top = "47%"
+  firstFlex.innerHTML = "The piece will end soon. Please enjoy listening to the whispers for a few more moments."
 }
 
 
@@ -982,10 +1011,15 @@ socket.on("set_section", (data) => {
   if (data == "pre") {
     console.log("This is the pre section")
 
-  } else if (data =="first") {
-    console.log("This is the first section")
+  } else if (data == "start") {
     startPiece()
     piecePreview()
+
+  } else if (data =="first") {
+    console.log("This is the first section")
+    startButton.style.visibility = "visible"
+    // startPiece()
+    // piecePreview()
 
   } else if (data =="second") {
     section2()
@@ -995,6 +1029,12 @@ socket.on("set_section", (data) => {
   } else if (data == "end") {
     console.log("This is the third section")
     endPiece()
+  } else if (data == "jl") {
+    justListen()
+
+  } else if (data == "jl1") {
+    justListen1()
+ 
   }
 })
 

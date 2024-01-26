@@ -204,6 +204,11 @@ io.on('connection', (socket) => {
       io.emit("set_section", "second")
     })
 
+    socket.on('startSec', () => {
+      whisperSection.section = "start";
+      io.emit("set_section", "start")
+    })
+
     socket.on('sec1', () => {
       whisperSection.section = "first"
       io.emit("set_section", "first")
@@ -214,6 +219,15 @@ io.on('connection', (socket) => {
       io.emit("set_section", "end")
     })
 
+    socket.on("justListen", () => {
+      whisperSection.section = "jl"
+      io.emit("set_section", "jl")
+    })
+
+    socket.on("justListen1", () => {
+      whisperSection.section = "jl1"
+      io.emit("set_section", "jl1")
+    })
   
 
     //for (i=0; i < fileCount; i++) {

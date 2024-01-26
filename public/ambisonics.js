@@ -545,25 +545,28 @@ function playOneSound() {
 // }
 // // Define mouse drag on spatial map .png local impact
 
-let randAzim = Math.random() * 360
+//let randAzim = Math.random() * 360
 
 // let myAzim;
 
 function setAzim(encoderNumber = 0) {
     let randAzim = Math.random() * 360
+    let randAzim1 = Math.random() * 360
+    let randAzim2 = Math.random() * 360
+    let randAzim3 = Math.random() * 360
     // console.log(marker.innerHTML)
     // myAzim = Number(marker.innerHTML)
     if (!encoderNumber) {
         encoder.azim = randAzim
         encoder.updateGains()
     } else if (encoderNumber == 1) {
-        encoder1.azim = randAzim
+        encoder1.azim = randAzim1
         encoder1.updateGains()
     } else if (encoderNumber == 2) {
-        encoder2.azim = randAzim
+        encoder2.azim = randAzim2
         encoder2.updateGains()
     } else if (encoderNumber == 3) {
-        encoder3.azim = randAzim
+        encoder3.azim = randAzim3
         encoder3.updateGains()
     }
     
@@ -576,6 +579,16 @@ function mouseActionLocal(angleXY) {
     encoder.azim = angleXY[0];
     encoder.elev = angleXY[1];
     encoder.updateGains();
+    encoder1.azim = angleXY[0] + 20;
+    encoder1.elev = angleXY[1] + 20;
+    encoder1.updateGains();
+    encoder2.azim = angleXY[0] + 20;
+    encoder2.elev = angleXY[1];
+    encoder2.updateGains();
+    encoder3.azim = angleXY[0] + 20;
+    encoder3.elev = angleXY[1];
+    encoder3.updateGains()
+
 }
 
 function drawLocal() {
