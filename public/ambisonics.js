@@ -70,11 +70,27 @@ socket.on('newFile', (data) => {
 var encoder = new ambisonics.monoEncoder(context, maxOrder);
 var encoder1 = new ambisonics.monoEncoder(context, maxOrder);
 var encoder2 = new ambisonics.monoEncoder(context, maxOrder);
-var encoder3 = new ambisonics.monoEncoder(context, maxOrder);
+var encoder4 = new ambisonics.monoEncoder(context, maxOrder);
+var encoder5 = new ambisonics.monoEncoder(context, maxOrder);
+var encoder6 = new ambisonics.monoEncoder(context, maxOrder);
+var encoder7 = new ambisonics.monoEncoder(context, maxOrder);
+var encoder8 = new ambisonics.monoEncoder(context, maxOrder);
+var encoder9 = new ambisonics.monoEncoder(context, maxOrder);
+var encoder10 = new ambisonics.monoEncoder(context, maxOrder);
+var encoder11 = new ambisonics.monoEncoder(context, maxOrder);
+
 encoder.azim = -90;
 encoder1.azim = -90;
 encoder2.azim = -90;
 encoder3.azim = -90;
+encoder4.azim = -90;
+encoder5.azim = -90;
+encoder6.azim = -90;
+encoder7.azim = -90;
+encoder8.azim = -90;
+encoder9.azim = -90;
+encoder10.azim = -90;
+encoder11.azim = -90;
 console.log(encoder);
 // define HOA order limiter (to show the effect of order)
 var limiter = new ambisonics.orderLimiter(context, maxOrder, orderOut);
@@ -101,6 +117,22 @@ encoder2.out.connect(analyser.in);
 encoder2.out.connect(limiter.in);
 encoder3.out.connect(analyser.in);
 encoder3.out.connect(limiter.in);
+encoder4.out.connect(analyser.in);
+encoder4.out.connect(limiter.in);
+encoder5.out.connect(analyser.in);
+encoder5.out.connect(limiter.in);
+encoder6.out.connect(analyser.in);
+encoder6.out.connect(limiter.in);
+encoder7.out.connect(analyser.in);
+encoder7.out.connect(limiter.in);
+encoder8.out.connect(analyser.in);
+encoder8.out.connect(limiter.in);
+encoder9.out.connect(analyser.in);
+encoder9.out.connect(limiter.in);
+encoder10.out.connect(analyser.in);
+encoder10.out.connect(limiter.in);
+encoder11.out.connect(analyser.in);
+encoder11.out.connect(limiter.in);
 limiter.out.connect(decoder.in);
 decoder.out.connect(gainOut);
 gainOut.connect(context.destination);
@@ -233,7 +265,7 @@ function playMoreGrainSounds() {
     myGrainPlayer1.reverse = true;
     myGrainPlayer1.fadeIn = 0.5;
     myGrainPlayer1.fadeOut = 0.5
-    myGrainPlayer1.connect(encoder.in)
+    myGrainPlayer1.connect(encoder1.in)
 }
 
 function playMoreGrainSounds1() {
@@ -250,7 +282,7 @@ function playMoreGrainSounds1() {
     myGrainPlayer2.reverse = true;
     myGrainPlayer2.fadeIn = 0.7;
     myGrainPlayer2.fadeOut = 0.7;
-    myGrainPlayer2.connect(encoder.in)
+    myGrainPlayer2.connect(encoder2.in)
    
 }
 
@@ -261,21 +293,21 @@ async function playGrains() {
 }
 
 
-function loadSounds() {
-    sound = context.createBufferSource();
-    sound1 = context.createBufferSource()
-    sound2 = context.createBufferSource()
-    sound3 = context.createBufferSource()
+// function loadSounds() {
+//     sound = context.createBufferSource();
+//     sound1 = context.createBufferSource()
+//     sound2 = context.createBufferSource()
+//     sound3 = context.createBufferSource()
 
-    console.log(sound)
+//     console.log(sound)
 
-    //encoder.azim = -180;
-    sound.buffer = soundBuffer;
-    sound1.buffer = soundBuffer1;
-    sound2.buffer = soundBuffer2;
-    sound3.buffer = soundBuffer3;
+//     //encoder.azim = -180;
+//     sound.buffer = soundBuffer;
+//     sound1.buffer = soundBuffer1;
+//     sound2.buffer = soundBuffer2;
+//     sound3.buffer = soundBuffer3;
     
-}
+// }
 
 let whichSample = 0;
 
@@ -306,15 +338,15 @@ function playMoreSounds1() {
         sound.start(0);
         sound1.fadeIn = 0.09
         sound1.fadeOut = 0.09
-        sound1.connect(encoder.in);
+        sound1.connect(encoder1.in);
         sound1.start(0)
         sound2.fadeIn = 0.09
         sound2.fadeOut = 0.09
-        sound2.connect(encoder.in);
+        sound2.connect(encoder2.in);
         sound2.start(0)
         sound3.fadeIn = 0.09
         sound3.fadeOut = 0.09
-        sound3.connect(encoder.in);
+        sound3.connect(encoder3.in);
         sound3.start(0)
         console.log(encoder.azim)
 
@@ -375,47 +407,47 @@ function playMoreSounds2() {
         sound.start(0);
         sound1.fadeIn = 0.09
         sound1.fadeOut = 0.09
-        sound1.connect(encoder.in);
+        sound1.connect(encoder1.in);
         sound1.start(0)
         sound2.fadeIn = 0.09
         sound2.fadeOut = 0.09
-        sound2.connect(encoder.in);
+        sound2.connect(encoder2.in);
         sound2.start(0)
         sound3.fadeIn = 0.09
         sound3.fadeOut = 0.09
-        sound3.connect(encoder.in);
+        sound3.connect(encoder3.in);
         sound3.start(0)
         sound4.fadeIn = 0.09
         sound4.fadeOut = 0.09
-        sound4.connect(encoder.in);
+        sound4.connect(encoder4.in);
         sound4.start(0);  sound.fadeIn = 0.09
         sound5.fadeIn = 0.09
         sound5.fadeOut = 0.09
-        sound5.connect(encoder.in);
+        sound5.connect(encoder5.in);
         sound5.start(0);  sound.fadeIn = 0.09
         sound6.fadeIn = 0.09
         sound6.fadeOut = 0.09
-        sound6.connect(encoder.in);
+        sound6.connect(encoder6.in);
         sound6.start(0);  sound.fadeIn = 0.09
         sound7.fadeIn = 0.09
         sound7.fadeOut = 0.09
-        sound7.connect(encoder.in);
+        sound7.connect(encoder7.in);
         sound7.start(0);  sound.fadeIn = 0.09
         sound8.fadeIn = 0.09
         sound8.fadeOut = 0.09
-        sound8.connect(encoder.in);
+        sound8.connect(encoder8.in);
         sound8.start(0);  sound.fadeIn = 0.09
         sound9.fadeIn = 0.09
         sound9.fadeOut = 0.09
-        sound9.connect(encoder.in);
+        sound9.connect(encoder9.in);
         sound9.start(0);  sound.fadeIn = 0.09
         sound10.fadeIn = 0.09
         sound10.fadeOut = 0.09
-        sound10.connect(encoder.in);
+        sound10.connect(encoder10.in);
         sound10.start(0);
         sound11.fadeIn = 0.09
         sound11.fadeOut = 0.09
-        sound11.connect(encoder.in);
+        sound11.connect(encoder11.in);
         sound11.start(0)
         console.log(encoder.azim)
 
@@ -580,7 +612,7 @@ function playSoundsSpaced() {
 
             sound1.fadeIn = 0.09
             sound1.fadeOut = 0.09
-            sound1.connect(encoder.in);
+            sound1.connect(encoder1.in);
 
             setTimeout(() => {
                 sound1.start(0)
@@ -589,20 +621,20 @@ function playSoundsSpaced() {
 
             sound2.fadeIn = 0.09
             sound2.fadeOut = 0.09
-            sound2.connect(encoder.in);
+            sound2.connect(encoder2.in);
             setTimeout(() => {
                 sound2.start(0)
             }, 1700)
             sound3.fadeIn = 0.09
             sound3.fadeOut = 0.09
-            sound3.connect(encoder.in);
+            sound3.connect(encoder3.in);
             setTimeout(() => {
                 sound3.start(0)
             }, 2500)
 
             sound4.fadeIn = 0.09
             sound4.fadeOut = 0.09
-            sound4.connect(encoder.in);
+            sound4.connect(encoder4.in);
             setTimeout(() => {
                 sound4.start(0)
             }, 3600)
