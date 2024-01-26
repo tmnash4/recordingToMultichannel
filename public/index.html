@@ -1012,12 +1012,13 @@ socket.on("set_section", (data) => {
     console.log("This is the pre section")
 
   } else if (data == "start") {
-    startPiece()
-    piecePreview()
+    startButton.style.visibility = "visible"
 
   } else if (data =="first") {
     console.log("This is the first section")
-    startButton.style.visibility = "visible"
+   
+    startPiece()
+    piecePreview()
     // startPiece()
     // piecePreview()
 
