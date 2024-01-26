@@ -70,6 +70,7 @@ socket.on('newFile', (data) => {
 var encoder = new ambisonics.monoEncoder(context, maxOrder);
 var encoder1 = new ambisonics.monoEncoder(context, maxOrder);
 var encoder2 = new ambisonics.monoEncoder(context, maxOrder);
+var encoder3 = new ambisonics.monoEncoder(context, maxOrder)
 var encoder4 = new ambisonics.monoEncoder(context, maxOrder);
 var encoder5 = new ambisonics.monoEncoder(context, maxOrder);
 var encoder6 = new ambisonics.monoEncoder(context, maxOrder);
@@ -316,9 +317,9 @@ let whichSample = 0;
 
 function playMoreSounds1() {
         setAzim()
-        // setAzim(1)
-        // setAzim(2)
-        // setAzim(3)
+        setAzim(1)
+        setAzim(2)
+        setAzim(3)
         let rand = Math.floor(Math.random() * myFilez.length)
         loadSample(myFilez[rand], assignSample2SoundBuffer);
         let rand1 = Math.floor(Math.random() * myFilez.length)
