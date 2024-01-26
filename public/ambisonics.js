@@ -123,16 +123,16 @@ encoder5.out.connect(analyser.in);
 encoder5.out.connect(limiter.in);
 encoder6.out.connect(analyser.in);
 encoder6.out.connect(limiter.in);
-encoder7.out.connect(analyser.in);
-encoder7.out.connect(limiter.in);
-encoder8.out.connect(analyser.in);
-encoder8.out.connect(limiter.in);
-encoder9.out.connect(analyser.in);
-encoder9.out.connect(limiter.in);
-encoder10.out.connect(analyser.in);
-encoder10.out.connect(limiter.in);
-encoder11.out.connect(analyser.in);
-encoder11.out.connect(limiter.in);
+// encoder7.out.connect(analyser.in);
+// encoder7.out.connect(limiter.in);
+// encoder8.out.connect(analyser.in);
+// encoder8.out.connect(limiter.in);
+// encoder9.out.connect(analyser.in);
+// encoder9.out.connect(limiter.in);
+// encoder10.out.connect(analyser.in);
+// encoder10.out.connect(limiter.in);
+// encoder11.out.connect(analyser.in);
+// encoder11.out.connect(limiter.in);
 limiter.out.connect(decoder.in);
 decoder.out.connect(gainOut);
 gainOut.connect(context.destination);
@@ -796,7 +796,6 @@ function mouseActionLocal(angleXY) {
     encoder3.updateGains()
 
 }
-
 function drawLocal() {
     // Update audio analyser buffers
     analyser.updateBuffers();
