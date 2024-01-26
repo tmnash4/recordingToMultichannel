@@ -27,6 +27,13 @@ let soundBuffer1, sound1;
 let soundBuffer2, sound2;
 let soundBuffer3, sound3;
 let soundBuffer4, sound4;
+let soundBuffer5, sound5;
+let soundBuffer6, sound6;
+let soundBuffer7, sound7;
+let soundBuffer8, sound8;
+let soundBuffer9, sound9;
+let soundBuffer10, sound10;
+let soundBuffer11, sound11;
 let info = "hello"
 
 var socketName = 'ambisonic';
@@ -139,7 +146,27 @@ var assignSample2SoundBuffer4 = function(decodedBuffer) {
     //document.getElementById('play').disabled = false;
     
 }
-
+var assignSample2SoundBuffer5 = function(decodedBuffer) {
+    soundBuffer5 = decodedBuffer;    
+}
+var assignSample2SoundBuffer6 = function(decodedBuffer) {
+    soundBuffer6 = decodedBuffer;    
+}
+var assignSample2SoundBuffer7 = function(decodedBuffer) {
+    soundBuffer7 = decodedBuffer;    
+}
+var assignSample2SoundBuffer8 = function(decodedBuffer) {
+    soundBuffer8 = decodedBuffer;    
+}
+var assignSample2SoundBuffer9 = function(decodedBuffer) {
+    soundBuffer9 = decodedBuffer;    
+}
+var assignSample2SoundBuffer10 = function(decodedBuffer) {
+    soundBuffer10 = decodedBuffer;    
+}
+var assignSample2SoundBuffer11 = function(decodedBuffer) {
+    soundBuffer11 = decodedBuffer;    
+}
 
 
 
@@ -280,6 +307,107 @@ function playMoreSounds1() {
         sound3.fadeOut = 0.09
         sound3.connect(encoder.in);
         sound3.start(0)
+        console.log(encoder.azim)
+
+    } 
+function playMoreSounds2() {
+        setAzim()
+        let rand = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand], assignSample2SoundBuffer);
+        let rand1 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand1], assignSample2SoundBuffer1);
+        let rand2 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand2], assignSample2SoundBuffer2);
+        let rand3 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand3], assignSample2SoundBuffer3);
+        let rand4 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand4], assignSample2SoundBuffer4);
+        let rand5 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand5], assignSample2SoundBuffer5);
+        let rand6 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand6], assignSample2SoundBuffer6);
+        let rand7 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand7], assignSample2SoundBuffer7);
+        let rand8 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand8], assignSample2SoundBuffer8);
+        let rand9 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand9], assignSample2SoundBuffer9);
+        let rand10 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand10], assignSample2SoundBuffer10);
+        let rand11 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand11], assignSample2SoundBuffer11);
+        sound = context.createBufferSource();
+        sound1 = context.createBufferSource()
+        sound2 = context.createBufferSource()
+        sound3 = context.createBufferSource()
+        sound4 = context.createBufferSource();
+        sound5 = context.createBufferSource()
+        sound6 = context.createBufferSource()
+        sound7 = context.createBufferSource()
+        sound8 = context.createBufferSource();
+        sound9 = context.createBufferSource()
+        sound10 = context.createBufferSource()
+        sound11 = context.createBufferSource()
+        sound.buffer = soundBuffer;
+        sound1.buffer = soundBuffer1;
+        sound2.buffer = soundBuffer2;
+        sound3.buffer = soundBuffer3;
+        sound4.buffer = soundBuffer;
+        sound5.buffer = soundBuffer1;
+        sound6.buffer = soundBuffer2;
+        sound7.buffer = soundBuffer3;
+        sound8.buffer = soundBuffer;
+        sound9.buffer = soundBuffer1;
+        sound10.buffer = soundBuffer2;
+        sound11.buffer = soundBuffer3;
+        sound.fadeIn = 0.09
+        sound.fadeOut = 0.09
+        sound.connect(encoder.in);
+        sound.start(0);
+        sound1.fadeIn = 0.09
+        sound1.fadeOut = 0.09
+        sound1.connect(encoder.in);
+        sound1.start(0)
+        sound2.fadeIn = 0.09
+        sound2.fadeOut = 0.09
+        sound2.connect(encoder.in);
+        sound2.start(0)
+        sound3.fadeIn = 0.09
+        sound3.fadeOut = 0.09
+        sound3.connect(encoder.in);
+        sound3.start(0)
+        sound4.fadeIn = 0.09
+        sound4.fadeOut = 0.09
+        sound4.connect(encoder.in);
+        sound4.start(0);  sound.fadeIn = 0.09
+        sound5.fadeIn = 0.09
+        sound5.fadeOut = 0.09
+        sound5.connect(encoder.in);
+        sound5.start(0);  sound.fadeIn = 0.09
+        sound6.fadeIn = 0.09
+        sound6.fadeOut = 0.09
+        sound6.connect(encoder.in);
+        sound6.start(0);  sound.fadeIn = 0.09
+        sound7.fadeIn = 0.09
+        sound7.fadeOut = 0.09
+        sound7.connect(encoder.in);
+        sound7.start(0);  sound.fadeIn = 0.09
+        sound8.fadeIn = 0.09
+        sound8.fadeOut = 0.09
+        sound8.connect(encoder.in);
+        sound8.start(0);  sound.fadeIn = 0.09
+        sound9.fadeIn = 0.09
+        sound9.fadeOut = 0.09
+        sound9.connect(encoder.in);
+        sound9.start(0);  sound.fadeIn = 0.09
+        sound10.fadeIn = 0.09
+        sound10.fadeOut = 0.09
+        sound10.connect(encoder.in);
+        sound10.start(0);
+        sound11.fadeIn = 0.09
+        sound11.fadeOut = 0.09
+        sound11.connect(encoder.in);
+        sound11.start(0)
         console.log(encoder.azim)
 
     } 
