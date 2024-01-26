@@ -312,13 +312,15 @@ var socket = io();
   deleteButton.style.color = "white"
   
 
-  //text.style.color = "blue"
+  text.style.color = "blue"
   // text3.style.color = "black"
   recordButton.style.boxShadow = "0 0 2px 2px white"
 
   let test1 = 0
   let test2 = 1
 
+  let sec2text1 = 0;
+ // text.style.color = "blue"
   function changeColor() {
   let randNum = Math.floor(Math.random() * hardy.length)
   //poemLine = 0;
@@ -354,6 +356,7 @@ var socket = io();
     } else if (recordButton.style.backgroundColor =="red" && test2 == 1) {
       recordButton.style.visibility = "hidden";
       clearInterval(refreshIntervalId)
+      text.style.color = "black"
       text1.style.color = "black"
       text2.style.color = "black"
       text3.style.color = "blue"
@@ -369,7 +372,7 @@ var socket = io();
       text1.style.color = "black"
       text2.style.color = "black"
       text3.style.color = "black"
-      text4.style.color = "blue"
+      //text4.style.color = "blue"
       test2 = 1;
 
     }
@@ -432,7 +435,12 @@ function flashColor() {
     deleteButton.style.visibility = "hidden"
     playButton.style.visibility = "hidden"
     recordButton.style.opacity = 1
+    if (sec2text1 == 1) {
     text.innerHTML = "What will you choose to whisper next? Press the record button again when you're ready!"
+    } else if (!sec2text1) {
+      text.style.color = "blue"
+      text3.style.color = "black"
+    }
     // myImg.src = "./images/play.png"
   })
 
@@ -443,7 +451,12 @@ function flashColor() {
       recordButton.style.color = "white"
       recordButton.innerHTML = "start recording"
     text3.style.color = "black"
-    text.style.color = "blue"
+    if (sec2text1 == 1) {
+    text.innerHTML = "What will you choose to whisper next? Press the record button again when you're ready!"
+    } else if (!sec2text1) {
+      text.style.color = "blue"
+      text3.style.color = "black"
+    }
     deleteButton.style.visibility = "hidden"
     uploadButton.style.visibility = "hidden"
     playButton.style.visibility = "hidden"
@@ -545,6 +558,8 @@ function section2() {
   text3.style.visibility = "hidden"
   text4.style.visibility = "hidden"
   firstFlex.style.display = "none"
+  sec2text1 = 1
+  
 
 
 }
