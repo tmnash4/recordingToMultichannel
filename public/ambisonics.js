@@ -316,6 +316,9 @@ let whichSample = 0;
 
 function playMoreSounds1() {
         setAzim()
+        setAzim(1)
+        setAzim(2)
+        setAzim(3)
         let rand = Math.floor(Math.random() * myFilez.length)
         loadSample(myFilez[rand], assignSample2SoundBuffer);
         let rand1 = Math.floor(Math.random() * myFilez.length)
