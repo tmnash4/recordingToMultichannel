@@ -363,7 +363,7 @@ var socket = io();
       playButton.style.visibility = 'visible'
       myTitle.style.visibility = "visible"
       test1 = 0;
-      test2 = 0;
+    
     
     } else if (!test2) {
       text1.style.color = "black"
@@ -780,6 +780,7 @@ function deleteAudio() {
     let deleteAudio = document.getElementById(id1)
     console.log(id1)
     deleteAudio.remove()
+    test2 = 0;
 
 
 }
@@ -916,6 +917,7 @@ let poemDiv = document.getElementById("text");
     handleSubmit()
     deleteAudio()
     //uArray.push(u)
+    test2 = 0;
 
   };
 
