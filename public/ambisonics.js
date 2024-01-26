@@ -72,6 +72,9 @@ var encoder1 = new ambisonics.monoEncoder(context, maxOrder);
 var encoder2 = new ambisonics.monoEncoder(context, maxOrder);
 var encoder3 = new ambisonics.monoEncoder(context, maxOrder);
 encoder.azim = -90;
+encoder1.azim = -90;
+encoder2.azim = -90;
+encoder3.azim = -90;
 console.log(encoder);
 // define HOA order limiter (to show the effect of order)
 var limiter = new ambisonics.orderLimiter(context, maxOrder, orderOut);
@@ -92,6 +95,12 @@ var gainOut = context.createGain();
 // connect HOA blocks
 encoder.out.connect(analyser.in);
 encoder.out.connect(limiter.in);
+encoder1.out.connect(analyser.in);
+encoder1.out.connect(limiter.in);
+encoder2.out.connect(analyser.in);
+encoder2.out.connect(limiter.in);
+encoder3.out.connect(analyser.in);
+encoder3.out.connect(limiter.in);
 limiter.out.connect(decoder.in);
 decoder.out.connect(gainOut);
 gainOut.connect(context.destination);
@@ -439,7 +448,7 @@ function playMoreSounds() {
     sound1 = context.createBufferSource()
     sound1.fadeIn = 0.09
     sound1.fadeOut = 0.09
-    sound1.connect(encoder.in);
+    sound1.connect(encoder1.in);
  
     sound1.buffer = soundBuffer1;
 
@@ -459,7 +468,7 @@ function playMoreSounds() {
         sound2.buffer = soundBuffer2;
         sound2.fadeIn = 0.09
         sound2.fadeOut = 0.09
-        sound2.connect(encoder.in);
+        sound2.connect(encoder2.in);
    
     
         whichSample++
@@ -476,7 +485,7 @@ function playMoreSounds() {
 
         sound3.fadeIn = 0.09
         sound3.fadeOut = 0.09
-        sound3.connect(encoder.in);
+        sound3.connect(encoder3.in);
         whichSample = 0
         sound3.start(0)
         console.log(encoder3.azim)
