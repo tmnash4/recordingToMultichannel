@@ -238,11 +238,6 @@ function loadSounds() {
     sound1.buffer = soundBuffer1;
     sound2.buffer = soundBuffer2;
     sound3.buffer = soundBuffer3;
-
-
-
-
-
     
 }
 
@@ -250,6 +245,44 @@ let whichSample = 0;
 
 //let norm = new Tone.Normalize(0,5);
 //norm.toDestination()
+
+function playMoreSounds1() {
+        setAzim()
+        let rand = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand], assignSample2SoundBuffer);
+        let rand1 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand1], assignSample2SoundBuffer1);
+        let rand2 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand2], assignSample2SoundBuffer2);
+        let rand3 = Math.floor(Math.random() * myFilez.length)
+        loadSample(myFilez[rand3], assignSample2SoundBuffer3);
+        sound = context.createBufferSource();
+        sound1 = context.createBufferSource()
+        sound2 = context.createBufferSource()
+        sound3 = context.createBufferSource()
+        sound.buffer = soundBuffer;
+        sound1.buffer = soundBuffer1;
+        sound2.buffer = soundBuffer2;
+        sound3.buffer = soundBuffer3;
+        sound.fadeIn = 0.09
+        sound.fadeOut = 0.09
+        sound.connect(encoder.in);
+        sound.start(0);
+        sound1.fadeIn = 0.09
+        sound1.fadeOut = 0.09
+        sound1.connect(encoder.in);
+        sound1.start(0)
+        sound2.fadeIn = 0.09
+        sound2.fadeOut = 0.09
+        sound2.connect(encoder.in);
+        sound2.start(0)
+        sound3.fadeIn = 0.09
+        sound3.fadeOut = 0.09
+        sound3.connect(encoder.in);
+        sound3.start(0)
+        console.log(encoder.azim)
+
+    } 
 
 function playMoreSounds() {
    
@@ -443,7 +476,6 @@ function playSoundsSpaced() {
       
             sound.isPlaying = true;
             sound1.isPlaying = true;
-
 }
 
 
@@ -468,7 +500,9 @@ document.addEventListener('keydown', (e) => {
              
 
         )
-    } 
+    } else if (e.key == "4") {
+        playMoreSounds1()
+    }
 })
 
 let myList = updateList
