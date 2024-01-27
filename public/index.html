@@ -468,21 +468,23 @@ function flashColor() {
   document.addEventListener("keydown", (e) => {
     if (e.key == "b") {
     socket.emit("begin", true)
-    } else if (e.key =="s") {
+    } else if (e.key =="r") {
     socket.emit("sec2", true)
     socket.emit('sendFileName1', true)
         console.log("2go")
-    } else if (e.key == "a") {
+    } else if (e.key == "w") {
       socket.emit("sec1", true)
    
-    } else if (e.key == "d") {
+    } else if (e.key == "y") {
       socket.emit("secEnd", true)
-    } else if (e.key == "f") {
+    } else if (e.key == "e") {
       socket.emit("justListen", true)
-    } else if (e.key == "g") {
+    } else if (e.key == "t") {
       socket.emit("justListen1", true)
-    } else if (e.key == "h") {
+    } else if (e.key == "q") {
       socket.emit("startSec", true)
+    } else if (e.key == "u") {
+      socket.emit("end", true)
     }
   })
   
@@ -576,12 +578,19 @@ function endPiece() {
 
 }
 
+function endPieceFully() {
+  let body = document.querySelector("body");
+  body.style.backgroundColor = "black"
+}
+
+
 function justListen() {
   secondFlex.style.display = "none";
   text.style.display = "none"
   text1.style.display = "none"
   text2.style.display = "none"
   text3.style.display = "none"
+  text4.style.display = "none"
   firstFlex.style.display = "flex"
   firstFlex.style.top = "47%"
   firstFlex.innerHTML = "Let's take a break from recording and just listen for a few moments."
@@ -1066,6 +1075,8 @@ socket.on("set_section", (data) => {
   } else if (data == "jl1") {
     justListen1()
  
+  } else if (data == "endForReal") {
+    endPieceFully()
   }
 })
 

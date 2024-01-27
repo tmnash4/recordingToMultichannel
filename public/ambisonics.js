@@ -253,7 +253,7 @@ function playGrainSounds() {
 }
 
 function playMoreGrainSounds() {
-    setAzim()
+    setAzim(1)
     let rand1 = Math.floor(Math.random() * myFilez1.length)
     //console.log(myFilez1[rand1])
     console.log(rand1)
@@ -270,7 +270,7 @@ function playMoreGrainSounds() {
 }
 
 function playMoreGrainSounds1() {
-    setAzim()
+    setAzim(2)
     let rand1 = Math.floor(Math.random() * myFilez1.length)
     //console.log(myFilez1[rand1])
     console.log(rand1)
@@ -284,7 +284,6 @@ function playMoreGrainSounds1() {
     myGrainPlayer2.fadeIn = 0.7;
     myGrainPlayer2.fadeOut = 0.7;
     myGrainPlayer2.connect(encoder2.in)
-   
 }
 
 async function playGrains() {
@@ -293,27 +292,19 @@ async function playGrains() {
     playMoreGrainSounds1()
 }
 
-
-// function loadSounds() {
-//     sound = context.createBufferSource();
-//     sound1 = context.createBufferSource()
-//     sound2 = context.createBufferSource()
-//     sound3 = context.createBufferSource()
-
-//     console.log(sound)
-
-//     //encoder.azim = -180;
-//     sound.buffer = soundBuffer;
-//     sound1.buffer = soundBuffer1;
-//     sound2.buffer = soundBuffer2;
-//     sound3.buffer = soundBuffer3;
+function playMoreGrains() {
+    playGrainSounds();
+    setTimeout(playMoreGrainSounds, 3000)
+    setTimeout(playMoreGrainSounds1, 6200)
+    setTimeout(playGrainSounds, 9500)
+    setTimeout(playMoreGrainSounds, 10500)
+    setTimeout(playMoreGrainSounds1, 12700)
+    setTimeout(playGrainSounds, 15000)
     
-// }
+}
 
 let whichSample = 0;
 
-//let norm = new Tone.Normalize(0,5);
-//norm.toDestination()
 
 function playMoreSounds1() {
         setAzim()
@@ -675,7 +666,15 @@ document.addEventListener('keydown', (e) => {
         )
     } else if (e.key == "4") {
         playMoreSounds1()
-    }
+    } else if (e.key == "5") {
+        playMoreSounds2()
+    } else if (e.key == "6") {
+        playGrainSounds()
+    } else if (e.key == "7") {
+        playGrains()
+    }  else if (e.key == "8") {
+        playMoreGrains()
+    } 
 })
 
 let myList = updateList

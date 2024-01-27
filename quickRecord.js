@@ -228,6 +228,11 @@ io.on('connection', (socket) => {
       whisperSection.section = "jl1"
       io.emit("set_section", "jl1")
     })
+
+    socket.on("end", () => {
+      whisperSection.section = "endForReal";
+      io.emit("set_section", "endForReal")
+    })
   
 
     //for (i=0; i < fileCount; i++) {
