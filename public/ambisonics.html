@@ -36,14 +36,14 @@
 &nbsp;
 <!-- <button id="play" >Play</button>
 <button id="stop" disabled="">Stop</button> -->
-<button class= "buttonClass1" id="play2" onclick="playOneSound()"> Play1</button>
-<button class= "buttonClass1" id="play1" onclick="playMoreSounds()" > Play2</button>
-<button class="buttonClass1" id="play3" onclick="playSoundsSpaced()"> Play3</button>
-<button class="buttonClass1" id="play4" onclick="playMoreSounds1()"> Play 4</button>
-<button class="buttonClass1" id="play5" onclick="playMoreSounds2()"> Play Lots</button>
-<button class= "buttonClass1" id="grain" onclick="playGrainSounds()"> Play5</button>
-<button class= "buttonClass1" id="grain1" onclick="playGrains()"> Play6</button>
-<button class= "buttonClass1" id="grain2" onclick="playMoreGrains()"> Play7</button>
+<!-- <button class= "buttonClass1" id="play2" onclick="playOneSound()"> Play One Sample</button> -->
+<button class= "buttonClass1" id="play1" onclick="playMoreSounds()" > Play One Sample</button>
+<button class="buttonClass1" id="play4" onclick="playMoreSounds1()"> Play More Samples</button>
+<button class="buttonClass1" id="play3" onclick="playSoundsSpaced()"> Play Multiple Samples Staggered</button>
+<button class="buttonClass1" id="play5" onclick="playMoreSounds2()"> Play Many Samples</button>
+<button class= "buttonClass1" id="grain" onclick="playGrainSounds()"> Play One Granulated Sample</button>
+<button class= "buttonClass1" id="grain1" onclick="playGrains()"> Play Multiple Granuated Samples</button>
+<button class= "buttonClass1" id="grain2" onclick="playMoreGrains()"> Play Multiple Granuated Samples Staggered</button>
 
 </p>
 </div>
@@ -92,7 +92,7 @@ Set Ambisonic order:
 
 <!-- MOVE SOURCE ON MAP -->
 <!-- <p id="move-map-instructions"> Click on the map to pan the source: </p> -->
-<p> <canvas id="Canvas" width="820" height="412"></canvas> </p>
+<p> <canvas id="Canvas" width="700" height="300"></canvas> </p>
 <p>
 Azimuth: <span id="azim-value">-12</span>
 Elevation: <span id="elev-value">-12</span>
@@ -101,7 +101,7 @@ Elevation: <span id="elev-value">-12</span>
 <!-- SOUND FIELD VISUALIZER -->
 <div id="div-analyser">
 <!-- <p>Intensity visualizer:</p> -->
-<canvas id="Canvas2" width="820" height="412"></canvas>
+<canvas id="Canvas2" width="820" height="412" style="display:none"></canvas>
 </div>
 
 <!-- <p align="right"> <a href="../index.html">back to index</a>&nbsp; &nbsp;</p> -->
@@ -152,11 +152,12 @@ Elevation: <span id="elev-value">-12</span>
     bottom: 1px;
 }
 .buttonClass1 {
-  border: 5px darkblue solid;
-  font-size: 1.2em;
+  font-size: 1em;
   background-color: darkblue;
-  border-radius: 95%;
-  color: white
+  /* border-radius: 95%; */
+  color: white;
+  border: #a1dcff 5px solid;
+
  
 }
 .buttonClass {
