@@ -478,22 +478,17 @@ function flashColor() {
   document.addEventListener("keydown", (e) => {
     if (e.key == "b") {
     socket.emit("begin", true)
-    } else if (e.key =="r") {
+    } else if (e.key =="e") {
     socket.emit("sec2", true)
     socket.emit('sendFileName1', true)
         console.log("2go")
-    } else if (e.key == "w") {
-      socket.emit("sec1", true)
-   
-    } else if (e.key == "y") {
+    } else if (e.key == "r") {
       socket.emit("secEnd", true)
-    } else if (e.key == "e") {
+    } else if (e.key == "w") {
       socket.emit("justListen", true)
-    } else if (e.key == "t") {
-      socket.emit("justListen1", true)
     } else if (e.key == "q") {
       socket.emit("startSec", true)
-    } else if (e.key == "u") {
+    } else if (e.key == "t") {
       socket.emit("end", true)
     }
   })
@@ -522,6 +517,7 @@ startButton.addEventListener("click", () => {
   piecePreview()
 })
 function piecePreview() {
+  body.style.backgroundColor = "white";
   firstFlex.style.display = "none"
   secondFlex.style.display = "flex"
 
@@ -544,6 +540,8 @@ function piecePreview() {
 
 
 function startPiece() {
+  body.style.backgroundColor = "white";
+  secondFlex.style.display = "flex"
   recordButton.style.visibility = "visible";
   text.innerHTML = "Step 1: Press 'start recording' once to start recording"
   text.style.visibility = "visible";
@@ -557,6 +555,7 @@ function startPiece() {
 
 
 function section2() {
+  body.style.backgroundColor = "white";
   secondFlex.style.display = "flex"
   text.style.display= "flex";
   recordButton.style.visibility = "visible";
@@ -577,6 +576,7 @@ function section2() {
 }
 
 function endPiece() {
+  body.style.backgroundColor = "white";
   secondFlex.style.display = "none";
   text.style.display = "none"
   text1.style.display = "none"
@@ -589,12 +589,15 @@ function endPiece() {
 }
 
 function endPieceFully() {
-  let body = document.querySelector("body");
-  body.style.backgroundColor = "black"
+  // let body = document.querySelector("body");
+  firstFlex.style.display = "none"
+  secondFlex.style.display = "none"
+  body.style.backgroundColor = "black";
 }
 
 
 function justListen() {
+  body.style.backgroundColor = "white";
   secondFlex.style.display = "none";
   text.style.display = "none"
   text1.style.display = "none"
@@ -604,15 +607,16 @@ function justListen() {
   firstFlex.style.display = "flex"
   firstFlex.style.top = "47%"
   firstFlex.innerHTML = "Let's take a break from recording and just listen for a few moments."
+  
 }
 
-function justListen1() {
-  secondFlex.style.display = "none";
-  text.style.display = "none"
-  firstFlex.style.display = "flex"
-  firstFlex.style.top = "47%"
-  firstFlex.innerHTML = "The piece will end soon. Please enjoy listening to the whispers for a few more moments."
-}
+// function justListen1() {
+//   secondFlex.style.display = "none";
+//   text.style.display = "none"
+//   firstFlex.style.display = "flex"
+//   firstFlex.style.top = "47%"
+//   firstFlex.innerHTML = "The piece will end soon. Please enjoy listening to the whispers for a few more moments."
+// }
 
 
   let soundClips = document.getElementById('sound-clips') // for adding audio to page
@@ -1081,11 +1085,7 @@ socket.on("set_section", (data) => {
     endPiece()
   } else if (data == "jl") {
     justListen()
-
-  } else if (data == "jl1") {
-    justListen1()
- 
-  } else if (data == "endForReal") {
+   } else if (data == "endForReal") {
     endPieceFully()
   }
 })
