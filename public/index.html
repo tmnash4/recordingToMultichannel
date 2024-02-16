@@ -490,6 +490,8 @@ function flashColor() {
       socket.emit("startSec", true)
     } else if (e.key == "t") {
       socket.emit("end", true)
+    } else if (e.key == "u") {
+      socket.emit("sec1", true)
     }
   })
   
@@ -1066,7 +1068,6 @@ socket.on("set_section", (data) => {
 
   } else if (data == "start") {
     startButton.style.visibility = "visible"
-
   } else if (data =="first") {
     console.log("This is the first section")
    
