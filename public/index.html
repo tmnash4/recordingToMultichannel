@@ -22,6 +22,7 @@
  Whisper is an interactive piece that asks you to record snippets of whispered speech into your phone. You may then listen to your recorded audio, and choose to upload it or delete it. Once it is uploaded, it will become part of the collective sound played through speakers. In the first section, you will be give lines of a Thomas Hardy poem to record. In the second, you will be able to choose what to record, but your words will be obscured through various audio reshufling techniques. Momentarily, a "start" button will appear. Click the button to continue. 
   </div>
 <div class="flex-items1">
+  <p></p>
   <button class="flex-items1" id="start" onclick="startPiece()"> Start Piece</button>
 </div>
 </div>
@@ -98,7 +99,7 @@ body {
   flex: 1 0 25%;
   max-width: 25%;
   overflow: hidden;
-  margin-top: 50px;
+  /* margin-top: 50px; */
   margin-bottom: 60px
   /* background-color: red */
   /* position: absolute */
@@ -506,6 +507,9 @@ function flashColor() {
   
 //   }
 // })
+let instructions = document.querySelector("#instructions")
+let instructions1 = "Whisper is an interactive piece that asks you to record snippets of whispered speech into your phone. You may then listen to your recorded audio, and choose to upload it or delete it. Once it is uploaded, it will become part of the collective sound played through speakers. In the first section, you will be give lines of a Thomas Hardy poem to record. In the second, you will be able to choose what to record, but your words will be obscured through various audio reshufling techniques. Momentarily, a 'start' button will appear. Click the button to continue."
+let header = document.querySelector("#instruction")
 let secondFlex = document.querySelector(".flex-container")
 let firstFlex = document.querySelector(".flex-container1")
 secondFlex.style.display = "none"
@@ -519,10 +523,10 @@ startButton.addEventListener("click", () => {
   piecePreview()
 })
 function piecePreview() {
+  
   body.style.backgroundColor = "white";
   firstFlex.style.display = "none"
   secondFlex.style.display = "flex"
-
   text.style.display= "flex";
   text1.style.display= "flex";
   text2.style.display= "flex";
@@ -530,15 +534,23 @@ function piecePreview() {
   text4.style.display="flex"
 
   startPiece()
-  
-  // } else if (data == "secondSection") {
-  //   section2()
-  
-  // }
 }
 
 
-
+function resetToPre() {
+  body.style.backgroundColor = "white";
+  firstFlex.style.display = "flex"
+  instructions.innerHTML = instructions1
+  header.style.visibility = "visible"
+  secondFlex.style.display = "none"
+  text.style.display= "none";
+  text1.style.display= "none";
+  text2.style.display= "none";
+  text3.style.display= "none";
+  text4.style.display="none";
+  startButton.style.visibility = "hidden"
+  console.log("resetting now")
+}
 
 
 function startPiece() {
@@ -553,6 +565,8 @@ function startPiece() {
   recordButton.removeEventListener("click", changeColor1)
   recordButton.addEventListener("click", changeColor)
   poemLine = 0
+  startButton.style.visibility = "hidden"
+
 }
 
 
@@ -572,7 +586,8 @@ function section2() {
   text4.style.visibility = "hidden"
   firstFlex.style.display = "none"
   sec2text1 = 1
-  
+  startButton.style.visibility = "hidden"
+
 
 
 }
@@ -585,8 +600,10 @@ function endPiece() {
   text2.style.display = "none"
   text3.style.display = "none"
   firstFlex.style.display = "flex"
-  firstFlex.style.top = "47%"
-  firstFlex.innerHTML = "The piece is now ending, listen to the whispers as they fade out! Thanks for participating! :)"
+  // firstFlex.style.top = "47%"
+  instructions.innerHTML = "The piece is now ending, listen to the whispers as they fade out! Thanks for participating! :)"
+  header.style.visibility = "hidden"
+  startButton.style.visibility = "hidden"
 
 }
 
@@ -595,10 +612,14 @@ function endPieceFully() {
   firstFlex.style.display = "none"
   secondFlex.style.display = "none"
   body.style.backgroundColor = "black";
+  startButton.style.visibility = "hidden"
+
 }
 
 
 function justListen() {
+  instructions.innerHTML = "Let's take a break from recording and just listen for a few moments."
+  header.style.visibility = "hidden"
   body.style.backgroundColor = "white";
   secondFlex.style.display = "none";
   text.style.display = "none"
@@ -607,9 +628,9 @@ function justListen() {
   text3.style.display = "none"
   text4.style.display = "none"
   firstFlex.style.display = "flex"
-  firstFlex.style.top = "47%"
-  firstFlex.innerHTML = "Let's take a break from recording and just listen for a few moments."
-  
+  startButton.style.visibility = "hidden"
+
+  // firstFlex.style.top = "47%"
 }
 
 // function justListen1() {
@@ -1062,31 +1083,40 @@ async function myFunction() {
 
 myFunction()
 
-socket.on("set_section", (data) => {
-  if (data == "pre") {
-    console.log("This is the pre section")
 
-  } else if (data == "start") {
-    startButton.style.visibility = "visible"
-  } else if (data =="first") {
+function leadInToFirstSection() {
+  startButton.style.visibility = "visible"
+  body.style.backgroundColor = "white";
+  firstFlex.style.display = "flex"
+  secondFlex.style.display = "none"
+  text.style.display= "none";
+  text1.style.display= "none";
+  text2.style.display= "none";
+  text3.style.display= "none";
+  text4.style.display="none";
+  instructions.innerHTML = instructions1
+  header.style.visibility = "visible"
+}
+
+socket.on("set_section", (data) => {
+  if (data == "zero") {
+    console.log("This is the pre section")
+    resetToPre()
+  } else if (data == "one") {
+    leadInToFirstSection()
+  } else if (data =="two") {
     console.log("This is the first section")
-   
     startPiece()
     piecePreview()
-    // startPiece()
-    // piecePreview()
-
-  } else if (data =="second") {
+  } else if (data == "three") {
+    justListen()
+   }else if (data =="four") {
     section2()
-    // piecePreview()
     console.log("This is the second section")
-
-  } else if (data == "end") {
+  } else if (data == "five") {
     console.log("This is the third section")
     endPiece()
-  } else if (data == "jl") {
-    justListen()
-   } else if (data == "endForReal") {
+  }  else if (data == "six") {
     endPieceFully()
   }
 })

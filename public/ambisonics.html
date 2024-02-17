@@ -21,32 +21,18 @@
 
 </head>
 <body>
-    <div id="main-column">
+    <link rel="stylesheet" type="text/css" href="common.css">
 
+<div class="flexbox">
+    <div id="main-column">
     <h1 id="head">Player Controls for Whisper </h1> 
 
     <!-- Load html and js elements common to all examples -->
     <div id="common">
 
-<link rel="stylesheet" type="text/css" href="common.css">
 
 <!-- PLAY / STOP -->
-<div id="div-play-stop-buttons">
-<p>
-&nbsp;
-<!-- <button id="play" >Play</button>
-<button id="stop" disabled="">Stop</button> -->
-<!-- <button class= "buttonClass1" id="play2" onclick="playOneSound()"> Play One Sample</button> -->
-<button class= "buttonClass1" id="play1" onclick="playMoreSounds()" > Play One Sample</button>
-<button class="buttonClass1" id="play4" onclick="playMoreSounds1()"> Play More Samples</button>
-<button class="buttonClass1" id="play3" onclick="playSoundsSpaced()"> Play Multiple Samples Staggered</button>
-<button class="buttonClass1" id="play5" onclick="playMoreSounds2()"> Play Many Samples</button>
-<button class= "buttonClass1" id="grain" onclick="playGrainSounds()"> Play One Granulated Sample</button>
-<button class= "buttonClass1" id="grain1" onclick="playGrains()"> Play Multiple Granuated Samples</button>
-<button class= "buttonClass1" id="grain2" onclick="playMoreGrains()"> Play Multiple Granuated Samples Staggered</button>
 
-</p>
-</div>
 <button class= "buttonClass" id="getSamples" onclick="startAudio()"> Start Audio Context </button>
 <button class= "buttonClass" id="updateList" onclick="updateList()"> Update Sample List</button>
 <button class= "buttonClass" onclick="printAudio()"> Print Audio </button>
@@ -72,6 +58,20 @@ Set Ambisonic order:
 <div id="div-decoder"><p> Set speaker position: azim1, elev1, dist1 etc. <span id="decoder-value"></span> &nbsp; </p><input type="text" id="spkpos" value="0,0,1,45,0,1,90,0,1,135,0,1,180,0,1,225,0,1,270,0,1,315,0,1,0,90,1,0,-90,1" size="100"><button class= "buttonClass2" id="spkButton">set</button></div>
 <br>
 <!-- OUTPUT VOLUME -->
+<div id="div-play-stop-buttons">
+
+    &nbsp;
+    <!-- <button class= "buttonClass1" id="play2" onclick="playOneSound()"> Play One Sample</button> -->
+    <button class= "buttonClass1" id="play1" onclick="playMoreSounds()" > Play <br> One <br>Sample</button>
+    <button class="buttonClass1" id="play4" onclick="playMoreSounds1()"> Play<br> More<br> Samples</button>
+    <button class="buttonClass1" id="play3" onclick="playSoundsSpaced()"> Play <br> Multiple<br> Samples<br> Staggered</button>
+    <button class="buttonClass1" id="play5" onclick="playMoreSounds2()"> Play<br> Many<br> Samples</button>
+    
+    <button class= "buttonClass1" id="grain" onclick="playGrainSounds()"> Play<br> One <br>Granulated<br> Sample</button>
+    <button class= "buttonClass1" id="grain1" onclick="playGrains()"> Play <br>Multiple <br>Granuated<br> Samples</button>
+    <button class= "buttonClass1" id="grain2" onclick="playMoreGrains()"> Play<br> Multiple<br> Granuated<br> Samples<br> Staggered</button>
+    
+    </div>
 <div id="div-volume">
 <!-- <label for="volume-slider">Volume</label> &nbsp; -->
 <div id="volume"> Volume </div>
@@ -92,7 +92,7 @@ Set Ambisonic order:
 
 <!-- MOVE SOURCE ON MAP -->
 <!-- <p id="move-map-instructions"> Click on the map to pan the source: </p> -->
-<p> <canvas id="Canvas" width="700" height="300"></canvas> </p>
+<p> <canvas id="Canvas" width="600" height="250"></canvas> </p>
 <p>
 Azimuth: <span id="azim-value">-12</span>
 Elevation: <span id="elev-value">-12</span>
@@ -101,7 +101,7 @@ Elevation: <span id="elev-value">-12</span>
 <!-- SOUND FIELD VISUALIZER -->
 <div id="div-analyser">
 <!-- <p>Intensity visualizer:</p> -->
-<canvas id="Canvas2" width="820" height="412" style="display:none"></canvas>
+<canvas id="Canvas2" width="820" height="250" style="display:none"></canvas>
 </div>
 
 <!-- <p align="right"> <a href="../index.html">back to index</a>&nbsp; &nbsp;</p> -->
@@ -152,13 +152,28 @@ Elevation: <span id="elev-value">-12</span>
     bottom: 1px;
 }
 .buttonClass1 {
+    vertical-align: top;
   font-size: 1em;
   background-color: darkblue;
+  text-align: center;
   /* border-radius: 95%; */
   color: white;
   border: #a1dcff 5px solid;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
 
  
+}
+
+.buttonClass1:hover {
+    background-color: rgb(47, 38, 220);
+    color: rgb(64, 207, 255)
+}
+
+.buttonClass1:active {
+    border: rgb(7, 58, 75) 5px solid;
+    background-color: rgb(7, 58, 75) ;
 }
 .buttonClass {
   border: 2px white solid;
@@ -169,16 +184,26 @@ Elevation: <span id="elev-value">-12</span>
   
 }
 
+.buttonClass:hover {
+    background-color: rgb(198, 155, 247);
+    border: 2px rgb(198, 155, 247) solid;
+
+}
+
+.buttonClass:active {
+    border: #370258 2px solid;
+    background-color: rgb(86, 78, 176);
+} 
+
 .buttonClass4 {
   margin: 2px;
   font-size: 1em;
   background-color: darkblue;
   color: white;
-  
 }
 
 .buttonClass2 {
-    margin: 2px;
+  margin: 2px;
   font-size: 1em;
   background-color: darkblue;
   color: white;
@@ -357,6 +382,27 @@ $.holdReady( false ); // to force awaiting on common.html loading
     <!-- Load js file related to current example -->
 
     </div>
+    <div id="main-column1" style="text-align: center;">
+        <h1 id="head1">Set Whisper Sections </h1> 
+        <p></p>
+        <button class="buttonClass" onclick="stateOne()">Start First Section</button>
+        <p></p>
+        <button class="buttonClass" onclick="stateTwo()">Pause Recording For a Moment</button>
+        <p></p>
+        <button class="buttonClass" onclick="stateThree()">Start Second Section</button>
+        <p></p>
+        <button class="buttonClass"onclick="stateFour()">Indicate Piece Ending</button>
+        <p></p>
+        <button class="buttonClass"onclick="stateFive()">End Piece</button>
+        <p></p>
+        <button class="buttonClass" onclick="resetMode()">Reset to Instructions Screen</button>
+        <p></p>
+    </div>
+</div>
+
+<style>
+
+</style>
 
 
 </body>

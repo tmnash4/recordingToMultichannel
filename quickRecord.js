@@ -82,7 +82,7 @@ const io = new Server(server);
 let fileNameArray = [];
 
 let whisperSection = {
-  section: "pre"
+  section: "zero"
 }
 
 app.use(bodyParser.json());
@@ -167,7 +167,7 @@ let myCount1;
 let fileName = [];
 
 let recordState = {
-  section: "pre"
+  section: "zero"
 }
 
 io.on('connection', (socket) => {
@@ -195,43 +195,49 @@ io.on('connection', (socket) => {
   
     })
 
-    socket.on('sendFileName1', () => {
-      //fileName.split(',')
-      counter = 3
-      io.emit('send-FN1', fileName3)
-      console.log("sent")
-      whisperSection.section = "second"
-      io.emit("set_section", "second")
+    socket.on('resetMode', () => {
+      whisperSection.section = "zero";
+      io.emit("set_section", "zero")
     })
 
     socket.on('startSec', () => {
-      whisperSection.section = "start";
-      io.emit("set_section", "start")
+      whisperSection.section = "one";
+      io.emit("set_section", "one")
     })
 
     socket.on('sec1', () => {
-      whisperSection.section = "first"
-      io.emit("set_section", "first")
-    })
-
-    socket.on("secEnd", () => {
-      whisperSection.section = "end"
-      io.emit("set_section", "end")
+      whisperSection.section = "two"
+      io.emit("set_section", "two")
     })
 
     socket.on("justListen", () => {
-      whisperSection.section = "jl"
-      io.emit("set_section", "jl")
+      whisperSection.section = "three"
+      io.emit("set_section", "three")
     })
 
-    socket.on("justListen1", () => {
-      whisperSection.section = "jl1"
-      io.emit("set_section", "jl1")
+    socket.on('sendFileName1', () => {
+      counter = 3
+      io.emit('send-FN1', fileName3)
+      console.log("sent")
+      whisperSection.section = "four"
+      io.emit("set_section", "four")
     })
+
+    socket.on("secEnd", () => {
+      whisperSection.section = "five"
+      io.emit("set_section", "five")
+    })
+
+   
+
+    // socket.on("justListen1", () => {
+    //   whisperSection.section = "jl1"
+    //   io.emit("set_section", "jl1")
+    // })
 
     socket.on("end", () => {
-      whisperSection.section = "endForReal";
-      io.emit("set_section", "endForReal")
+      whisperSection.section = "six";
+      io.emit("set_section", "six")
     })
   
 
@@ -281,8 +287,6 @@ io.on('connection', (socket1) => {
       console.log(data)
       numberOfAudioFiles.push(data)
       myCount = numberOfAudioFiles.length 
-
-     
     })
    
     socket1.on('sendBack', () => {

@@ -827,12 +827,17 @@ document.addEventListener('keydown', (e)=> {
         socket.emit('sendFileName', true)
         myList = updateList
     } else if (e.key == "s") {
-        socket.emit('sendFileName1', true)
-        console.log("2go")
+
        
 
     }
 })
+
+function changeArray() {
+    socket.emit('sendFileName1', true)
+}
+
+
 
 //let listButton = document.getElementById("updateList");
 //listButton.addEventListener('click', updateList)
@@ -864,9 +869,6 @@ socket.on('send-FN', (data) => {
     myList = updateList1
     //console.log(myFilez1)
     console.log("getting in message back");
-
-
-   
   })
 
 
@@ -982,3 +984,39 @@ function makeList() {
     }
     
 };
+
+function resetMode() {
+    socket.emit("resetMode", true)
+}
+
+function stateOne() {
+    socket.emit("startSec", true)
+}
+
+function resetOne() {
+    socket.emit("sec1", true)
+}
+
+function stateTwo() {
+    socket.emit("justListen", true)
+}
+
+
+function stateThree() {
+    socket.emit("sec2", true)
+    socket.emit('sendFileName1', true)
+    setTimeout(() => {
+        console.log(myFilez1)
+    }, 5000)
+}
+
+
+function stateFour() {
+    socket.emit("secEnd", true)
+
+}
+
+function stateFive() {
+    socket.emit("end", true)
+}
+
