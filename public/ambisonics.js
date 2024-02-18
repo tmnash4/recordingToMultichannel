@@ -18,8 +18,6 @@ context.onstatechange = function() {
 
 let soundUrl = "/uploads/whisper_Sample";
 
-
-
 var maxOrder = 3;
 var orderOut = 3;
 var soundBuffer, sound;

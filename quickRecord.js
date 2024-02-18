@@ -44,6 +44,7 @@ console.log("Port: " + serverPort);
 var app = express();
 app.use(express.static(publicFolder));
 console.log(publicFolder);
+let date = new Date()
 
 // server is the node server (web app via express)
 // this code can launch the server on port 80 and switch the user id away from sudo
@@ -175,6 +176,12 @@ io.on('connection', (socket) => {
     if (data == 'ambisonic') {
       ambiSocket = socket
     } 
+
+    socket.on('correctNumber', (data) => {
+      myCount = data
+      console.log(data)
+      socket.emit('correct-number', data)
+    })
     socket.on('counter', (data) => {
       //console.log(data)
       //numberOfAudioFiles.push(data)
