@@ -83,7 +83,7 @@ const io = new Server(server);
 let fileNameArray = [];
 
 let whisperSection = {
-  section: "zero"
+  // section: "zero"
 }
 
 app.use(bodyParser.json());
