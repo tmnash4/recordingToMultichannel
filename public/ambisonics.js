@@ -458,9 +458,13 @@ function playMoreSounds() {
         loadSample(myFilez[rand], assignSample2SoundBuffer);
         sound = context.createBufferSource();
         sound.buffer = soundBuffer;
+        const filter = context.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.value = 400;
         sound.fadeIn = 0.09
         sound.fadeOut = 0.09
-        sound.connect(encoder.in);
+        sound.connect(filter)
+        filter.connect(encoder.in)
         whichSample++
         sound.start(0);
         console.log(encoder.azim)
@@ -700,6 +704,8 @@ if (myFilez.length >= 1) {
 
 }
 
+let filt = new Tone.Filter(100, "lowpass", -12)
+
 
 function playOneSound() {
     setAzim()
@@ -711,8 +717,9 @@ function playOneSound() {
             sound.fadeIn = 0.09
             sound.fadeOut = 0.09
            
-            sound.connect(encoder.in);
-            sound.start(0);
+            sound.connect(filt);
+            filt.connect(encoder.in)
+            filt.start(0);
 
             //sound.isPlaying = true;
            // myFFT = new Tone.FFT(128)
@@ -758,19 +765,26 @@ function setAzim(encoderNumber = 0) {
     let randAzim1 = Math.random() * 360
     let randAzim2 = Math.random() * 360
     let randAzim3 = Math.random() * 360
+    var randElev = (Math.random() * 90) - 90;
+
+
     // console.log(marker.innerHTML)
     // myAzim = Number(marker.innerHTML)
     if (!encoderNumber) {
         encoder.azim = randAzim
+        encoder.elev = randElev
         encoder.updateGains()
     } else if (encoderNumber == 1) {
         encoder1.azim = randAzim1
+        encoder.elev = randElev
         encoder1.updateGains()
     } else if (encoderNumber == 2) {
         encoder2.azim = randAzim2
+        encoder.elev = randElev
         encoder2.updateGains()
     } else if (encoderNumber == 3) {
         encoder3.azim = randAzim3
+        encoder.elev = randElev
         encoder3.updateGains()
     }
     
@@ -1001,8 +1015,8 @@ function stateTwo() {
 
 
 function stateThree() {
+    changeArray()
     socket.emit("sec2", true)
-    socket.emit('sendFileName1', true)
     setTimeout(() => {
         console.log(myFilez1)
     }, 5000)

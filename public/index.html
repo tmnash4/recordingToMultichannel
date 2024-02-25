@@ -57,7 +57,7 @@
       <p id="text2" style="display:none"> Step 3: Press 'stop recording' once to stop recording</p>
         <p id="text3" style="display:none"> Step 4: Play your audio back, then decide whether to upload or delete it</p>
           <p id="text4" style="display:none">  Step 5: Repeat!</p>
-    
+  <p id="text5" style="display:none"> </p>
     
     
     <!-- When you begin to record, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you have stopped recording, you can listen to your audio and then upload or delete it. Repeat  </p> -->
@@ -319,6 +319,7 @@ var socket = io();
   let text2 = document.querySelector("#text2");
   let text3 = document.querySelector("#text3");
   let text4 = document.querySelector("#text4");
+  let text5 = document.querySelector("#text5")
   uploadButton.style.color = "white"
   deleteButton.style.color = "white"
   
@@ -329,7 +330,7 @@ var socket = io();
 
   let test1 = 0
   let test2 = 1
-
+let myInt;
   let sec2text1 = 0;
  // text.style.color = "blue"
   function changeColor() {
@@ -351,7 +352,8 @@ var socket = io();
       deleteButton.style.visibility = "hidden"
       playButton.style.visibility = "hidden"
       test1 = 1;
-   
+      myInt = setInterval(checkForScream, 100)
+      text5.style.display="flex"
       // poemLine = 0;
       // poemLine++
      
@@ -367,6 +369,8 @@ var socket = io();
     } else if (recordButton.style.backgroundColor =="red" && test2 == 1) {
       recordButton.style.visibility = "hidden";
       clearInterval(refreshIntervalId)
+      clearInterval(myInt)
+      text5.style.display="none"
       text.style.color = "black"
       text1.style.color = "black"
       text2.style.color = "black"
@@ -679,7 +683,20 @@ let playText = document.getElementById("playAud");
 let playSymbol = document.getElementById("playSymb");
 playButton.style.color = "white"
 
+
+
+function checkForScream() {
+    let level = meter.getValue();
+    console.log(level)
+    text5.innerHTML = level
+    if (level > -40) {
+        console.log("It's above!!!")
+    }
+}
+
+
   liveFeed.open().then(()=>{
+
     //promise resolves when input is available
     console.log("Recorder Available")
     recorder = new MediaRecorder(liveFeed._stream);
@@ -706,6 +723,20 @@ playButton.style.color = "white"
   	// promise is rejected when the user doesn't have or allow mic access
   	console.log("mic not open");
   });
+
+  const meter = new Tone.Meter()
+let screamFilter = new Tone.Filter({
+    Q: 20,
+    frequency: 2500,
+    roloff: -48,
+    type: "bandpass"
+}) 
+screamFilter.connect(meter);
+liveFeed.connect(screamFilter)
+let screamIsPlaying = false;
+
+
+
   let men1 = 0;
   let j = 0;
   let k = 0;
@@ -728,39 +759,6 @@ playButton.style.color = "white"
     newAudio.style.width = "0px"
     
 
-      // if (men == 1) {
-
-      // playButton.addEventListener('click', ()=> {
-      //   // if (men == 1) {
-        
-      //     setTimeout(() => {
-      //       "./images/Pause.png"
-      //       playButton.addEventListener('click', () => {
-      //       newAudio.play()
-            
-      //     })
-        
-        
-        // } else {
-        //   newAudio.play()
-        //   console.log("else")
-        //   myImg.src = "./images/Pause.png"
-        //   men = 1
-       
-        // }
-      // })
-
-      // let bat = 1
-      // if (bat = 1) {
-      //   newAudio.paused
-      //   myImg.src = "./images/play.png"
-      //   bat = 2
-      // } else  {
-      //   bat = 2
-      //   newAudio.play()
-      //   myImg.src = "./images/Pause.png"
-      // }
-    // })
     
   
 
@@ -933,12 +931,7 @@ let poemDiv = document.getElementById("text");
   // function uploadSample(user = 'bob', userNumber = myCount, soundBlob) {
     function uploadSample(user = 'bob', userNumber = today, soundBlob) {
     today = new Date().getTime()
-    //console.log(u)
     let formdata = new FormData(); //create a from to of data to upload to the server
-    // if (myCount == null) {
-    //   myCount = 0;
-    //   myCount++
-    // } 
     let soundFileName = user  + '_Sample' + today;
     sendNumber()
     console.log(today)
@@ -966,14 +959,9 @@ let poemDiv = document.getElementById("text");
     });
 
     console.log('recording sent');
-   // u++
     fileNameArray.push(soundFileName + ".wav")
-    //i++
     handleSubmit()
     deleteAudio()
-    //uArray.push(u)
-    // test2 = 0;
-
   };
 
 
