@@ -167,9 +167,9 @@ let myCount;
 let myCount1;
 let fileName = [];
 
-// let recordState = {
-//   section: "zero"
-// }
+let recordState = {
+  // section: "zero"
+}
 
 io.on('connection', (socket) => {
   socket.on('register', (data)=> {
