@@ -213,7 +213,7 @@ var assignSample2SoundBuffer11 = function(decodedBuffer) {
 
 function onDecodeAudioDataError(error) {
     var url = 'hjre';
-  alert("Browser cannot decode audio data..." + "\n\nError: " + error + "\n\n(If you re using Safari and get a null error, this is most likely due to Apple's shady plan going on to stop the .ogg format from easing web developer's life :)");
+  console.log("Browser cannot decode audio data..." + "\n\nError: " + error + "\n\n(If you re using Safari and get a null error, this is most likely due to Apple's shady plan going on to stop the .ogg format from easing web developer's life :)");
 }
 
 // function to load samples
