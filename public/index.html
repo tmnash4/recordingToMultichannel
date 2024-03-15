@@ -37,7 +37,7 @@
 </div>
 <div class="flex-items">  
 
-  <button id="upload" onclick="uploadSample('whisper', userNumber = today, soundBlob)">upload latest 
+  <button id="upload" >upload latest 
     <img class="img" src="./upload.png">
   </button>
   </div>
@@ -57,8 +57,31 @@
       <p id="text2" style="display:none"> Step 3: Press 'stop recording' once to stop recording</p>
         <p id="text3" style="display:none"> Step 4: Play your audio back, then decide whether to upload or delete it</p>
           <p id="text4" style="display:none">  Step 5: Repeat!</p>
-  <p id="text5" style="display:none"> </p>
-    
+  <p id="text5" style="display:none; color:rgb(255, 255, 247); font-size: 40px">Please hold the phone further from your mouth :D</p>
+  <div id="peak-meter" style="height: 80px; width: 95%; visibility: hidden; margin: auto;">
+    <div class="peakMeterInside" id="one"></div>
+    <div class="peakMeterInside" id="two"></div>
+    <div class="peakMeterInside" id="three"></div>
+    <div class="peakMeterInside" id="four"></div>
+    <div class="peakMeterInside" id="five"></div>
+    <div class="peakMeterInside" id="six"></div>
+    <div class="peakMeterInside" id="seven"></div>
+    <div class="peakMeterInside" id="eight"></div>
+    <div class="peakMeterInside" id="nine"></div>
+    <div class="peakMeterInside" id="ten"></div>
+    <div class="peakMeterInside" id="eleven"></div>
+    <div class="peakMeterInside" id="twelve"></div>
+    <div class="peakMeterInside" id="thirteen"></div>
+    <div class="peakMeterInside" id="fourteen"></div>
+    <div class="peakMeterInside" id="fifteen"></div>
+    <div class="peakMeterInside" id="sixteen"></div>
+    <div class="peakMeterInside" id="seventeen"></div>
+    <div class="peakMeterInside" id="eighteen"></div>
+    <div class="peakMeterInside" id="nineteen"></div>
+    <div class="peakMeterInside" id="twenty"></div>
+
+  </div>
+
     
     <!-- When you begin to record, text will appear on the screen. Please whisper the text into your phone, then press the button again to stop recording. Once you have stopped recording, you can listen to your audio and then upload or delete it. Repeat  </p> -->
   <div id="sound-clips">
@@ -80,6 +103,23 @@ body {
   font-size: 2em;
 
 }
+
+#peak-meter {
+  display: flex;
+  background-color: black;
+  border: 5px rgb(156, 149, 128) solid;
+
+}
+
+.peakMeterInside {
+  width:20%;
+  height:98%;
+  background-color: white;
+  border: white 1px solid
+}
+
+
+
 
 .flex-container {
   display: flex;
@@ -306,12 +346,21 @@ h3 {
 var socketName = 'index';
 var socket = io(); 
   let body = document.querySelector("body")
-
+  const meterElement = document.getElementById('peak-meter');
   let recordButton = document.getElementById("record")
-
+  let peakMeter = document.getElementById("peak-meter")
 
 
   let uploadButton = document.getElementById("upload");
+  uploadButton.addEventListener("click", ()=> {
+    if (peakLevel == 0) {
+     uploadSample('whisper', userNumber = today, soundBlob)
+    } else {
+      console.log("not today buddy")
+      peakLevel = 0;
+    }
+  })
+
   let deleteButton = document.getElementById("delete");
   let poemLine = 0;
   let text = document.querySelector("#text");
@@ -334,12 +383,14 @@ let myInt;
   let sec2text1 = 0;
  // text.style.color = "blue"
   function changeColor() {
+
   let randNum = Math.floor(Math.random() * hardy.length)
   //poemLine = 0;
   recordButton.style.opacity = 0.9;
   let refreshIntervalId = setInterval(flashColor, 1000);
   poemLine++
     if (!test1) {
+      peakMeter.style.visibility = "visible"
       recordButton.style.backgroundColor = "red";
        text.style.color = "black";
        text1.style.color = "blue";
@@ -367,6 +418,8 @@ let myInt;
       //   recordButton.style.visibility = "hidden"
       // }
     } else if (recordButton.style.backgroundColor =="red" && test2 == 1) {
+
+      peakMeter.style.visibility = "hidden"
       recordButton.style.visibility = "hidden";
       clearInterval(refreshIntervalId)
       clearInterval(myInt)
@@ -683,15 +736,215 @@ let playText = document.getElementById("playAud");
 let playSymbol = document.getElementById("playSymb");
 playButton.style.color = "white"
 
+let peak1 = document.getElementById("one");
+let peak2 = document.getElementById("two")
+let peak3 = document.getElementById("three")
+let peak4 = document.getElementById("four")
+let peak5 = document.getElementById("five")
+let peak6 = document.getElementById("six")
+let peak7 = document.getElementById("seven")
+let peak8 = document.getElementById("eight")
+let peak9 = document.getElementById("nine")
+let peak10 = document.getElementById("ten")
+let peak11 = document.getElementById("eleven");
+let peak12 = document.getElementById("twelve")
+let peak13 = document.getElementById("thirteen")
+let peak14 = document.getElementById("fourteen")
+let peak15 = document.getElementById("fifteen")
+let peak16 = document.getElementById("sixteen")
+let peak17 = document.getElementById("seventeen")
+let peak18 = document.getElementById("eighteen")
+let peak19 = document.getElementById("nineteen")
+let peak20 = document.getElementById("twenty")
 
+let peakArray = [peak1, peak2, peak3, peak4, peak5, peak6, peak7, peak8, peak9, peak10, peak11, peak12, peak13, peak14, peak15,peak16, peak17, peak18, peak19, peak20]
+
+let peakLevel = 0;
 
 function checkForScream() {
+   
     let level = meter.getValue();
     console.log(level)
-    text5.innerHTML = level
-    if (level > -40) {
-        console.log("It's above!!!")
+    //text1.innerHTML = level
+    if (level <= -90) {
+      for (i=0; i<1; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=1;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+    } else if (level > -90 && level <= -63) {
+      for (i=0; i<2; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=2;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+    } else if (level > -63 && level <= -60 ) {
+      for (i=0; i<3; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=3;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+
+    } else if (level > -60 && level <= -57) {
+      for (i=0; i<4; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=4;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+
+   
+    } else if (level > -57 && level <= -54) {
+      for (i=0; i<5; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=5;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+
+   
+    } else if (level > -54 && level <= -51) {
+      for (i=0; i<6; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=6;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+
+   
+    } else if (level > -51 && level <= -48) {
+      for (i=0; i<7; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=7;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+
+   
+    } else if (level > -48 && level <= -45) {
+      for (i=0; i<8; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=8;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+
+   
+    } else if (level > -45 && level <= -42) {
+      for (i=0; i<9; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=8;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+
+
+    } else if (level > -42 && level <= -40) {
+      for (i=0; i<10; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=10;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+
+    } else if (level > -40 && level <= -38) {
+      for (i=0; i<11; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=11;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+    } else if (level > -38 && level <= -36) {
+      for (i=0; i<12; i++) {
+        peakArray[i].style.backgroundColor = "green"
+      }
+      for (i=12;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+    } else if (level > -36 && level <= -34) {
+      for (i=0; i<13; i++) {
+        peakArray[i].style.backgroundColor = "yellow"
+      }
+      for (i=13;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+    } else if (level > -34 && level <= -32) {
+      for (i=0; i<14; i++) {
+        peakArray[i].style.backgroundColor = "yellow"
+      }
+      for (i=14;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+    } else if (level > -32 && level <= -30) {
+      for (i=0; i<15; i++) {
+        peakArray[i].style.backgroundColor = "yellow"
+      }
+      for (i=15;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+    } else if (level > -30 && level <= -28) {
+      for (i=0; i<16; i++) {
+        peakArray[i].style.backgroundColor = "yellow"
+      }
+      for (i=16;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+    } else if (level > -28 && level <= -26) {
+      for (i=0; i<17; i++) {
+        peakArray[i].style.backgroundColor = "yellow"
+      }
+      for (i=17;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }  
+    } else if (level > -26 && level <= -24) {
+      text5.style.color = "black"
+        setTimeout(() => {
+          text5.style.color = "rgb(255, 255, 247)"
+        }, 2000)
+      for (i=0; i<18; i++) {
+        peakArray[i].style.backgroundColor = "red"
+        
+      }
+      for (i=18;i<peakArray.length;i++) {
+        peakArray[i].style.backgroundColor = "white"
+      } 
+    } else if (level > -24 && level <= -22) {
+      text5.style.color = "black"
+        setTimeout(() => {
+          text5.style.color = "rgb(255, 255, 247)"
+        }, 2000)
+      for (i=0; i<19; i++) {
+        peakArray[i].style.backgroundColor = "red"
+        
+      }
+      
+      for (i=19;i<peakArray.length;i++) {
+        peakLevel = 1
+        peakArray[i].style.backgroundColor = "white"
+      } 
+    } else if (level > -22 && level <= -20) {
+
+      text5.style.color = "black"
+        setTimeout(() => {
+          text5.style.color = "rgb(255, 255, 247)"
+        }, 2000)
+     
+      for (i=0; i<peakArray.length; i++) {
+        peakArray[i].style.backgroundColor = "red"
+        
+      }
+      
+   
+    } else {
+      for (i=0; i<peakArray.length; i++) {
+        peakArray[i].style.backgroundColor = "white"
+      }
+
     }
+    
 }
 
 
@@ -731,11 +984,11 @@ let screamFilter = new Tone.Filter({
     roloff: -48,
     type: "bandpass"
 }) 
-screamFilter.connect(meter);
-liveFeed.connect(screamFilter)
+//screamFilter.connect(meter);
+liveFeed.connect(meter)
 let screamIsPlaying = false;
 
-
+ // let audioPeakMeter = new webAudioPeakMeter.WebAudioPeakMeter(meter.getValue(), meterElement);
 
   let men1 = 0;
   let j = 0;

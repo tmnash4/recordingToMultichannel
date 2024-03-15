@@ -253,7 +253,6 @@ function playGrainSounds() {
 function playMoreGrainSounds() {
     setAzim(1)
     let rand1 = Math.floor(Math.random() * myFilez1.length)
-    //console.log(myFilez1[rand1])
     console.log(rand1)
     myGrainPlayer1 = new tone.GrainPlayer(myFilez1[rand1], () => {
         myGrainPlayer1.start()
@@ -270,7 +269,6 @@ function playMoreGrainSounds() {
 function playMoreGrainSounds1() {
     setAzim(2)
     let rand1 = Math.floor(Math.random() * myFilez1.length)
-    //console.log(myFilez1[rand1])
     console.log(rand1)
     myGrainPlayer2 = new tone.GrainPlayer(myFilez1[rand1], () => {
         myGrainPlayer2.start()
@@ -873,14 +871,18 @@ socket.on('send-FN', (data) => {
       socket.off('send-FN')
       console.log("I can't hear you!")
     }
-    // console.log(myFilez)
   })
 
   socket.on('send-FN1', (data) => {
+    socket.off('send-FN')
     myFilez1 = data;
     myList = updateList1
-    //console.log(myFilez1)
     console.log("getting in message back");
+    // setTimeout(() => {
+    //     myFilez1 = data;
+    //     myList = updateList1
+    //     console.log("getting in message back");
+    // },100)
   })
 
 
