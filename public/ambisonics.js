@@ -97,7 +97,8 @@ console.log(limiter);
 // binaural HOA decoder
 var decoder = new ambisonics.decoder(context, maxOrder);
 //let spkSphPosArray = [ [0, 0, 1], [90, 0, 1], [180, 0, 1], [270, 0, 1], [0, 90, 1], [0, -90, 1] ];
-let spkSphPosArray = [ [0, 0, 1], [45, 0, 1], [90, 0, 1], [135, 0, 1], [180, 0, 1], [225, 0, 1], [270, 0, 1], [315, 0, 1], [0, 90, 1], [300, -90, 1] ];
+//let spkSphPosArray = [ [0, 0, 1], [45, 0, 1], [90, 0, 1], [135, 0, 1], [180, 0, 1], [225, 0, 1], [270, 0, 1], [315, 0, 1], [0, 90, 1], [300, -90, 1] ];
+let spkSphPosArray = [ [135, 0, 1], [45, 0, 1], [315, 0, 1], [225, 0, 1], [0, 90, 1], [300, -90, 1] ];
 
 decoder.speakerPos = spkSphPosArray;
 console.log(decoder);
