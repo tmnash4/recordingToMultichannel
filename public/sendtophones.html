@@ -42,8 +42,8 @@ let myButt2 = document.getElementById("play");
 
 myButt1.addEventListener("click", () => {
     socket.emit(
-  "load_audio",
-   myFilez)
+  "load_audio", true)
+  console.log("loading audio")
 })
 
 myButt2.addEventListener("click", () => {
