@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Screen</title>
+    <style>
+        /* Reset */
+        * {
+            
+           background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <script src="/socket.io/socket.io.js"></script>
+    <div id="onlyDiv">
+     <!-- Thank you for playing!<br>See you next time! -->
+      Thank you so much for participating! <br><br> -TMN xx
+    </div>
+    
+<script>
+
+var socketName = "default";
+var socket = io();  
+
+socket.on("begin_Piece", () => {
+    location.href = "index.html"
+})
+
+
+socket.on("set_section", (section) => {
+    console.log(section)
+    if (section == "begin") {
+        location.href = "index.html"
+    } 
+})
+
+// document.getElementById("onlyDiv").addEventListener("click", () => {
+//      location.href = "https://frog.treyanash.com/";
+// })
+
+
+</script>
+<style>
+    * {
+        font-size: 30px;
+        text-align: center;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+
+    #onlyDiv {
+        position: absolute;
+        top: 50%;               /* 50% from the top of the parent */
+        left: 50%;              /* 50% from the left of the parent */
+        transform: translate(-50%, -50%); /* Shift the element back by 50% of its width and height */
+        width: 90%;    
+        color: white;         /* Set width if needed */
+    }
+
+
+</style>
+
+
+</body>
+</html>
