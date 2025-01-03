@@ -12,7 +12,10 @@
 <button id="play"> Play on Phone</button>
 
 <script>
+   
 var socket = io(); 
+var socketName = "index"
+socket.emit('register', 'index')
 let myFilez = ["file", "another file", "a third file", "ff"];
 // let myFilez1 = [];
 
