@@ -737,9 +737,10 @@ let myPlay3;
 
 
 socket.on("loadAudio", (data) => {
+    myFilez = data;
     console.log("recieving!")
     let randomIndices = getRandomInts(3, myFilez.length);
-    myFilez = data;
+
     myBuff1 = new Tone.Buffer(myFilez[randomIndices[0]]);
     myBuff2 = new Tone.Buffer(myFilez[randomIndices[1]]);
     myBuff3 = new Tone.Buffer(myFilez[randomIndices[2]]);
