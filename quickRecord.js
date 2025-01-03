@@ -237,7 +237,8 @@ io.on('connection', (socket) => {
 
     socket.on("load_audio", () => {
       io.emit("loadAudio", fileName2)
-      console.log(fileName2)
+      console.log("Sending files:", fileName2);
+      
     })
    
     socket.on("play_audio", () => {
