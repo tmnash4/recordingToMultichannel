@@ -235,7 +235,13 @@ io.on('connection', (socket) => {
       io.emit("set_section", "five")
     })
 
+    socket.on("load_audio", () => {
+      io.emit("loadAudio", fileName2)
+    })
    
+    socket.on("play_audio", () => {
+      io.emit("playAudio", true)
+    })
 
     // socket.on("justListen1", () => {
     //   whisperSection.section = "jl1"
