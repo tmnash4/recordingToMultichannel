@@ -737,6 +737,7 @@ let myPlay3;
 
 
 socket.on("loadAudio", (data) => {
+    let randomIndices = getRandomInts(3, myFilez.length);
     myFilez = data;
     myBuff1 = new Tone.Buffer(myFilez[randomIndices[0]]);
     myBuff2 = new Tone.Buffer(myFilez[randomIndices[1]]);
@@ -768,9 +769,6 @@ function getRandomInts(count, max) {
   }
   return indices;
 }
-
-// Pick 3 unique random indices
-const randomIndices = getRandomInts(3, myFilez.length);
 
 function sendNumber() {
 socket.emit('correctNumber', today)
