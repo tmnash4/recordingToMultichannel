@@ -726,6 +726,51 @@ function justListen() {
     myCount = data
   })
   //GetFolder("/uploads")
+let myFilez = [];
+
+let myBuff1;
+let myBuff2;
+let myBuff3;
+let myPlay1;
+let myPlay2;
+let myPlay3;
+
+
+socket.on("loadAudio", (data) => {
+    myFilez = data;
+    myBuff1 = new Tone.Buffer(myFilez[randomIndices[0]]);
+    myBuff2 = new Tone.Buffer(myFilez[randomIndices[1]]);
+    myBuff3 = new Tone.Buffer(myFilez[randomIndices[2]]);
+    myPlay1 = new Tone.Player(myBuff1).toDestination();
+    myPlay2 = new Tone.Player(myBuff2).toDestination();
+    myPlay3 = new Tone.Player(myBuff3).toDestination();
+})
+
+
+
+socket.on("playAudio", () => {
+   myPlay1.start()
+   setTimeout(() => {
+    myPlay2.start()
+   }, 1000)
+   setTimeout(() => {
+    myPlay3.start()
+   }, 2000)
+})
+
+function getRandomInts(count, max) {
+  const indices = [];
+  while (indices.length < count) {
+    const num = Math.floor(Math.random() * max); // Random index
+    if (!indices.includes(num)) { // Avoid duplicates
+      indices.push(num);
+    }
+  }
+  return indices;
+}
+
+// Pick 3 unique random indices
+const randomIndices = getRandomInts(3, myFilez.length);
 
 function sendNumber() {
 socket.emit('correctNumber', today)
