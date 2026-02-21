@@ -4,9 +4,6 @@ console.log(ambisonics);
 var AudioContext = window.AudioContext // Default
     || window.webkitAudioContext; // Safari and old versions of Chrome
 var context = new AudioContext; // Create and Initialize the Audio Context
-console.log("destination.maxChannelCount =", context.destination.maxChannelCount);
-console.log("destination.channelCount (initial) =", context.destination.channelCount);
-console.log("decoder.nSpk =", decoder.nSpk);
 Tone.setContext(context);
 let tone = Tone;
 tone.setContext(context);
@@ -787,19 +784,19 @@ function setAzim(encoderNumber = 0) {
         encoder.azim = randAzim
         encoder.elev = randElev
         encoder.updateGains()
-        } else if (encoderNumber == 1) {
-        encoder1.azim = randAzim1
-        encoder1.elev = randElev
-        encoder1.updateGains()
-        } else if (encoderNumber == 2) {
-        encoder2.azim = randAzim2
-        encoder2.elev = randElev
-        encoder2.updateGains()
-        } else if (encoderNumber == 3) {
-        encoder3.azim = randAzim3
-        encoder3.elev = randElev
-        encoder3.updateGains()
-        }
+    } else if (encoderNumber == 1) {
+    encoder1.azim = randAzim1
+    encoder1.elev = randElev
+    encoder1.updateGains()
+    } else if (encoderNumber == 2) {
+    encoder2.azim = randAzim2
+    encoder2.elev = randElev
+    encoder2.updateGains()
+    } else if (encoderNumber == 3) {
+    encoder3.azim = randAzim3
+    encoder3.elev = randElev
+    encoder3.updateGains()
+    }
     
     
 }
