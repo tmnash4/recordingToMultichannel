@@ -4,6 +4,9 @@ console.log(ambisonics);
 var AudioContext = window.AudioContext // Default
     || window.webkitAudioContext; // Safari and old versions of Chrome
 var context = new AudioContext; // Create and Initialize the Audio Context
+console.log("destination.maxChannelCount =", context.destination.maxChannelCount);
+console.log("destination.channelCount (initial) =", context.destination.channelCount);
+console.log("decoder.nSpk =", decoder.nSpk);
 Tone.setContext(context);
 let tone = Tone;
 tone.setContext(context);
