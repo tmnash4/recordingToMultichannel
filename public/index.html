@@ -37,14 +37,14 @@
 </div>
 <div class="flex-items">  
 
-  <button id="upload" >upload latest 
+  <button id="upload" >upload
     <img class="img" src="./upload.png">
   </button>
   </div>
   <div class="flex-items"> 
 
  
-   <button id="delete" onclick="deleteAudio()"> delete latest
+   <button id="delete" onclick="deleteAudio()"> delete
     <img class="img" id="img1" src="./images/delete.png"></button>
   </div>
   </div>
@@ -191,7 +191,7 @@ body {
 #start {
   /* width: 10%;
   height: 20%; */
-  font-size: 1.8em;
+  font-size: 5rem;
   font-family: inherit;
   border: none;
   background-color: green;
@@ -229,26 +229,29 @@ body {
 #upload {
   /* position: relative; */
   /* position: absolute; */
+  color: black;
   background-color: lightskyblue;
   width: 200px;
   height: 200px;
   border-radius: 50%;
   border: 5px lightskyblue solid;
   font-family: 'Times New Roman', Times, serif;
-  font-size: 20px;
+  font-size: 50px;
+
   /* left: 432px */
 }
 
 #delete {
   /* position: relative; */
   /* position: absolute; */
+    color: black;
   background-color: rgb(239, 132, 132);
   width: 200px;
   height: 200px;
   border-radius: 50%;
   border: 5px rgb(239, 132, 132) solid;
   font-family: 'Times New Roman', Times, serif;
-  font-size: 20px;
+  font-size: 50px;
   /* left: 642px; */
   visibility: hidden;
 }
@@ -370,8 +373,8 @@ var socket = io();
   let text3 = document.querySelector("#text3");
   let text4 = document.querySelector("#text4");
   let text5 = document.querySelector("#text5")
-  uploadButton.style.color = "white"
-  deleteButton.style.color = "white"
+  // uploadButton.style.color = "white"
+  // deleteButton.style.color = "white"
   
 
   text.style.color = "blue"
@@ -1411,7 +1414,7 @@ socket.on("set_section", (data) => {
  #record {
     background-color: black;
     color: white;
-    font-size: 30px;
+    font-size: 45px;
   }
 
 
