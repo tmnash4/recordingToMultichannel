@@ -109,6 +109,16 @@ console.log(analyser);
 // output gain
 var gainOut = context.createGain();
 
+decoder.out.channelCountMode = "explicit";
+decoder.out.channelInterpretation = "discrete";
+
+gainOut.channelCountMode = "explicit";
+gainOut.channelInterpretation = "discrete";
+
+context.destination.channelCountMode = "explicit";
+context.destination.channelInterpretation = "discrete";
+context.destination.channelCount = decoder.nSpk; // currently 6
+
 // connect HOA blocks
 encoder.out.connect(analyser.in);
 encoder.out.connect(limiter.in);
