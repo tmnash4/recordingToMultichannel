@@ -784,19 +784,19 @@ function setAzim(encoderNumber = 0) {
         encoder.azim = randAzim
         encoder.elev = randElev
         encoder.updateGains()
-    } else if (encoderNumber == 1) {
+        } else if (encoderNumber == 1) {
         encoder1.azim = randAzim1
-        encoder.elev = randElev
+        encoder1.elev = randElev
         encoder1.updateGains()
-    } else if (encoderNumber == 2) {
+        } else if (encoderNumber == 2) {
         encoder2.azim = randAzim2
-        encoder.elev = randElev
+        encoder2.elev = randElev
         encoder2.updateGains()
-    } else if (encoderNumber == 3) {
+        } else if (encoderNumber == 3) {
         encoder3.azim = randAzim3
-        encoder.elev = randElev
+        encoder3.elev = randElev
         encoder3.updateGains()
-    }
+        }
     
     
 }
