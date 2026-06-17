@@ -23,13 +23,18 @@
   </div>
   <div class="flex-items1">
     <p></p>
-<button class="flex-items1" id="start"> Start Piece</button></div>
+  <button class="flex-items1" id="start" onclick="startPiece()"> Start Piece</button>
+</div>
 </div>
 <div class="flex-container">
 <div class="flex-items"> 
   <button id="record" onclick="startRecording()" >start recording</button> 
 </div>
+<div class="flex-items">  
 
+  <button id="play" > <p id="playAud" style="position: relative; top: 10px"> play recording </p> <p id="playSymb" style="font-size: 100px; position: relative; top: -90px">  &#9658 </p> </button> 
+  <!-- <img class="img" id="img2" src="./images/play.png"> -->
+</div>
 <div class="flex-items">  
 
   <button id="upload" >upload
@@ -51,7 +56,7 @@
     <p id="text1" style="display:none">Step 2: Once you hit record, a line of poetry will appear here. Whisper it into your phone.</p>
       <p id="text2" style="display:none"> Step 3: Press 'stop recording' once to stop recording</p>
         <!-- <p id="text3" style="display:none"> Step 4: Play your audio back, then decide whether to upload or delete it</p> -->
-     <p id="text3" style="display:none"> Step 4: Upload or delete your audio</p>
+        <p id="text3" style="display:none"> Step 4: Upload or delete your audio</p>
           <p id="text4" style="display:none">  Step 5: Repeat!</p>
   <p id="text5" style="display:none; color:rgb(255, 255, 247); font-size: 40px">Please hold the phone further from your mouth :D</p>
   <div id="peak-meter" style="height: 80px; width: 95%; visibility: hidden; margin: auto;">
@@ -92,397 +97,255 @@
 <button id="stop">Stop</button> -->
 
 <style>
-/* --------------------
-   GLOBAL
--------------------- */
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100%;
-}
 
 body {
   font-family: 'Times New Roman', Times, serif;
   background-color: rgb(255, 255, 247);
-  color: black;
-  overflow-x: hidden;
-  overflow-y: auto;
+  font-size: 2em;
+
 }
 
-
-button,
-img,
-.flex-items,
-.flex-items1 {
-  -webkit-tap-highlight-color: transparent;
-}
-
-button {
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  outline: none;
-}
-
-/* --------------------
-   START / INSTRUCTIONS PAGE
--------------------- */
-
-.flex-container1 {
+#peak-meter {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  background-color: black;
+  border: 5px rgb(156, 149, 128) solid;
 
-  width: 100dvw;
-  min-height: 100dvh;
-
-  text-align: center;
-  padding: clamp(20px, 4dvh, 50px) clamp(18px, 5dvw, 70px);
 }
 
-.flex-items1 {
-  width: 100%;
-  max-width: 1200px;
-  margin: clamp(16px, 3dvh, 45px) auto;
-}
-
-#instruction h1 {
-  font-size: clamp(4rem, 12vw, 8rem);
-  line-height: 0.95;
-  font-weight: normal;
-  margin: 0;
-}
-
-#instruction h2 {
-  font-size: clamp(2.2rem, 6vw, 4rem);
-  line-height: 1;
-  font-weight: normal;
-  margin: 0.25em 0 0 0;
-}
-
-#instructions {
-  font-size: clamp(3.2rem, 8vw, 5.4rem);
-  line-height: 1.06;
-
-  width: min(92dvw, 1150px);
-  margin-left: auto;
-  margin-right: auto;
-
-  padding-left: clamp(20px, 5vw, 70px);
-  padding-right: clamp(20px, 5vw, 70px);
-}
-
-#start {
-  font-size: clamp(4.5rem, 13vw, 8.5rem);
-  font-family: inherit;
-
-  border: none;
-  background-color: green;
-  color: rgb(255, 255, 247);
-
-  border-radius: 0.25em;
-  padding: 0.12em 0.35em;
-
-  margin-top: clamp(-40px, -3dvh, -10px);
+.peakMeterInside {
+  width:20%;
+  height:98%;
+  background-color: white;
+  border: white 1px solid
 }
 
 
-/* --------------------
-   RECORDING BUTTON PAGE
-   Three visible buttons: record / upload / delete
--------------------- */
+
 
 .flex-container {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  flex-wrap: wrap;
   justify-content: space-evenly;
-  align-items: flex-start;
-
-  width: 100dvw;
-  min-height: 32dvh;
-
-  text-align: center;
-
-  padding-top: clamp(70px, 11dvh, 140px);
-  padding-left: clamp(10px, 3dvw, 40px);
-  padding-right: clamp(10px, 3dvw, 40px);
+  align-content: center;
+  flex-direction: row;
+  text-align: center
+  /* background-color: blue; */
+  /* flex-direction: column; */
 }
 
-.flex-items {
-  flex: 0 1 33.333%;
-  max-width: 33.333%;
+ .flex-items {
+  flex: 1 0 25%;
+  max-width: 25%;
+  overflow: hidden;
+  /* margin-top: 50px; */
+  margin-bottom: 60px
+  /* background-color: red */
+  /* position: absolute */
+} 
 
+.flex-container1 {
   display: flex;
-  justify-content: center;
-  align-items: center;
-
-  overflow: visible;
-  margin: 0;
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  /* align-content: center; */
+  flex-direction: row;
+  text-align: center
+  /* background-color: blue; */
+  /* flex-direction: column; */
 }
 
-/* If the old play button is still in the HTML, hide its whole slot. */
-#play {
-  display: none;
+ .flex-items1 {
+  flex: 1 0 100%;
+  max-width: 100%;
+  /* overflow: hidden; */
+  margin-top: 100px
+  /* background-color: red */
+  /* position: absolute */
+} 
+
+@media screen and (min-width: 800px) {
+  #instructions {
+  width: 30px;
+  font-size: 1.75em;
+  margin-top: -80px; 
+  margin-left: 40px;
+  margin-right: 40px
+}
 }
 
-#record,
-#upload,
-#delete {
-  width: min(28dvw, 260px);
-  height: min(28dvw, 260px);
-
-  min-width: 125px;
-  min-height: 125px;
-
-  border-radius: 50%;
-  font-family: 'Times New Roman', Times, serif;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  text-align: center;
-  cursor: pointer;
+#instructions {
+  width: 30px;
+  font-size: 1.75em;
+  margin-top: 80px; 
+  margin-left: 40px;
+  margin-right: 40px
 }
+
+#start {
+  /* width: 10%;
+  height: 20%; */
+  font-size: 5rem;
+  font-family: inherit;
+  border: none;
+  background-color: green;
+  border-radius: 5%;
+  color: rgb(255, 255, 247);
+  margin-top: -100px
+  /* margin-top: -1000px */
+}
+
 #record {
-  background-color: black;
-  color: white;
-  border: 5px black solid;
+    /* position: relative; */
 
-  font-size: clamp(1.8rem, 4.5vw, 3.3rem);
+  background-color:black;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  visibility: hidden;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+#play {
+  /* position: relative; */
+  /* position: absolute; */
+  background-color: rgb(26, 209, 26);
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 5px rgb(26, 209, 26) solid;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 20px;
+  /* left: 220px; */
   visibility: hidden;
 }
 
 #upload {
-  background-color: lightskyblue;
+  /* position: relative; */
+  /* position: absolute; */
   color: black;
+  background-color: lightskyblue;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
   border: 5px lightskyblue solid;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 50px;
 
-  font-size: clamp(2.2rem, 5vw, 3.7rem);
-  visibility: hidden;
+  /* left: 432px */
 }
 
 #delete {
+  /* position: relative; */
+  /* position: absolute; */
+    color: black;
   background-color: rgb(239, 132, 132);
-  color: black;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
   border: 5px rgb(239, 132, 132) solid;
-
-  font-size: clamp(2.2rem, 5vw, 3.7rem);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 50px;
+  /* left: 642px; */
   visibility: hidden;
 }
-
 .img {
-  display: block;
-  position: static;
-
-  width: min(10dvw, 95px);
-  height: min(10dvw, 95px);
-
-  min-width: 42px;
-  min-height: 42px;
-
-  margin: 0.15em auto 0 auto;
+  position: relative;
+  width: 100px;
+  height: 100px
 }
 
-#img1,
+#img1 {
+  top: 5px;
+}
 #img2 {
-  top: auto;
-  left: auto;
+  left: 5px;
 }
-
-/* --------------------
-   RECORDING INSTRUCTION TEXT
--------------------- */
-
-#text,
-#text1,
-#text2,
-#text3,
-#text4 {
-  visibility: hidden;
-
-  font-size: clamp(3rem, 7vw, 4.8rem);
-  line-height: 1.08;
-
-  margin-left: clamp(20px, 5vw, 70px);
-  margin-right: clamp(20px, 5vw, 70px);
-  margin-top: 0.25em;
-  margin-bottom: 0.25em;
-}
-
-#text1 {
-  white-space: pre-wrap;
-}
-
-#text5 {
-  display: none;
-
-  color: rgb(255, 255, 247);
-  font-size: clamp(2.2rem, 5.5vw, 3.8rem);
-
-  margin-left: clamp(20px, 5vw, 70px);
-  margin-right: clamp(20px, 5vw, 70px);
-}
-
-
-/* --------------------
-   LEVEL METER
--------------------- */
-
-#peak-meter {
-  display: flex;
-
-  background-color: black;
-  border: 5px rgb(156, 149, 128) solid;
-
-  height: clamp(60px, 10dvh, 100px) !important;
-  width: min(92dvw, 950px) !important;
-
-  visibility: hidden;
-  margin: clamp(15px, 3dvh, 35px) auto;
-}
-
-.peakMeterInside {
-  flex: 1;
-  height: 100%;
-
-  background-color: white;
-  border: 1px white solid;
-}
-
-
-/* --------------------
-   HIDDEN AUDIO / MISC
--------------------- */
-
 .audioClass {
   width: 600px;
+ 
 }
-
 #sound-recording {
   visibility: hidden;
   width: 2px;
 }
 
+#text {
+  visibility: hidden;
+  font-size: 50px;
+  margin-left: 15px
+}
+#text1 {
+  visibility: hidden;
+  font-size: 50px;
+  white-space: pre-wrap;
+  margin-left: 15px
+}
+#text2 {
+  visibility: hidden;
+  font-size: 50px;
+  margin-left: 15px
+}
+#text3 {
+  visibility: hidden;
+  font-size: 50px;
+  margin-left: 15px
+}
+
+#text4 {
+  /* visibility: hidden; */
+  font-size: 50px;
+  margin-left: 15px
+}
+
+
+#upload {
+  visibility: hidden
+}
+
 #myTitle {
   visibility: hidden;
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-size: 30px;
 }
 
 #volume-visualizer {
   display: none;
-
   --volume: 0%;
-
   position: relative;
   width: 50%;
   height: 20px;
-
   margin-top: 50px;
   background-color: #DDD;
 }
 
 #volume-visualizer::before {
-  content: '';
-
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-
-  width: var(--volume);
-
-  background-color: green;
-  transition: width 100ms linear;
+   content: '';
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   width: var(--volume);
+   background-color: green;
+   transition: width 100ms linear;
 }
+
+/* button {
+  margin-left: 50px;
+} */
 
 h3 {
   margin: 20px;
   font-family: sans-serif;
 }
 
-
-/* --------------------
-   VERY SMALL SCREENS
--------------------- */
-
-@media screen and (max-width: 430px) {
-  #instructions {
-    font-size: clamp(2.8rem, 9vw, 4rem);
-    line-height: 1.05;
-  }
-
-#text,
-#text1,
-#text2,
-#text3,
-#text4 {
-  visibility: hidden;
-
-  font-size: clamp(3rem, 7vw, 4.8rem);
-  line-height: 1.08;
-
-  margin-left: clamp(20px, 5vw, 70px);
-  margin-right: clamp(20px, 5vw, 70px);
-  margin-top: 0.35em;
-  margin-bottom: 0.35em;
-}
-  #record,
-  #upload,
-  #delete {
-    width: 30dvw;
-    height: 30dvw;
-
-    min-width: 105px;
-    min-height: 105px;
-  }
-
-  .flex-container {
-    padding-top: clamp(60px, 9dvh, 110px);
-    padding-left: 1dvw;
-    padding-right: 1dvw;
-  }
-}
-
-@keyframes recordPulse {
-  0% {
-    background-color: red;
-    border-color: red;
-    color: white;
-    opacity: 1;
-  }
-
-  50% {
-    background-color: rgb(255, 230, 0);
-    border-color: rgb(255, 230, 0);
-    color: black;
-    opacity: 1;
-  }
-
-  100% {
-    background-color: red;
-    border-color: red;
-    color: white;
-    opacity: 1;
-  }
-}
-
-.recordingFlash {
-  animation: recordPulse 0.8s infinite;
-}
-
 </style>
+
 <script type="text/javascript">
 var socketName = 'index';
 var socket = io(); 
@@ -490,8 +353,7 @@ var socket = io();
   const meterElement = document.getElementById('peak-meter');
   let recordButton = document.getElementById("record")
   let peakMeter = document.getElementById("peak-meter")
-  let firstSectionUrlSet = new Set();
-  let currentPlayerSection = "one";
+
 
   let uploadButton = document.getElementById("upload");
   uploadButton.addEventListener("click", ()=> {
@@ -529,12 +391,11 @@ let myInt;
   let randNum = Math.floor(Math.random() * hardy.length)
   //poemLine = 0;
   recordButton.style.opacity = 0.9;
-  // let refreshIntervalId = setInterval(flashColor, 1000);
+  let refreshIntervalId = setInterval(flashColor, 1000);
   poemLine++
     if (!test1) {
       peakMeter.style.visibility = "visible"
       recordButton.style.backgroundColor = "red";
-      recordButton.classList.add("recordingFlash");
        text.style.color = "black";
        text1.style.color = "blue";
        text2.style.color = "blue"
@@ -553,22 +414,18 @@ let myInt;
      
       // if (poemLine <=24) {
         // text1.style.width = "100%"
-text1.innerHTML =
-  "Step 2: Whisper the following line of poetry into your phone:" +
-  "<br><br>" +
-  '"' + hardy[randNum] + '"' +
-  "<br><br><br>";        // let newLine = document.createElement("div");
+       text1.innerHTML = "Step 2: Whisper the following line of poetry into your phone: " + "<br>" + "<br>" + "         " + '"' + hardy[randNum] + '"'
+        // let newLine = document.createElement("div");
         // text1.appendChild(newLine)
       // } else {
       //   poemDiv1.innerHTML = "That's good for now, thanks!"
       //   recordButton.style.visibility = "hidden"
       // }
-      
     } else if (recordButton.style.backgroundColor =="red" && test2 == 1) {
-recordButton.classList.remove("recordingFlash");
+
       peakMeter.style.visibility = "hidden"
       recordButton.style.visibility = "hidden";
-      // clearInterval(refreshIntervalId)
+      clearInterval(refreshIntervalId)
       clearInterval(myInt)
       text5.style.display="none"
       text.style.color = "black"
@@ -606,54 +463,38 @@ function flashColor() {
 
 
 
-function changeColor1() {
-  let randNum = Math.floor(Math.random() * hardy.length);
-
+  function changeColor1() {
+    let randNum = Math.floor(Math.random() * hardy.length)
+  //poemLine = 0;
   recordButton.style.opacity = 0.9;
-  // let refreshIntervalId = setInterval(flashColor, 1000);
+  let refreshIntervalId = setInterval(flashColor, 1000);
 
-  if (!test1) {
-    recordButton.classList.add("recordingFlash");
-    peakLevel = 0;
-    peakMeter.style.visibility = "visible";
-
-    recordButton.style.backgroundColor = "red";
-    text.style.color = "blue";
-    recordButton.style.boxShadow = "0 0 2px 2px red";
-    recordButton.innerHTML = "stop recording";
-
-    uploadButton.style.visibility = "hidden";
-    deleteButton.style.visibility = "hidden";
-
-    test1 = 1;
-
-    myInt = setInterval(checkForScream, 100);
-
-    text5.style.display = "flex";
-
-    text.innerHTML = "You're recording, whisper something to me!";
-  } else if (recordButton.style.backgroundColor == "red") {
-    recordButton.classList.remove("recordingFlash");
-    peakMeter.style.visibility = "hidden";
-
-    recordButton.style.visibility = "hidden";
-
-    clearInterval(refreshIntervalId);
-    clearInterval(myInt);
-
-    text5.style.display = "none";
-    text.style.color = "black";
-
-    uploadButton.style.visibility = "visible";
-    deleteButton.style.visibility = "visible";
-
-    myTitle.style.visibility = "visible";
-
-    test1 = 0;
-
-    text.innerHTML = "You've stopped recording! Upload or delete your audio.";
+    if (!test1) {
+      recordButton.style.backgroundColor = "red";
+       text.style.color = "blue";
+      recordButton.style.boxShadow = "0 0 2px 2px red"
+      recordButton.innerHTML = "stop recording"
+      uploadButton.style.visibility = "hidden"
+      deleteButton.style.visibility = "hidden"
+     // playButton.style.visibility = "hidden"
+      test1 = 1;
+      text.innerHTML = "You're recording, whisper something to me!"
+   
+     
+    } else if (recordButton.style.backgroundColor =="red") {
+      recordButton.style.visibility = "hidden";
+      clearInterval(refreshIntervalId)
+      text.style.color = "black"
+      uploadButton.style.visibility = "visible"
+      deleteButton.style.visibility = "visible"
+     // playButton.style.visibility = 'visible'
+      myTitle.style.visibility = "visible"
+      test1 = 0;
+      text.innerHTML = "You've stopped recording! Listen to your audio, and then you can choose to upload or delete it."
+    
+    }
   }
-}
+  
 
   uploadButton.addEventListener("click", () => {
     recordButton.style.visibility = "visible"
@@ -890,6 +731,40 @@ function justListen() {
     myCount = data
   })
   //GetFolder("/uploads")
+let myFilez = [];
+
+let myBuff1;
+let myBuff2;
+let myBuff3;
+let myPlay1;
+let myPlay2;
+let myPlay3;
+
+
+socket.on("loadAudio", (data) => {
+    myFilez = data;
+    console.log("recieving!")
+    let randomIndices = getRandomInts(3, myFilez.length);
+
+    myBuff1 = new Tone.Buffer(myFilez[randomIndices[0]]);
+    myBuff2 = new Tone.Buffer(myFilez[randomIndices[1]]);
+    myBuff3 = new Tone.Buffer(myFilez[randomIndices[2]]);
+    myPlay1 = new Tone.Player(myBuff1).toDestination();
+    myPlay2 = new Tone.Player(myBuff2).toDestination();
+    myPlay3 = new Tone.Player(myBuff3).toDestination();
+})
+
+
+
+socket.on("playAudio", () => {
+   myPlay1.start()
+   setTimeout(() => {
+    myPlay2.start()
+   }, 1000)
+   setTimeout(() => {
+    myPlay3.start()
+   }, 2000)
+})
 
 function getRandomInts(count, max) {
   const indices = [];
@@ -939,7 +814,7 @@ let peakLevel = 0;
 function checkForScream() {
    
     let level = meter.getValue();
-    // console.log(level)
+    console.log(level)
     //text1.innerHTML = level
     if (level <= -90) {
       for (i=0; i<1; i++) {
@@ -1377,15 +1252,17 @@ let poemDiv = document.getElementById("text");
       })
     };
   
-  fetch(serverUrl, httpRequestOptions)
-  .then(res => {
-    console.log("Uploaded: ", res);
-  })
-  .catch(error => {
-    console.log(error);
-  });
-    console.log('recording sent');
+    fetch(serverUrl, httpRequestOptions).then(res => {
+      console.log("Uploaded: ", res)
+    }).then(error => {
+      if(error) {
+        console.log(error)
+      }
+    
+    });
 
+    console.log('recording sent');
+    fileNameArray.push(soundFileName + ".wav")
     handleSubmit()
     deleteAudio()
   };
@@ -1534,14 +1411,11 @@ socket.on("set_section", (data) => {
 </script>
 
 <style>
-#record {
-  background-color: black;
-  color: white;
-  border: 5px black solid;
-
-  font-size: clamp(2.2rem, 5.5vw, 4rem);
-  visibility: hidden;
-}
+ #record {
+    background-color: black;
+    color: white;
+    font-size: 45px;
+  }
 
 
 

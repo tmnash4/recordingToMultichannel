@@ -82,9 +82,7 @@ const io = new Server(server);
 
 let fileNameArray = [];
 
-let whisperSection = {
-  // section: "zero"
-}
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -92,44 +90,47 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // *** adding in audio file upload...
 //let fileNameEnd = 0
 app.post('/upload', upload.single('soundBlob'), function(req, res, next) {
-  console.log('upload', req.file); // see what got uploaded
-  let uploadLocation = __dirname + '/public/uploads/' + req.file.originalname + ".wav" // where to save the file to. make sure the incoming name has a .wav extension
+  console.log('upload', req.file);
 
-  fs.writeFileSync(uploadLocation, Buffer.from(new Uint8Array(req.file.buffer))); // write the blob to the server as a file
-  res.sendStatus(200); //send back that everything went ok
+  let savedName = req.file.originalname + ".wav";
+  let uploadLocation = __dirname + '/public/uploads/' + savedName;
+
+  fs.writeFileSync(uploadLocation, Buffer.from(new Uint8Array(req.file.buffer)));
+
   console.log("Seems to have uploaded...", req.body.id, req.body.user, req.file.originalname);
-  //fileNameEnd++
+
+  // Keep your mp3 conversion if you still want it
   mp3(req.file.originalname);
-  //index.emit('newFile', {'fileName': req.file.originalname})
-  //ambiSocket.emit('newFile', {'fileName': req.file.originalname})
-  fileNameArray.push(req.file.originalname);
- 
-  
-  // Could transmit the load sample from here:
-  // hub.transmit('sample', null, { 'user': req.body.user, 'val': 'load', 'sample': true, 'url': req.file.originalname + '.mp3', 'id': req.body.id });
-  
-})
+
+  // This is the important part:
+  // public/uploads is served by express.static(publicFolder),
+  // so the browser URL should be /uploads/filename.wav
+  let fileUrl = "/uploads/" + savedName;
+
+  if (!fileName2.includes(fileUrl)) {
+    fileName2.push(fileUrl);
+  }
+
+  console.log("Current audio files:", fileName2);
+
+  // Send updated file list to any player that is listening
+  io.emit("loadAudio", fileName2);
+
+  res.sendStatus(200);
+});
 let counter = 0;
-let fileName2 = [];
 let fileName3 = [];
 
 
-// Could spin off into it's own node app or spork a thread.
 function mp3(fileName) {
-//   console.log(fileNameArray)
-//  for (f=0; f< fileNameArray.length; f++) {
-//     let myVar = fileNameArray[f].slice(14, 15);
-//     console.log(myVar + "heheh")
-//  }
-//   console.log(fileNameArray[f])
   console.log('MP3: ', fileName);
+
   try {
     let process = new ffmpeg(__dirname + '/public/uploads/' + fileName  + ".wav");
-    // console.log('process: ', process);
+
     process.then(function(audio) {
-      // callback mode
       audio.setAudioBitRate(128);
-      // console.log('Audio', audio);
+
       audio.fnExtractSoundToMP3(__dirname + '/public/uploads/' + fileName  + ".mp3", function(error, file) {
         if (!error) {
           console.log('Audio file: ', file);
@@ -139,24 +140,12 @@ function mp3(fileName) {
       });
     }, function(err) {
       console.log('Error encoding mp3: ', err);
-    })
+    });
   } catch (e) {
     console.log('Error: ', e.code);
     console.log(e.msg);
   }
-
-  let fileName1 = "./uploads/" + fileName  + ".wav"
-  fileName2.push(fileName1)
-  //fileName3.push()
-  console.log(fileName1)
-  console.log(fileName2)
-
-  if (counter == "3") {
-    fileName3.push(fileName1)
-  }
-
-  // console.log('done mp3');
-};
+}
 
 let i = 0;
 let ambiSocket;
@@ -171,163 +160,116 @@ let recordState = {
   // section: "zero"
 }
 
+let whisperSection = {
+  section: "zero"
+};
+
+let fileName2 = [];
+
+
 io.on('connection', (socket) => {
-  socket.on('register', (data)=> {
-    if (data == 'ambisonic') {
-      ambiSocket = socket
-    } 
+  console.log("socket connected:", socket.id);
 
-    socket.on('correctNumber', (data) => {
-      myCount = data
-      console.log(data)
-      socket.emit('correct-number', data)
-    })
-    socket.on('counter', (data) => {
-      //console.log(data)
-      //numberOfAudioFiles.push(data)
-      myCount1 = numberOfAudioFiles.length 
-    })
-   
-    socket.on('sendBack', () => {
-      socket.emit('send-back', myCount1)
-    })
+  socket.on('register', (data) => {
+    console.log("registered:", data);
 
-    socket.on('sendBack1', () => {
-      socket.emit('send-back', myCount1)
-    })
-
-    socket.on('sendFileName', () => {
-      //fileName.split(',')
-      socket.emit('send-FN', fileName2)
-  
-    })
-
-    socket.on('resetMode', () => {
-      whisperSection.section = "zero";
-      io.emit("set_section", "zero")
-    })
-
-    socket.on('startSec', () => {
-      whisperSection.section = "one";
-      io.emit("set_section", "one")
-    })
-
-    socket.on('sec1', () => {
-      whisperSection.section = "two"
-      io.emit("set_section", "two")
-    })
-
-    socket.on("justListen", () => {
-      whisperSection.section = "three"
-      io.emit("set_section", "three")
-    })
-
-    socket.on('sendFileName1', () => {
-      counter = 3
-      io.emit('send-FN1', fileName3)
-      console.log("sent")
-      whisperSection.section = "four"
-      io.emit("set_section", "four")
-    })
-
-    socket.on("secEnd", () => {
-      whisperSection.section = "five"
-      io.emit("set_section", "five")
-    })
-
-    socket.on("load_audio", () => {
-      io.emit("loadAudio", fileName2)
-      console.log("Sending files:", fileName2);
-      
-    })
-   
-    socket.on("play_audio", () => {
-      io.emit("playAudio", true)
-    })
-
-    // socket.on("justListen1", () => {
-    //   whisperSection.section = "jl1"
-    //   io.emit("set_section", "jl1")
-    // })
-
-    socket.on("end", () => {
-      whisperSection.section = "six";
-      io.emit("set_section", "six")
-    })
-  
-
-    //for (i=0; i < fileCount; i++) {
-   
-  
-    // if (data) {
-    //   ambiSocket = socket
-    // }
-  })
-  
-  // console.log(socket.id)
- 
-  // socket.id = i 
-  // idArray.push(socket.id);
-  // i++
-
-
-  // socket.on("connect", () => {
-  //   console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-  // })
-  // socket.emit("room", 1)
-  // socket.join('room1')
-  // console.log("room1")
-
-  socket.emit("set_section", whisperSection.section)
-  console.log(whisperSection.section)
-
-
-})
-
-io.on('connection', (socket1) => {
-  socket1.on('register', (data)=> {
-    if (data == 'index') {
-      index = socket1
+    if (data === 'ambisonic' || data === 'player') {
+      ambiSocket = socket;
     }
 
-    
-    //for (i=0; i < fileCount; i++) {
-    //   socket1.on('file-count', () => {
-    //   // socket1.emit('send-count', fileCount)
-    //   console.log(fileCount)
-    // })
-  
+    if (data === 'index') {
+      index = socket;
+    }
 
-    socket1.on('counter', (data) => {
-      console.log(data)
-      numberOfAudioFiles.push(data)
-      myCount = numberOfAudioFiles.length 
-    })
-   
-    socket1.on('sendBack', () => {
-      socket1.emit('send-back', myCount)
-    })
+    // Send the current section to new audience pages.
+    // Since default is now "zero", index pages should not jump to section four.
+    socket.emit("set_section", whisperSection.section);
+  });
 
-    socket1.on('file-name', (data) => {
-      fileName.push(upload.originalname)
-      console.log(fileName)
-    })
+  socket.on('correctNumber', (data) => {
+    myCount = data;
+    console.log(data);
+    socket.emit('correct-number', data);
+  });
 
-  //   socket1.on("begin", () => {
-  //     // socket.broadcast.emit("end_piece", true);
-  //      recordState.section = "startRecording";
-  //      io.emit("set_section", recordState.section)
+  socket.on('counter', (data) => {
+    console.log("counter:", data);
+    numberOfAudioFiles.push(data);
+    myCount = numberOfAudioFiles.length;
+  });
 
-  //  })
+  socket.on('sendBack', () => {
+    socket.emit('send-back', myCount);
+  });
 
-   socket1.on("sec2", () => {
-    // socket.broadcast.emit("end_piece", true);
-     recordState.section = "secondSection";
-     io.emit("set_section", recordState.section)
+  socket.on('sendBack1', () => {
+    socket.emit('send-back', myCount);
+  });
 
- })
-   socket1.emit("set_section", recordState.section)
-  })
+  socket.on('sendFileName', () => {
+    socket.emit('send-FN', fileName2);
+  });
 
-})
+  // IMPORTANT:
+  // This now ONLY sends audio files.
+  // It does NOT change the section.
+  socket.on('sendFileName1', () => {
+    console.log("sending files from sendFileName1:", fileName2);
+    socket.emit("loadAudio", fileName2);
+  });
+
+  // Also support this event name, since your server already had it.
+  socket.on("load_audio", () => {
+    console.log("sending files from load_audio:", fileName2);
+    socket.emit("loadAudio", fileName2);
+  });
+
+  socket.on("play_audio", () => {
+    io.emit("playAudio", true);
+  });
+
+  // Simple universal section handler for the player/control page
+  socket.on("set_section", (sectionName) => {
+    whisperSection.section = sectionName;
+    console.log("section set to:", sectionName);
+    io.emit("set_section", sectionName);
+  });
+
+  // Older section event names, kept for compatibility
+
+  socket.on('resetMode', () => {
+    whisperSection.section = "zero";
+    io.emit("set_section", "zero");
+  });
+
+  socket.on('startSec', () => {
+    whisperSection.section = "one";
+    io.emit("set_section", "one");
+  });
+
+  socket.on('sec1', () => {
+    whisperSection.section = "two";
+    io.emit("set_section", "two");
+  });
+
+  socket.on("justListen", () => {
+    whisperSection.section = "three";
+    io.emit("set_section", "three");
+  });
+
+  socket.on("sec2", () => {
+    whisperSection.section = "four";
+    io.emit("set_section", "four");
+  });
+
+  socket.on("secEnd", () => {
+    whisperSection.section = "five";
+    io.emit("set_section", "five");
+  });
+
+  socket.on("end", () => {
+    whisperSection.section = "six";
+    io.emit("set_section", "six");
+  });
+});
 

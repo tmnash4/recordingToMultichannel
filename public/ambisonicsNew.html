@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="#">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Whisper Player Controls</title>
+
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"
+    integrity="sha512-jduERlz7En1IUZR54bqzpNI64AbffZWR//KJgF71SJ8D8/liKFZ+s1RxmUmB+bhCnIfzebdZsULwOrbVB5f3nQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer">
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Times New Roman", Times, serif;
+      background-color: rgb(255, 255, 247);
+      color: black;
+      font-size: 1.3em;
+    }
+
+    .flexbox {
+      display: flex;
+      width: 100%;
+      min-height: 100dvh;
+      flex-direction: row;
+    }
+
+    #main-column {
+      flex: 3;
+      padding: 25px;
+      text-align: center;
+    }
+
+    #main-column1 {
+      flex: 1;
+      padding: 25px;
+      text-align: center;
+      border-left: 3px solid darkblue;
+    }
+
+    #head,
+    #head1 {
+      color: darkblue;
+      font-weight: normal;
+    }
+
+    #common {
+      width: 100%;
+    }
+
+    .buttonClass {
+      border: 2px white solid;
+      margin: 8px;
+      font-size: 1.1em;
+      background-color: white;
+      color: darkblue;
+      font-family: "Times New Roman", Times, serif;
+      cursor: pointer;
+      padding: 8px 14px;
+    }
+
+    .buttonClass:hover {
+      background-color: rgb(198, 155, 247);
+      border: 2px rgb(198, 155, 247) solid;
+    }
+
+    .buttonClass:active {
+      border: #370258 2px solid;
+      background-color: rgb(86, 78, 176);
+      color: white;
+    }
+
+    .buttonClass1 {
+      vertical-align: top;
+      font-size: 1em;
+      background-color: darkblue;
+      text-align: center;
+      color: white;
+      border: #a1dcff 5px solid;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      font-family: "Times New Roman", Times, serif;
+      cursor: pointer;
+      margin: 6px;
+    }
+
+    .buttonClass1:hover {
+      background-color: rgb(47, 38, 220);
+      color: rgb(64, 207, 255);
+    }
+
+    .buttonClass1:active {
+      border: rgb(7, 58, 75) 5px solid;
+      background-color: rgb(7, 58, 75);
+    }
+
+    .buttonClass2 {
+      margin: 2px;
+      font-size: 1em;
+      background-color: darkblue;
+      color: white;
+      font-family: "Times New Roman", Times, serif;
+      cursor: pointer;
+    }
+
+    #div-play-stop-buttons {
+      margin-top: 20px;
+      margin-bottom: 25px;
+    }
+
+    #div-volume {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    #volume {
+      color: darkblue;
+      margin-bottom: 6px;
+    }
+
+    #volume-slider {
+      width: min(500px, 80%);
+      accent-color: darkblue;
+    }
+
+  
+    .sliderLine {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 10px 0;
+    }
+
+    .sliderLine label {
+      width: 160px;
+    }
+
+    .sliderLine input {
+      flex: 1;
+      accent-color: darkblue;
+    }
+
+    .sliderLine span {
+      width: 60px;
+      text-align: right;
+    }
+
+    #Canvas {
+      background-color: black;
+      border: 5px rgb(156, 149, 128) solid;
+      max-width: 95%;
+      height: auto;
+      margin-top: 15px;
+    }
+
+    #Canvas2 {
+      display: none;
+    }
+
+    #status {
+      width: min(760px, 90%);
+      margin: 20px auto;
+      color: darkblue;
+      text-align: left;
+      white-space: pre-wrap;
+      font-size: 0.85em;
+      border: 1px solid darkblue;
+      padding: 10px;
+      background-color: white;
+    }
+
+    #fileList {
+      width: min(760px, 90%);
+      max-height: 130px;
+      overflow: auto;
+      margin: 10px auto;
+      color: black;
+      text-align: left;
+      font-size: 0.75em;
+      line-height: 1.35;
+      border: 1px solid rgb(156, 149, 128);
+      padding: 10px;
+      background-color: white;
+    }
+
+    #speakerInfo {
+      width: min(760px, 90%);
+      margin: 12px auto;
+      color: darkblue;
+      font-size: 0.8em;
+      line-height: 1.35;
+    }
+
+    @media screen and (max-width: 900px) {
+      .flexbox {
+        flex-direction: column;
+      }
+
+      #main-column1 {
+        border-left: none;
+        border-top: 3px solid darkblue;
+      }
+
+      .buttonClass1 {
+        width: 115px;
+        height: 115px;
+        font-size: 0.85em;
+      }
+
+      .sliderLine {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .sliderLine label,
+      .sliderLine span {
+        width: auto;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flexbox">
+    <div id="main-column">
+      <h1 id="head">Player Controls for Whisper</h1>
+
+      <div id="common">
+        <button class="buttonClass" id="getSamples" onclick="startAudio()">
+          Start Audio Context
+        </button>
+
+        <button class="buttonClass" onclick="updateList()">
+          Reload Sample List
+        </button>
+
+        <button class="buttonClass" onclick="printAudio()">
+          Print Sample List
+        </button>
+
+        <button class="buttonClass" onclick="testSpeakers()">
+          Test Four Speakers
+        </button>
+
+        <button class="buttonClass" onclick="stopAllSounds()">
+          Stop All Sounds
+        </button>
+
+        <div id="div-play-stop-buttons">
+          <button class="buttonClass1" id="play1" onclick="playMoreSounds()">
+            Play<br>One<br>Sample
+          </button>
+
+          <button class="buttonClass1" id="play4" onclick="playMoreSounds1()">
+            Play<br>More<br>Samples
+          </button>
+
+          <button class="buttonClass1" id="play3" onclick="playSoundsSpaced()">
+            Play<br>Multiple<br>Samples<br>Staggered
+          </button>
+
+          <button class="buttonClass1" id="play5" onclick="playMoreSounds2()">
+            Play<br>Many<br>Samples
+          </button>
+
+          <button class="buttonClass1" id="grain" onclick="playGrainSounds()">
+            Play<br>One<br>Granulated<br>Sample
+          </button>
+
+          <button class="buttonClass1" id="grain1" onclick="playGrains()">
+            Play<br>Multiple<br>Granulated<br>Samples
+          </button>
+
+          <button class="buttonClass1" id="grain2" onclick="playMoreGrains()">
+            Play<br>Multiple<br>Granulated<br>Samples<br>Staggered
+          </button>
+        </div>
+
+        <div id="div-volume">
+          <div id="volume">Volume</div>
+          <input id="volume-slider" type="range" min="0" max="2" value="1" step="0.01">
+          <span id="volume-value">1.00</span>
+        </div>
+
+        <div id="grain-controls">
+    
+
+          <div class="sliderLine">
+            <label for="speed-slider">Movement speed</label>
+            <input id="speed-slider" type="range" min="2" max="100" value="25" step="1">
+            <span id="speed-value">25</span>
+          </div>
+        </div>
+
+        <p>
+          <canvas id="Canvas" width="600" height="250"></canvas>
+        </p>
+
+        <p>
+          Azimuth:
+          <span id="azim-value">0</span>
+          &nbsp;
+          Elevation:
+          <span id="elev-value">0</span>
+        </p>
+
+        <canvas id="Canvas2" width="820" height="250"></canvas>
+
+        <div id="speakerInfo">
+          Four-channel output order:
+          channel 0 = front left,
+          channel 1 = front right,
+          channel 2 = back right,
+          channel 3 = back left.
+        </div>
+
+        <div id="status">Audio not started.</div>
+        <div id="fileList">No files loaded.</div>
+      </div>
+    </div>
+
+    <div id="main-column1">
+      <h1 id="head1">Set Whisper Sections</h1>
+
+      <p></p>
+      <button class="buttonClass" onclick="stateOne()">Start First Section</button>
+
+      <p></p>
+      <button class="buttonClass" onclick="stateTwo()">Pause Recording For a Moment</button>
+
+      <p></p>
+      <button class="buttonClass" onclick="stateThree()">Start Second Section</button>
+
+      <p></p>
+      <button class="buttonClass" onclick="stateFour()">Indicate Piece Ending</button>
+
+      <p></p>
+      <button class="buttonClass" onclick="stateFive()">End Piece</button>
+
+      <p></p>
+      <button class="buttonClass" onclick="resetMode()">Reset to Instructions Screen</button>
+    </div>
+  </div>
+
+  <script>
+    ////////////////////////////
+    // SOCKET SETUP
+
+    const socket = io();
+
+    socket.emit("register", "player");
+
+    ////////////////////////////
+    // FOUR SPEAKER AUDIO SETUP
+
+    let audioCtx;
+    let masterGain;
+    let outputMerger;
+
+let firstSectionBuffers = [];
+let secondSectionBuffers = [];
+let firstSectionUrlSet = new Set();
+
+let currentPlayerSection = "one";
+
+let backupFileUrls = [
+  "/uploads/backup1.wav",
+  "/uploads/backup2.wav"
+];
+
+let backupBuffers = [];
+
+let activeSounds = [];
+
+    const NUM_SPEAKERS = 4;
+
+    /*
+      Channel order:
+      0 = front left
+      1 = front right
+      2 = back right
+      3 = back left
+
+      Angle system:
+      0   = front
+      90  = right
+      180 = back
+      270 = left
+    */
+
+    const speakerMap = [
+      { channel: 0, angle: 315, name: "front left" },
+      { channel: 1, angle: 45,  name: "front right" },
+      { channel: 2, angle: 135, name: "back right" },
+      { channel: 3, angle: 225, name: "back left" }
+    ];
+
+    const volumeSlider = document.getElementById("volume-slider");
+    const volumeValue = document.getElementById("volume-value");
+
+    const speedSlider = document.getElementById("speed-slider");
+    const speedValue = document.getElementById("speed-value");
+
+    const statusDiv = document.getElementById("status");
+    const fileListDiv = document.getElementById("fileList");
+
+    volumeSlider.addEventListener("input", () => {
+      volumeValue.innerHTML = Number(volumeSlider.value).toFixed(2);
+
+      if (masterGain && audioCtx) {
+        masterGain.gain.setTargetAtTime(Number(volumeSlider.value), audioCtx.currentTime, 0.03);
+      }
+    });
+
+
+    speedSlider.addEventListener("input", () => {
+      speedValue.innerHTML = speedSlider.value;
+    });
+
+    async function startAudio() {
+      await Tone.start();
+
+      const toneContext = Tone.getContext();
+
+      audioCtx = toneContext.rawContext || toneContext._context;
+      
+      if (!audioCtx) {
+        alert("Could not get Tone AudioContext.");
+        return;
+      }
+
+      try {
+        audioCtx.destination.channelCount = NUM_SPEAKERS;
+        audioCtx.destination.channelCountMode = "explicit";
+        audioCtx.destination.channelInterpretation = "discrete";
+      } catch (error) {
+        console.log("Could not explicitly set output to four channels.");
+        console.log(error);
+      }
+
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = Number(volumeSlider.value);
+
+      outputMerger = audioCtx.createChannelMerger(NUM_SPEAKERS);
+
+      outputMerger.connect(masterGain);
+      masterGain.connect(audioCtx.destination);
+            await loadBackupFiles();
+      setStatus(
+        "Audio started.\n" +
+        "Max output channels: " + audioCtx.destination.maxChannelCount + "\n" +
+        "Current output channels: " + audioCtx.destination.channelCount + "\n" +
+        "Requesting uploaded files..."
+      );
+
+      updateList();
+    }
+
+    async function loadBackupFiles() {
+  backupBuffers = [];
+
+  for (const url of backupFileUrls) {
+    try {
+      const buffer = new Tone.Buffer(url);
+      await Tone.loaded();
+
+      backupBuffers.push({
+        url,
+        buffer
+      });
+    } catch (error) {
+      console.log("Could not load backup file:", url, error);
+    }
+  }
+
+  console.log("backupBuffers:", backupBuffers.length);
+}
+
+    function updateList() {
+      if (!audioCtx) {
+        setStatus("Press Start Audio Context first.");
+        return;
+      }
+
+      socket.emit("sendFileName1", true);
+      socket.emit("file-count", true);
+
+      setStatus("Requesting file list from server...");
+    }
+
+socket.on("loadAudio", async (data) => {
+  const files = Array.isArray(data) ? data : [];
+
+  console.log("received files:", files);
+
+  if (currentPlayerSection === "one") {
+    firstSectionBuffers = [];
+    firstSectionUrlSet = new Set();
+
+    for (const item of files) {
+      const url = typeof item === "string" ? item : item.url;
+      if (!url) continue;
+
+      try {
+        const buffer = new Tone.Buffer(url);
+        await Tone.loaded();
+
+        firstSectionUrlSet.add(url);
+
+     const gainInfo = getBufferGainInfo(buffer);
+
+      firstSectionBuffers.push({
+        url,
+        buffer,
+        gain: gainInfo.gain,
+        peak: gainInfo.peak,
+        rms: gainInfo.rms
+      });
+      } catch (error) {
+        console.log("Could not load first-section file:", url, error);
+      }
+    }
+  }
+
+  if (currentPlayerSection === "four") {
+    secondSectionBuffers = [];
+
+    for (const item of files) {
+      const url = typeof item === "string" ? item : item.url;
+      if (!url) continue;
+
+      // IMPORTANT:
+      // Do not let first-section files enter the grain pool.
+      if (firstSectionUrlSet.has(url)) {
+        console.log("skipping first-section file for grain pool:", url);
+        continue;
+      }
+
+      try {
+        const buffer = new Tone.Buffer(url);
+        await Tone.loaded();
+      const gainInfo = getBufferGainInfo(buffer);
+
+      secondSectionBuffers.push({
+        url,
+        buffer,
+        gain: gainInfo.gain,
+        peak: gainInfo.peak,
+        rms: gainInfo.rms
+      });
+      } catch (error) {
+        console.log("Could not load second-section file:", url, error);
+      }
+    }
+  }
+
+  updateFileList();
+
+  setStatus(
+    "Loaded files.\n" +
+    "First-section files: " + firstSectionBuffers.length + "\n" +
+    "Second-section grain files: " + secondSectionBuffers.length + "\n" +
+    "Backup files: " + backupBuffers.length
+  );
+});
+
+    socket.on("playAudio", () => {
+      playGrains();
+    });
+
+    function printAudio() {
+      console.log("files from server:");
+      console.log(myFilez);
+
+      console.log("loaded buffers:");
+      console.log(loadedBuffers);
+
+      setStatus(
+        "Printed sample list to console.\n" +
+        "Files from server: " + myFilez.length + "\n" +
+        "Loaded buffers: " + loadedBuffers.length
+      );
+    }
+
+function audioReady() {
+  if (!audioCtx || !outputMerger) {
+    console.log("Press Start Audio Context first.");
+    setStatus("Press Start Audio Context first.");
+    return false;
+  }
+
+  return true;
+}
+
+    ////////////////////////////
+    // ORIGINAL PLAYER BUTTON FUNCTION NAMES
+
+    function playMoreSounds() {
+      // Original button: Play One Sample
+      playOneNormalMovingSound();
+    }
+
+    function playMoreSounds1() {
+      // Original button: Play More Samples
+      for (let i = 0; i < 3; i++) {
+        setTimeout(playOneNormalMovingSound, i * 700);
+      }
+    }
+
+    function playSoundsSpaced() {
+      // Original button: Play Multiple Samples Staggered
+      for (let i = 0; i < 5; i++) {
+        setTimeout(playOneNormalMovingSound, i * 2000);
+      }
+    }
+
+    function playMoreSounds2() {
+      // Original button: Play Many Samples
+      for (let i = 0; i < 12; i++) {
+        setTimeout(playOneNormalMovingSound, randomInteger(0, 8000));
+      }
+    }
+
+    function playGrainSounds() {
+      // Original button: Play One Granulated Sample
+      playOneGrainMovingSound();
+    }
+
+    function playGrains() {
+      // Original button: Play Multiple Granulated Samples
+      for (let i = 0; i < 4; i++) {
+        setTimeout(playOneGrainMovingSound, i * 600);
+      }
+    }
+
+    function playMoreGrains() {
+      // Original button: Play Multiple Granulated Samples Staggered
+      for (let i = 0; i < 8; i++) {
+        setTimeout(playOneGrainMovingSound, randomInteger(0, 9000));
+      }
+    }
+
+
+    function getNormalPlaybackPool() {
+  if (firstSectionBuffers.length > 0) {
+    return firstSectionBuffers;
+  }
+
+  return backupBuffers;
+}
+
+function playOneNormalMovingSound() {
+  if (!audioReady()) return;
+
+  const pool = getNormalPlaybackPool();
+
+  if (pool.length === 0) {
+    console.log("No first-section audience files or backup files loaded.");
+    setStatus("No first-section audience files or backup files loaded.");
+    return;
+  }
+
+  const file = chooseRandom(pool);
+
+  if (!file.buffer || !file.buffer.loaded) {
+    console.log("File buffer is not loaded yet:", file.url);
+    setStatus("That file is not loaded yet. Try again in a moment.");
+    return;
+  }
+
+  const correctionDb = Tone.gainToDb(file.gain || 1);
+
+  const player = new Tone.Player(file.buffer);
+  player.loop = false;
+  player.volume.value = randomBetween(-16, -4) + correctionDb;
+
+  startFourSpeakerMovement(player, randomInteger(4000, 14000));
+}
+function getGrainPlaybackPool() {
+  if (secondSectionBuffers.length > 0) {
+    return secondSectionBuffers;
+  }
+
+  return backupBuffers;
+}
+
+function playOneGrainMovingSound() {
+  if (!audioReady()) return;
+
+  const pool = getGrainPlaybackPool();
+
+  if (pool.length === 0) {
+    console.log("No second-section audience files or backup files loaded.");
+    setStatus("No second-section audience files or backup files loaded.");
+    return;
+  }
+
+  const file = chooseRandom(pool);
+
+  if (!file.buffer || !file.buffer.loaded) {
+    console.log("File buffer is not loaded yet:", file.url);
+    setStatus("That file is not loaded yet. Try again in a moment.");
+    return;
+  }
+
+  const correctionDb = Tone.gainToDb(file.gain || 1);
+
+  const grain = new Tone.GrainPlayer(file.buffer);
+
+  grain.grainSize = 0.9;
+  grain.overlap = 2;
+  grain.reverse = true;
+  grain.loop = false;
+  grain.volume.value = -18 + correctionDb;
+
+  startFourSpeakerGrainMovement(grain, randomInteger(6000, 12000));
+}
+function startFourSpeakerGrainMovement(grain, durationMs) {
+  const gains = [];
+
+  for (let i = 0; i < NUM_SPEAKERS; i++) {
+    const gain = audioCtx.createGain();
+    gain.gain.value = 0;
+
+    grain.connect(gain);
+    gain.connect(outputMerger, 0, i);
+
+    gains.push(gain);
+  }
+
+  let angle = randomBetween(0, 360);
+  let speed = randomSignedSpeed();
+
+  grain.start();
+
+  const moveInterval = setInterval(() => {
+    angle = normalizeAngle(angle + speed * 0.05);
+
+    const speakerGains = getSpeakerGains(angle);
+
+    for (let i = 0; i < NUM_SPEAKERS; i++) {
+      gains[i].gain.setTargetAtTime(
+        speakerGains[i],
+        audioCtx.currentTime,
+        0.08
+      );
+    }
+
+    updateCircles([angle, 0, 0.5], canvas);
+  }, 50);
+
+  activeSounds.push({
+    player: grain,
+    gains,
+    moveInterval
+  });
+
+  setTimeout(() => {
+    stopOneMovingPlayer(grain, gains, moveInterval);
+  }, durationMs);
+}
+
+function startFourSpeakerMovement(player, durationMs) {
+  const gains = [];
+
+  for (let i = 0; i < NUM_SPEAKERS; i++) {
+    const gain = audioCtx.createGain();
+    gain.gain.value = 0;
+
+    player.connect(gain);
+    gain.connect(outputMerger, 0, i);
+
+    gains.push(gain);
+  }
+
+  let angle = randomBetween(0, 360);
+  let speed = randomSignedSpeed();
+
+  player.start();
+
+  const moveInterval = setInterval(() => {
+    angle = normalizeAngle(angle + speed * 0.05);
+
+    const speakerGains = getSpeakerGains(angle);
+
+    for (let i = 0; i < NUM_SPEAKERS; i++) {
+      gains[i].gain.setTargetAtTime(
+        speakerGains[i],
+        audioCtx.currentTime,
+        0.08
+      );
+    }
+
+    updateCircles([angle, 0, 0.5], canvas);
+  }, 50);
+
+  activeSounds.push({
+    player,
+    gains,
+    moveInterval
+  });
+
+  setTimeout(() => {
+    stopOneMovingPlayer(player, gains, moveInterval);
+  }, durationMs);
+}
+
+function stopOneMovingPlayer(player, gains, moveInterval) {
+  clearInterval(moveInterval);
+
+  for (const gain of gains) {
+    gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+  }
+
+  setTimeout(() => {
+    try {
+      player.stop();
+      player.dispose();
+    } catch (error) {
+      console.log(error);
+    }
+
+    activeSounds = activeSounds.filter(item => item.player !== player);
+  }, 500);
+}
+
+function getSpeakerGains(angle) {
+  angle = normalizeAngle(angle);
+
+  const gains = [0, 0, 0, 0];
+
+  let leftChannel;
+  let rightChannel;
+  let position;
+
+  if (angle >= 315 || angle < 45) {
+    leftChannel = 0;
+    rightChannel = 1;
+
+    const unwrapped = angle < 45 ? angle + 360 : angle;
+    position = (unwrapped - 315) / 90;
+  } else if (angle >= 45 && angle < 135) {
+    leftChannel = 1;
+    rightChannel = 2;
+    position = (angle - 45) / 90;
+  } else if (angle >= 135 && angle < 225) {
+    leftChannel = 2;
+    rightChannel = 3;
+    position = (angle - 135) / 90;
+  } else {
+    leftChannel = 3;
+    rightChannel = 0;
+    position = (angle - 225) / 90;
+  }
+
+  gains[leftChannel] = Math.cos(position * Math.PI / 2);
+  gains[rightChannel] = Math.sin(position * Math.PI / 2);
+
+  return gains;
+}
+    
+
+
+    function calculateFourSpeakerGains(angle) {
+      /*
+        Equal-power crossfade between adjacent speakers.
+
+        Not ambisonics.
+        Direct four-channel panning.
+      */
+
+      const normalized = normalizeAngle(angle);
+
+      const ordered = [
+        { channel: 0, angle: 315 },
+        { channel: 1, angle: 405 },
+        { channel: 2, angle: 495 },
+        { channel: 3, angle: 585 }
+      ];
+
+      let unwrapped = normalized;
+
+      if (unwrapped < 315) {
+        unwrapped += 360;
+      }
+
+      let a = ordered[0];
+      let b = ordered[1];
+
+      for (let i = 0; i < ordered.length; i++) {
+        const current = ordered[i];
+
+        const next = i === ordered.length - 1
+          ? { ...ordered[0], angle: ordered[0].angle + 360 }
+          : ordered[i + 1];
+
+        if (unwrapped >= current.angle && unwrapped <= next.angle) {
+          a = current;
+          b = next;
+          break;
+        }
+      }
+
+      const position = (unwrapped - a.angle) / (b.angle - a.angle);
+
+      const gainA = Math.cos(position * Math.PI / 2);
+      const gainB = Math.sin(position * Math.PI / 2);
+
+      const gains = [0, 0, 0, 0];
+
+      gains[a.channel] = gainA;
+      gains[b.channel % 4] = gainB;
+
+      return gains;
+    }
+
+    function testSpeakers() {
+      if (!audioCtx || !outputMerger) {
+        alert("Press Start Audio Context first.");
+        return;
+      }
+
+      const now = audioCtx.currentTime;
+
+      for (let i = 0; i < NUM_SPEAKERS; i++) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.frequency.value = 300 + i * 120;
+
+        gain.gain.setValueAtTime(0, now + i * 0.8);
+        gain.gain.linearRampToValueAtTime(0.35, now + i * 0.8 + 0.05);
+        gain.gain.linearRampToValueAtTime(0, now + i * 0.8 + 0.55);
+
+        osc.connect(gain);
+        gain.connect(outputMerger, 0, i);
+
+        osc.start(now + i * 0.8);
+        osc.stop(now + i * 0.8 + 0.65);
+      }
+
+      setStatus("Testing speakers: front left, front right, back right, back left.");
+    }
+
+function stopAllSounds() {
+  for (const item of [...activeSounds]) {
+    stopOneMovingPlayer(item.player, item.gains, item.moveInterval);
+  }
+
+  activeSounds = [];
+  setStatus("Stopped all active sounds.");
+}
+
+    ////////////////////////////
+    // SECTION BUTTONS
+    // These send the same set_section messages your audience index page listens for.
+
+    function resetMode() {
+      socket.emit("set_section", "zero");
+      setStatus("Sent section: zero / reset instructions screen.");
+    }
+
+function stateOne() {
+  currentPlayerSection = "one";
+  socket.emit("set_section", "one");
+  socket.emit("sendFileName1", true);
+  setStatus("Sent section: one / first section.");
+}
+
+function stateThree() {
+  currentPlayerSection = "four";
+  socket.emit("set_section", "four");
+  socket.emit("sendFileName1", true);
+  setStatus("Sent section: four / second section.");
+}
+
+    function stateTwo() {
+      socket.emit("set_section", "three");
+      setStatus("Sent section: three / pause recording and just listen.");
+    }
+
+
+    function stateFour() {
+      socket.emit("set_section", "five");
+      setStatus("Sent section: five / piece ending message.");
+    }
+
+    function stateFive() {
+      socket.emit("set_section", "six");
+      setStatus("Sent section: six / end piece fully.");
+    }
+
+    /*
+      Optional keyboard controls.
+      These mirror the key events you already used on the index page.
+    */
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "u") {
+        resetMode();
+      } else if (e.key === "b") {
+        stateOne();
+      } else if (e.key === "w") {
+        stateTwo();
+      } else if (e.key === "e") {
+        stateThree();
+      } else if (e.key === "r") {
+        stateFour();
+      } else if (e.key === "t") {
+        stateFive();
+      } else if (e.key === "p") {
+        playGrains();
+      } else if (e.key === "o") {
+        playMoreGrains();
+      }
+    });
+
+    ////////////////////////////
+    // VISUAL MAP / CANVAS
+
+    const canvas = document.getElementById("Canvas");
+    const canvas_context = canvas.getContext("2d");
+
+    const canvas2 = document.getElementById("Canvas2");
+    const canvas2_context = canvas2.getContext("2d");
+
+    const azimValue = document.getElementById("azim-value");
+    const elevValue = document.getElementById("elev-value");
+
+    let mouseDown = false;
+
+    let mapSprite = new Image();
+    mapSprite.src = "images/mymap.jpeg";
+
+    mapSprite.onerror = () => {
+      console.log("No map image found. Drawing plain black background.");
+    };
+
+    function Marker() {
+      this.Width = 30;
+      this.Height = 30;
+      this.XPos = canvas.width / 2 - this.Width / 2;
+      this.YPos = canvas.height / 2 - this.Height / 2;
+    }
+
+    const marker = new Marker();
+
+    canvas.addEventListener("mousedown", (mouse) => {
+      mouseDown = true;
+      mouseAction(mouse);
+    }, false);
+
+    canvas.addEventListener("mousemove", (mouse) => {
+      if (mouseDown) {
+        mouseAction(mouse);
+      }
+    }, false);
+
+    canvas.addEventListener("mouseup", () => {
+      mouseDown = false;
+    }, false);
+
+    canvas.addEventListener("mouseleave", () => {
+      mouseDown = false;
+    }, false);
+
+    function mouseAction(mouse) {
+      const rect = canvas.getBoundingClientRect();
+
+      const mouseXPos = mouse.clientX - rect.left;
+      const mouseYPos = mouse.clientY - rect.top;
+
+      const angleX = -Math.round(360 * (mouseXPos - rect.width / 2) / rect.width);
+      const angleY = Math.round(180 * ((rect.height / 2) - mouseYPos) / rect.height);
+
+      azimValue.innerHTML = angleX;
+      elevValue.innerHTML = angleY;
+
+      marker.XPos = mouseXPos * (canvas.width / rect.width) - marker.Width / 2;
+      marker.YPos = mouseYPos * (canvas.height / rect.height) - marker.Height / 2;
+    }
+
+    const circles = [];
+    const numCircleLim = 30;
+    const opacityLim = 0.2;
+
+    function Circle(xPos, yPos, radius, opacity) {
+      this.xPos = xPos;
+      this.yPos = yPos;
+      this.radius = radius;
+      this.opacity = opacity;
+    }
+
+    Circle.prototype.draw = function(context) {
+      context.beginPath();
+      context.arc(this.xPos, this.yPos, this.radius, 0, Math.PI * 2, false);
+      context.closePath();
+
+      context.fillStyle = "rgba(185, 211, 238," + this.opacity + ")";
+      context.fill();
+    };
+
+    function angles2pixels(azim, elev, cnv) {
+      const rect = cnv.getBoundingClientRect();
+
+      const xy = [];
+
+      xy[0] = Math.round(-azim * cnv.width / 360 + cnv.width / 2);
+      xy[1] = Math.round(cnv.height / 2 - elev * cnv.height / 180);
+
+      return xy;
+    }
+
+    function updateCircles(params, cnv) {
+      const xy = angles2pixels(params[0], params[1], cnv);
+      const radius = 30 * (1 - params[2]);
+      const opacity = 1;
+
+      const circle = new Circle(xy[0], xy[1], radius, opacity);
+
+      if (circles.length < numCircleLim) {
+        circles.push(circle);
+      } else {
+        circles.shift();
+        circles.push(circle);
+
+        for (let i = 0; i < numCircleLim - 1; i++) {
+          circles[i].opacity = opacityLim + i * (1 - opacityLim) / numCircleLim;
+        }
+      }
+    }
+
+    function drawSpeakerLabels() {
+      canvas_context.fillStyle = "white";
+      canvas_context.font = "16px Times New Roman";
+      canvas_context.textAlign = "center";
+
+      canvas_context.fillText("front left / ch 0", 95, 30);
+      canvas_context.fillText("front right / ch 1", canvas.width - 95, 30);
+      canvas_context.fillText("back left / ch 3", 95, canvas.height - 20);
+      canvas_context.fillText("back right / ch 2", canvas.width - 95, canvas.height - 20);
+
+      canvas_context.beginPath();
+      canvas_context.arc(40, 40, 15, 0, Math.PI * 2);
+      canvas_context.arc(canvas.width - 40, 40, 15, 0, Math.PI * 2);
+      canvas_context.arc(canvas.width - 40, canvas.height - 40, 15, 0, Math.PI * 2);
+      canvas_context.arc(40, canvas.height - 40, 15, 0, Math.PI * 2);
+      canvas_context.fillStyle = "white";
+      canvas_context.fill();
+    }
+
+    function drawMarker() {
+      canvas_context.beginPath();
+      canvas_context.arc(
+        marker.XPos + marker.Width / 2,
+        marker.YPos + marker.Height / 2,
+        marker.Width / 2,
+        0,
+        Math.PI * 2
+      );
+      canvas_context.fillStyle = "rgb(255, 255, 247)";
+      canvas_context.fill();
+    }
+
+    function draw() {
+      requestAnimationFrame(draw);
+
+      canvas_context.fillStyle = "black";
+      canvas_context.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (mapSprite.complete && mapSprite.naturalWidth > 0) {
+        canvas_context.drawImage(mapSprite, 0, 0, canvas.width, canvas.height);
+      }
+
+      drawSpeakerLabels();
+
+      for (let i = 0; i < circles.length; i++) {
+        circles[i].draw(canvas_context);
+      }
+
+      drawMarker();
+
+  
+    }
+
+    draw();
+
+    ////////////////////////////
+    // HELPERS
+function getBufferGainInfo(toneBuffer) {
+  const audioBuffer = toneBuffer.get();
+
+  let peak = 0;
+  let sumSquares = 0;
+  let sampleCount = 0;
+
+  for (let ch = 0; ch < audioBuffer.numberOfChannels; ch++) {
+    const data = audioBuffer.getChannelData(ch);
+
+    for (let i = 0; i < data.length; i++) {
+      const sample = Math.abs(data[i]);
+
+      if (sample > peak) {
+        peak = sample;
+      }
+
+      sumSquares += sample * sample;
+      sampleCount++;
+    }
+  }
+
+  const rms = Math.sqrt(sumSquares / sampleCount);
+
+  // Only reduce files that are actually too loud.
+  // peak above 0.85 is near clipping.
+  // rms above 0.18 is generally very loud for speech/whisper material.
+  let gain = 1;
+
+  if (peak > 0.85) {
+    gain *= 0.85 / peak;
+  }
+
+  if (rms > 0.18) {
+    gain *= 0.18 / rms;
+  }
+
+  return {
+    peak,
+    rms,
+    gain
+  };
+}
+function updateFileList() {
+  fileListDiv.innerHTML =
+    "First-section audience files: " + firstSectionBuffers.length + "<br>" +
+    "Second-section audience files: " + secondSectionBuffers.length + "<br>" +
+    "Backup files: " + backupBuffers.length + "<br><br>" +
+    "<b>First section:</b><br>" +
+    firstSectionBuffers.map((item, index) => {
+      return (index + 1) + ". " + escapeHtml(item.url);
+    }).join("<br>") +
+    "<br><br><b>Second section:</b><br>" +
+    secondSectionBuffers.map((item, index) => {
+      return (index + 1) + ". " + escapeHtml(item.url);
+    }).join("<br>") +
+    "<br><br><b>Backups:</b><br>" +
+    backupBuffers.map((item, index) => {
+      return (index + 1) + ". " + escapeHtml(item.url);
+    }).join("<br>");
+}
+    function setStatus(message) {
+      statusDiv.innerHTML = escapeHtml(message);
+    }
+
+    function chooseRandom(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function randomBetween(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function randomInteger(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomSignedSpeed() {
+      const base = Number(speedSlider.value);
+      const direction = Math.random() < 0.5 ? -1 : 1;
+
+      return direction * randomBetween(base * 0.4, base * 1.5);
+    }
+
+    function normalizeAngle(angle) {
+      return ((angle % 360) + 360) % 360;
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, function(char) {
+        return {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;"
+        }[char];
+      });
+    }
+  </script>
+</body>
+</html>
