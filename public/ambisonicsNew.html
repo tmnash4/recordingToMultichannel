@@ -432,6 +432,8 @@ let activeSounds = [];
       const toneContext = Tone.getContext();
 
       audioCtx = toneContext.rawContext || toneContext._context;
+
+      
       
       if (!audioCtx) {
         alert("Could not get Tone AudioContext.");
@@ -442,18 +444,29 @@ let activeSounds = [];
         audioCtx.destination.channelCount = NUM_SPEAKERS;
         audioCtx.destination.channelCountMode = "explicit";
         audioCtx.destination.channelInterpretation = "discrete";
+
+        console.log("destination maxChannelCount:", audioCtx.destination.maxChannelCount);
+console.log("destination channelCount:", audioCtx.destination.channelCount);
+console.log("destination channelCountMode:", audioCtx.destination.channelCountMode);
+console.log("destination channelInterpretation:", audioCtx.destination.channelInterpretation);
       } catch (error) {
         console.log("Could not explicitly set output to four channels.");
         console.log(error);
       }
 
-      masterGain = audioCtx.createGain();
-      masterGain.gain.value = Number(volumeSlider.value);
+masterGain = audioCtx.createGain();
+masterGain.gain.value = Number(volumeSlider.value);
 
-      outputMerger = audioCtx.createChannelMerger(NUM_SPEAKERS);
+makeNodeDiscrete(masterGain, NUM_SPEAKERS);
 
-      outputMerger.connect(masterGain);
-      masterGain.connect(audioCtx.destination);
+outputMerger = audioCtx.createChannelMerger(NUM_SPEAKERS);
+
+// The merger inputs should behave as numbered channels,
+// not as front/surround speaker positions.
+makeNodeDiscrete(outputMerger, NUM_SPEAKERS);
+
+outputMerger.connect(masterGain);
+masterGain.connect(audioCtx.destination);
             await loadBackupFiles();
       setStatus(
         "Audio started.\n" +
@@ -648,7 +661,15 @@ function audioReady() {
         setTimeout(playOneGrainMovingSound, randomInteger(0, 9000));
       }
     }
-
+function makeNodeDiscrete(node, channelCount) {
+  try {
+    node.channelCount = channelCount;
+    node.channelCountMode = "explicit";
+    node.channelInterpretation = "discrete";
+  } catch (error) {
+    console.log("Could not set node to discrete:", node, error);
+  }
+}
 
     function getNormalPlaybackPool() {
   if (firstSectionBuffers.length > 0) {
@@ -731,6 +752,8 @@ function startFourSpeakerGrainMovement(grain, durationMs) {
     const gain = audioCtx.createGain();
     gain.gain.value = 0;
 
+    makeNodeDiscrete(gain, 1);
+
     grain.connect(gain);
     gain.connect(outputMerger, 0, i);
 
@@ -769,12 +792,15 @@ function startFourSpeakerGrainMovement(grain, durationMs) {
   }, durationMs);
 }
 
+
 function startFourSpeakerMovement(player, durationMs) {
   const gains = [];
 
   for (let i = 0; i < NUM_SPEAKERS; i++) {
     const gain = audioCtx.createGain();
     gain.gain.value = 0;
+
+    makeNodeDiscrete(gain, 1);
 
     player.connect(gain);
     gain.connect(outputMerger, 0, i);
@@ -813,7 +839,6 @@ function startFourSpeakerMovement(player, durationMs) {
     stopOneMovingPlayer(player, gains, moveInterval);
   }, durationMs);
 }
-
 function stopOneMovingPlayer(player, gains, moveInterval) {
   clearInterval(moveInterval);
 
@@ -1239,6 +1264,10 @@ function getBufferGainInfo(toneBuffer) {
     gain
   };
 }
+
+
+
+
 function updateFileList() {
   fileListDiv.innerHTML =
     "First-section audience files: " + firstSectionBuffers.length + "<br>" +

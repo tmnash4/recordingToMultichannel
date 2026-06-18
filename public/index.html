@@ -18,13 +18,19 @@
     <h1>Whisper by Treya Nash</h1>
     <h2>with poetry by Thomas Hardy</h2>
   </div>
+
 <div class="flex-items1" id="instructions">
   Whisper is an interactive piece that asks you to record snippets of whispered speech into your phone and upload them to become part of the collective soundscape. You will be given lines of a Thomas Hardy poem to record. Instructions will guide you through the process. Momentarily, a 'start' button will appear. Click the button to continue.
   </div>
   <div class="flex-items1">
     <p></p>
 <button class="flex-items1" id="start"> Start Piece</button></div>
+
 </div>
+  <div id="languageButtons">
+  <button class="languageButton" onclick="setLanguage('en')">English</button>
+  <button class="languageButton" onclick="setLanguage('it')">Italiano</button>
+  </div>
 <div class="flex-container">
 <div class="flex-items"> 
   <button id="record" onclick="startRecording()" >start recording</button> 
@@ -134,7 +140,33 @@ button {
 /* --------------------
    START / INSTRUCTIONS PAGE
 -------------------- */
+#languageButtons {
+  position: absolute;
+  width: 100dvw;
+  margin-top: 1em;
+  text-align: center;
+  top: 5dvh;
+}
 
+.languageButton {
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(1.4rem, 19vw, 3rem);
+  margin: 0.2em;
+  padding: 0.25em 0.6em;
+  border: 2px solid darkblue;
+  background-color: white;
+  color: darkblue;
+}
+
+.languageButton:active {
+  background-color: darkblue;
+  color: white;
+}
+
+.languageButton.selectedLanguage {
+  background-color: darkblue;
+  color: white;
+}
 .flex-container1 {
   display: flex;
   flex-direction: column;
@@ -169,7 +201,7 @@ button {
 }
 
 #instructions {
-  font-size: clamp(3.2rem, 8vw, 5.4rem);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
   line-height: 1.06;
 
   width: min(92dvw, 1150px);
@@ -209,11 +241,11 @@ button {
   align-items: flex-start;
 
   width: 100dvw;
-  min-height: 32dvh;
+  min-height: 24dvh;
 
   text-align: center;
 
-  padding-top: clamp(70px, 11dvh, 140px);
+  padding-top: clamp(35px, 6dvh, 80px);
   padding-left: clamp(10px, 3dvw, 40px);
   padding-right: clamp(10px, 3dvw, 40px);
 }
@@ -260,7 +292,9 @@ button {
   color: white;
   border: 5px black solid;
 
-  font-size: clamp(1.8rem, 4.5vw, 3.3rem);
+  font-size: clamp(1.7rem, 3.8vw, 2.7rem);
+  line-height: 1;
+  padding: 0.25em;
   visibility: hidden;
 }
 
@@ -510,23 +544,29 @@ var socket = io();
   let text2 = document.querySelector("#text2");
   let text3 = document.querySelector("#text3");
   let text4 = document.querySelector("#text4");
-  let text5 = document.querySelector("#text5")
+  let text5 = document.querySelector("#text5");
+  let currentSocketSection = "zero";
   // uploadButton.style.color = "white"
   // deleteButton.style.color = "white"
   
-
+  let mode = "english";
   text.style.color = "blue"
   // text3.style.color = "black"
   recordButton.style.boxShadow = "0 0 2px 2px white"
 
   let test1 = 0
   let test2 = 1
-let myInt;
+  let myInt;
   let sec2text1 = 0;
  // text.style.color = "blue"
+function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
   function changeColor() {
 
-  let randNum = Math.floor(Math.random() * hardy.length)
+  let randNum = randomInteger(0, currentPoemLines.length - 1);
   //poemLine = 0;
   recordButton.style.opacity = 0.9;
   // let refreshIntervalId = setInterval(flashColor, 1000);
@@ -541,7 +581,7 @@ let myInt;
        text3.style.color = "black"
        text4.style.color = "black"
       recordButton.style.boxShadow = "0 0 2px 2px red"
-      recordButton.innerHTML = "stop recording"
+      recordButton.innerHTML = t("recordStop");
       uploadButton.style.visibility = "hidden"
       deleteButton.style.visibility = "hidden"
       // playButton.style.visibility = "hidden"
@@ -553,11 +593,15 @@ let myInt;
      
       // if (poemLine <=24) {
         // text1.style.width = "100%"
+
+// if (mode == "english") {
+
+const promptText = t("step2Prompt");
 text1.innerHTML =
-  "Step 2: Whisper the following line of poetry into your phone:" +
+  promptText +
   "<br><br>" +
-  '"' + hardy[randNum] + '"' +
-  "<br><br><br>";        // let newLine = document.createElement("div");
+  '"' + currentPoemLines[randNum] + '"' +
+  "<br><br><br>";       // let newLine = document.createElement("div");
         // text1.appendChild(newLine)
       // } else {
       //   poemDiv1.innerHTML = "That's good for now, thanks!"
@@ -607,8 +651,7 @@ function flashColor() {
 
 
 function changeColor1() {
-  let randNum = Math.floor(Math.random() * hardy.length);
-
+let randNum = randomInteger(0, currentPoemLines.length - 1);
   recordButton.style.opacity = 0.9;
   // let refreshIntervalId = setInterval(flashColor, 1000);
 
@@ -620,7 +663,7 @@ function changeColor1() {
     recordButton.style.backgroundColor = "red";
     text.style.color = "blue";
     recordButton.style.boxShadow = "0 0 2px 2px red";
-    recordButton.innerHTML = "stop recording";
+   recordButton.innerHTML = t("recordStop");
 
     uploadButton.style.visibility = "hidden";
     deleteButton.style.visibility = "hidden";
@@ -631,14 +674,13 @@ function changeColor1() {
 
     text5.style.display = "flex";
 
-    text.innerHTML = "You're recording, whisper something to me!";
+    text.innerHTML = t("secondSectionRecording");
   } else if (recordButton.style.backgroundColor == "red") {
     recordButton.classList.remove("recordingFlash");
     peakMeter.style.visibility = "hidden";
 
     recordButton.style.visibility = "hidden";
 
-    clearInterval(refreshIntervalId);
     clearInterval(myInt);
 
     text5.style.display = "none";
@@ -651,7 +693,7 @@ function changeColor1() {
 
     test1 = 0;
 
-    text.innerHTML = "You've stopped recording! Upload or delete your audio.";
+    text.innerHTML = t("secondSectionStopped");
   }
 }
 
@@ -660,14 +702,14 @@ function changeColor1() {
     recordButton.style.backgroundColor = "black"
       recordButton.style.boxShadow = "0 0 0px 0px white"
       recordButton.style.color = "white"
-      recordButton.innerHTML = "start recording"
+     recordButton.innerHTML = t("recordStart");
     text.style.color = "black"
     uploadButton.style.visibility = "hidden"
     deleteButton.style.visibility = "hidden"
     //playButton.style.visibility = "hidden"
     recordButton.style.opacity = 1
     if (sec2text1 == 1) {
-    text.innerHTML = "What will you choose to whisper next? Press the record button again when you're ready!"
+text.innerHTML = t("afterUploadOrDelete");
     } else if (!sec2text1) {
       text.style.color = "blue"
       text3.style.color = "black"
@@ -680,7 +722,7 @@ function changeColor1() {
     recordButton.style.backgroundColor = "black"
       recordButton.style.boxShadow = "0 0 0px 0px white"
       recordButton.style.color = "white"
-      recordButton.innerHTML = "start recording"
+      recordButton.innerHTML = t("recordStart");
     text3.style.color = "black"
     if (sec2text1 == 1) {
     text.innerHTML = "What will you choose to whisper next? Press the record button again when you're ready!"
@@ -692,8 +734,7 @@ function changeColor1() {
     uploadButton.style.visibility = "hidden"
     //playButton.style.visibility = "hidden"
     recordButton.style.opacity = 1
-    text1.innerHTML = "Step 2: Once you hit record, a line of poetry will appear here. Whisper it into your phone."
-
+text1.innerHTML = t("step2Before");
   })
 
   document.addEventListener("keydown", (e) => {
@@ -733,6 +774,7 @@ let header = document.querySelector("#instruction")
 let secondFlex = document.querySelector(".flex-container")
 let firstFlex = document.querySelector(".flex-container1")
 secondFlex.style.display = "none"
+let languageButtons = document.getElementById("languageButtons");
 
 let poemDiv1 = document.getElementById("text1")
 // poemDiv1.style.textAlign = "left"
@@ -741,7 +783,11 @@ let startButton = document.getElementById("start");
 startButton.style.visibility = "hidden"
 startButton.addEventListener("click", () => {
   piecePreview()
+  
 })
+
+
+
 function piecePreview() {
   
   body.style.backgroundColor = "rgb(255, 255, 247)";
@@ -751,8 +797,8 @@ function piecePreview() {
   text1.style.display= "flex";
   text2.style.display= "flex";
   text3.style.display= "flex";
-  text4.style.display="flex"
-
+  text4.style.display="flex";
+  languageButtons.style.top = "90dvh"
   startPiece()
 }
 
@@ -770,6 +816,7 @@ function resetToPre() {
   text4.style.display="none";
   startButton.style.visibility = "hidden"
   console.log("resetting now")
+  languageButtons.style.top = "5dvh"
 }
 
 
@@ -777,7 +824,12 @@ function startPiece() {
   body.style.backgroundColor = "rgb(255, 255, 247)";
   secondFlex.style.display = "flex"
   recordButton.style.visibility = "visible";
-  text.innerHTML = "Step 1: Press 'start recording' once to start recording"
+    text.innerHTML = t("step1");
+  text1.innerHTML = t("step2Before");
+  text2.innerHTML = t("step3");
+  text3.innerHTML = t("step4");
+  text4.innerHTML = t("step5");
+  recordButton.innerHTML = t("recordStart");
   text.style.visibility = "visible";
   text1.style.visibility = "visible";
   text2.style.visibility = "visible";
@@ -786,7 +838,7 @@ function startPiece() {
   recordButton.addEventListener("click", changeColor)
   poemLine = 0
   startButton.style.visibility = "hidden"
-
+languageButtons.style.top = "90dvh"
 }
 
 
@@ -798,7 +850,8 @@ function section2() {
   text.style.visibility = "visible";
   recordButton.removeEventListener("click", changeColor)
   recordButton.addEventListener("click", changeColor1);
-  text.innerHTML = "For this section, record yourself whispering whatever words/phrases you like. Your words will be obscured using audio processing techniques."
+  text.innerHTML = t("secondSection");
+  recordButton.innerHTML = t("recordStart");  
   text.style.color = "black"
   text1.style.visibility = "hidden"
   text2.style.visibility = "hidden"
@@ -807,7 +860,7 @@ function section2() {
   firstFlex.style.display = "none"
   sec2text1 = 1
   startButton.style.visibility = "hidden"
-
+languageButtons.style.top = "90dvh"
 
 
 }
@@ -821,10 +874,10 @@ function endPiece() {
   text3.style.display = "none"
   firstFlex.style.display = "flex"
   // firstFlex.style.top = "47%"
-  instructions.innerHTML = "The piece is now ending, listen to the whispers as they fade out! Thanks for participating! :)"
+  instructions.innerHTML = t("ending");
   header.style.visibility = "hidden"
   startButton.style.visibility = "hidden"
-
+  languageButtons.style.display = "none"
 }
 
 function endPieceFully() {
@@ -836,20 +889,34 @@ function endPieceFully() {
   location.href = "endcard.html"
 
 }
-
+function updateLanguageButtonVisibility(section) {
+  if (!languageButtons) return;
+  console.log("section")
+  if (section === "zero") {
+    languageButtons.style.display = "block";
+  } 
+}
 
 function justListen() {
-  instructions.innerHTML = "Let's take a break from recording and just listen for a few moments."
-  header.style.visibility = "hidden"
+  console.log(languageButtons)
+  instructions.innerHTML = t("justListen");
+  header.style.visibility = "hidden";
   body.style.backgroundColor = "rgb(255, 255, 247)";
   secondFlex.style.display = "none";
-  text.style.display = "none"
-  text1.style.display = "none"
-  text2.style.display = "none"
-  text3.style.display = "none"
-  text4.style.display = "none"
-  firstFlex.style.display = "flex"
-  startButton.style.visibility = "hidden"
+ 
+  text.style.display = "none";
+  text1.style.display = "none";
+  text2.style.display = "none";
+  text3.style.display = "none";
+  text4.style.display = "none";
+
+  firstFlex.style.display = "flex";
+  startButton.style.visibility = "hidden";
+   languageButtons.style.top = "90dvh"
+  if (languageButtons) {
+    // languageButtons.style.display = "none";
+  }
+  // languageButtons.style.visibility = "hidden"
 }
 
   let soundClips = document.getElementById('sound-clips') // for adding audio to page
@@ -1262,6 +1329,8 @@ function deleteAudio() {
 
 }
 
+
+
 let timeElapsed;
 let startTime;
   // ------ Toggle recording ------
@@ -1342,6 +1411,189 @@ let hardy = [
 "Or if the voice so near",
 "Be a soul’s voice floating here.",
 ]
+
+const italianPoemLines = [
+  "Odi? La pioggia cade",
+  "su la solitaria",
+  "verdura",
+  "con un crepitìo che dura",
+  "e varia nell’aria",
+  "secondo le fronde",
+  "più rade, men rade.",
+  "Ascolta. Risponde",
+  "al pianto il canto",
+  "delle cicale",
+  "che il pianto australe",
+  "non impaura,",
+  "né il ciel cinerino.",
+  "E il pino",
+  "ha un suono, e il mirto",
+  "altro suono, e il ginepro",
+  "altro ancóra, stromenti",
+  "diversi",
+  "sotto innumerevoli dita.",
+  "E immersi",
+  "noi siam nello spirto",
+  "silvestre,",
+ "d’arborea vita viventi;",
+"e il tuo vólto ebro",
+"è molle di pioggia",
+"come una foglia",
+"e le tue chiome",
+"auliscono come",
+"le chiare ginestre",
+"o creatura terrestre",
+"che hai nome",
+"Ermione."
+]
+
+const UI_TEXT = {
+  en: {
+    title: "Whisper by Treya Nash",
+    subtitle: "with poetry by Thomas Hardy",
+
+    beginning:
+      "Whisper is an interactive piece that asks you to record snippets of whispered speech into your phone and upload them to become part of the collective soundscape. You will be given lines of a Thomas Hardy poem to record. Instructions will guide you through the process. Momentarily, a 'start' button will appear. Click the button to continue.",
+
+    startButton: "Start Piece",
+
+    step1: "Step 1: Press 'start recording' once to start recording",
+    step2Before: "Step 2: Once you hit record, a line of poetry will appear here. Whisper it into your phone.",
+    step2Prompt: "Step 2: Whisper the following line of poetry into your phone:",
+    step3: "Step 3: Press 'stop recording' once to stop recording",
+    step4: "Step 4: Upload or delete your audio",
+    step5: "Step 5: Repeat!",
+
+    recordStart: "start recording",
+    recordStop: "stop recording",
+    upload: "upload",
+    delete: "delete",
+
+    tooLoud: "Please hold the phone further from your mouth :D",
+
+    afterUploadOrDelete:
+      "What will you choose to whisper next? Press the record button again when you're ready!",
+
+    secondSection:
+      "For this section, record yourself whispering whatever words/phrases you like. Your words will be obscured using audio processing techniques.",
+
+    secondSectionRecording:
+      "You're recording, whisper something to me!",
+
+    secondSectionStopped:
+      "You've stopped recording! Upload or delete your audio.",
+
+    ending:
+      "The piece is now ending, listen to the whispers as they fade out! Thanks for participating! :)",
+
+    justListen:
+      "Let's take a break from recording and just listen for a few moments."
+  },
+
+  it: {
+    title: "Whisper di Treya Nash",
+    subtitle: "con poesia di Gabriele D’Annunzio",
+
+    beginning:
+      "Whisper è un brano interattivo che ti chiede di registrare frammenti di voce sussurrata nel telefono e caricarli per farli diventare parte del paesaggio sonoro collettivo. Ti verranno date alcune righe di una poesia da registrare. Le istruzioni ti guideranno nel processo. Tra poco apparirà un pulsante di inizio. Premi il pulsante per continuare.",
+
+    startButton: "Inizia",
+
+    step1: "Passo 1: Premi 'inizia registrazione' una volta per iniziare a registrare",
+    step2Before: "Passo 2: Dopo aver premuto registra, qui apparirà una riga di poesia. Sussurrala nel telefono.",
+    step2Prompt: "Passo 2: Sussurra nel telefono questa riga di poesia:",
+    step3: "Passo 3: Premi 'ferma registrazione' una volta per fermare la registrazione",
+    step4: "Passo 4: Carica o elimina il tuo audio",
+    step5: "Passo 5: Ripeti!",
+
+    recordStart: "inizia registrazione",
+    recordStop: "ferma registrazione",
+    upload: "carica",
+    delete: "elimina",
+
+    tooLoud: "Tieni il telefono un po’ più lontano dalla bocca :D",
+
+    afterUploadOrDelete:
+      "Che cosa vuoi sussurrare ora? Premi di nuovo il pulsante di registrazione quando sei pronta/o.",
+
+    secondSection:
+      "Per questa sezione, registra te stessa/o mentre sussurri le parole o frasi che vuoi. Le tue parole saranno oscurate con tecniche di elaborazione audio.",
+
+    secondSectionRecording:
+      "Stai registrando, sussurrami qualcosa!",
+
+    secondSectionStopped:
+      "Hai fermato la registrazione. Carica o elimina il tuo audio.",
+
+    ending:
+      "Il brano sta finendo. Ascolta i sussurri mentre svaniscono. Grazie per aver partecipato! :)",
+
+    justListen:
+      "Facciamo una pausa dalla registrazione e ascoltiamo per qualche momento."
+  }
+};
+
+
+let currentLanguage = "en";
+let currentPoemLines = hardy;
+
+function t(key) {
+  return UI_TEXT[currentLanguage][key];
+}
+
+function setLanguage(language) {
+  console.log("AAAH")
+  currentLanguage = language;
+
+  if (language === "it") {
+    currentPoemLines = italianPoemLines;
+  } else {
+    currentPoemLines = hardy;
+  }
+
+  applyLanguageText();
+}
+
+function applyLanguageText() {
+  document.querySelector("#instruction h1").innerHTML = t("title");
+  document.querySelector("#instruction h2").innerHTML = t("subtitle");
+  
+  instructions1 = t("beginning");
+
+  // Only put the beginning text on actual beginning screens.
+  // Do not overwrite pause / ending / other section text.
+  if (currentSocketSection === "zero" || currentSocketSection === "one") {
+    instructions.innerHTML = t("beginning");
+  }
+
+  startButton.innerHTML = t("startButton");
+
+  text.innerHTML = t("step1");
+  text1.innerHTML = t("step2Before");
+  text2.innerHTML = t("step3");
+  text3.innerHTML = t("step4");
+  text4.innerHTML = t("step5");
+
+  recordButton.innerHTML = t("recordStart");
+
+  uploadButton.childNodes[0].nodeValue = t("upload") + " ";
+  deleteButton.childNodes[0].nodeValue = t("delete") + " ";
+
+  text5.innerHTML = t("tooLoud");
+  if (currentSocketSection == "three") {
+    instructions.innerHTML = t("justListen");
+  }
+
+  document.querySelectorAll(".languageButton").forEach(button => {
+    button.classList.remove("selectedLanguage");
+  });
+
+  if (currentLanguage === "it") {
+    document.querySelector(".languageButton[onclick=\"setLanguage('it')\"]").classList.add("selectedLanguage");
+  } else {
+    document.querySelector(".languageButton[onclick=\"setLanguage('en')\"]").classList.add("selectedLanguage");
+  }
+}
 // let pieceStarted = false;
 let pieceStarted
 
@@ -1505,48 +1757,39 @@ function leadInToFirstSection() {
   instructions.innerHTML = instructions1
   header.style.visibility = "visible"
 }
-
 socket.on("set_section", (data) => {
+  currentSocketSection = data;
+  updateLanguageButtonVisibility(data);
+
   if (data == "zero") {
-    console.log("This is the pre section")
-    resetToPre()
+    console.log("This is the pre section");
+    resetToPre();
+
   } else if (data == "one") {
-    leadInToFirstSection()
-  } else if (data =="two") {
-    console.log("This is the first section")
-    startPiece()
-    piecePreview()
+    leadInToFirstSection();
+
+  } else if (data == "two") {
+    console.log("This is the first section");
+    piecePreview();
+
   } else if (data == "three") {
-    justListen()
-   }else if (data =="four") {
-    section2()
-    console.log("This is the second section")
+    justListen();
+
+  } else if (data == "four") {
+    section2();
+    console.log("This is the second section");
+
   } else if (data == "five") {
-    console.log("This is the third section")
-    endPiece()
-  }  else if (data == "six") {
-    endPieceFully()
+    console.log("This is the third section");
+    endPiece();
+
+  } else if (data == "six") {
+    endPieceFully();
   }
-})
-
-
+});
 
 </script>
 
-<style>
-#record {
-  background-color: black;
-  color: white;
-  border: 5px black solid;
-
-  font-size: clamp(2.2rem, 5.5vw, 4rem);
-  visibility: hidden;
-}
-
-
-
-
-</style>
 
 </body>
 </html>
