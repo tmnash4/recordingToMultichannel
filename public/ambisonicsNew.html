@@ -371,6 +371,7 @@ let secondSectionBuffers = [];
 let firstSectionUrlSet = new Set();
 
 let currentPlayerSection = "one";
+let firstSectionLocked = false;
 
 let backupFileUrls = [
   "/uploads/backup1.wav",
@@ -514,8 +515,13 @@ socket.on("loadAudio", async (data) => {
   const files = Array.isArray(data) ? data : [];
 
   console.log("received files:", files);
+  console.log("currentPlayerSection:", currentPlayerSection);
+  console.log("firstSectionLocked:", firstSectionLocked);
 
-  if (currentPlayerSection === "one") {
+  // SECTION ONE:
+  // Only build the normal playback pool while section one is active
+  // and before it has been locked.
+  if (currentPlayerSection === "one" && !firstSectionLocked) {
     firstSectionBuffers = [];
     firstSectionUrlSet = new Set();
 
@@ -529,21 +535,25 @@ socket.on("loadAudio", async (data) => {
 
         firstSectionUrlSet.add(url);
 
-     const gainInfo = getBufferGainInfo(buffer);
+        const gainInfo = getBufferGainInfo(buffer);
 
-      firstSectionBuffers.push({
-        url,
-        buffer,
-        gain: gainInfo.gain,
-        peak: gainInfo.peak,
-        rms: gainInfo.rms
-      });
+        firstSectionBuffers.push({
+          url,
+          buffer,
+          gain: gainInfo.gain,
+          peak: gainInfo.peak,
+          rms: gainInfo.rms
+        });
+
       } catch (error) {
         console.log("Could not load first-section file:", url, error);
       }
     }
   }
 
+  // SECTION TWO:
+  // Only build the grain pool from files that were NOT already
+  // captured in firstSectionUrlSet.
   if (currentPlayerSection === "four") {
     secondSectionBuffers = [];
 
@@ -551,8 +561,6 @@ socket.on("loadAudio", async (data) => {
       const url = typeof item === "string" ? item : item.url;
       if (!url) continue;
 
-      // IMPORTANT:
-      // Do not let first-section files enter the grain pool.
       if (firstSectionUrlSet.has(url)) {
         console.log("skipping first-section file for grain pool:", url);
         continue;
@@ -561,15 +569,17 @@ socket.on("loadAudio", async (data) => {
       try {
         const buffer = new Tone.Buffer(url);
         await Tone.loaded();
-      const gainInfo = getBufferGainInfo(buffer);
 
-      secondSectionBuffers.push({
-        url,
-        buffer,
-        gain: gainInfo.gain,
-        peak: gainInfo.peak,
-        rms: gainInfo.rms
-      });
+        const gainInfo = getBufferGainInfo(buffer);
+
+        secondSectionBuffers.push({
+          url,
+          buffer,
+          gain: gainInfo.gain,
+          peak: gainInfo.peak,
+          rms: gainInfo.rms
+        });
+
       } catch (error) {
         console.log("Could not load second-section file:", url, error);
       }
@@ -580,12 +590,11 @@ socket.on("loadAudio", async (data) => {
 
   setStatus(
     "Loaded files.\n" +
-    "First-section files: " + firstSectionBuffers.length + "\n" +
+    "First-section normal files: " + firstSectionBuffers.length + "\n" +
     "Second-section grain files: " + secondSectionBuffers.length + "\n" +
     "Backup files: " + backupBuffers.length
   );
 });
-
     socket.on("playAudio", () => {
       playGrains();
     });
@@ -671,7 +680,7 @@ function makeNodeDiscrete(node, channelCount) {
   }
 }
 
-    function getNormalPlaybackPool() {
+function getNormalPlaybackPool() {
   if (firstSectionBuffers.length > 0) {
     return firstSectionBuffers;
   }
@@ -681,7 +690,6 @@ function makeNodeDiscrete(node, channelCount) {
 
 function playOneNormalMovingSound() {
 
-  
   if (!audioReady()) return;
 
   const pool = getNormalPlaybackPool();
@@ -1000,17 +1008,31 @@ function stopAllSounds() {
     }
 
 function stateOne() {
+  stopAllSounds();
+
   currentPlayerSection = "one";
+  firstSectionLocked = false;
+
+  firstSectionBuffers = [];
+  secondSectionBuffers = [];
+  firstSectionUrlSet = new Set();
+
   socket.emit("set_section", "one");
   socket.emit("sendFileName1", true);
-  setStatus("Sent section: one / first section.");
+
+  setStatus("Sent section: one / first section. Loading first-section normal files.");
 }
 
 function stateThree() {
+  stopAllSounds();
+
+  firstSectionLocked = true;
   currentPlayerSection = "four";
+
   socket.emit("set_section", "four");
   socket.emit("sendFileName1", true);
-  setStatus("Sent section: four / second section.");
+
+  setStatus("Sent section: four / second section. Loading only new files for grain playback.");
 }
 
     function stateTwo() {
