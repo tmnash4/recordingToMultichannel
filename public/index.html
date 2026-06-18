@@ -28,8 +28,8 @@
 
 </div>
   <div id="languageButtons">
-  <button class="languageButton" onclick="setLanguage('en')">English</button>
-  <button class="languageButton" onclick="setLanguage('it')">Italiano</button>
+<button class="languageButton" onclick="setLanguage(event, 'en')">English</button>
+<button class="languageButton" onclick="setLanguage(event, 'it')">Italiano</button>
   </div>
 <div class="flex-container">
 <div class="flex-items"> 
@@ -877,7 +877,7 @@ function endPiece() {
   instructions.innerHTML = t("ending");
   header.style.visibility = "hidden"
   startButton.style.visibility = "hidden"
-  languageButtons.style.display = "none"
+  // languageButtons.style.display = "none"
 }
 
 function endPieceFully() {
@@ -891,10 +891,32 @@ function endPieceFully() {
 }
 function updateLanguageButtonVisibility(section) {
   if (!languageButtons) return;
-  console.log("section")
+
+  languageButtons.style.display = "block";
+  languageButtons.style.pointerEvents = "auto";
+
   if (section === "zero") {
-    languageButtons.style.display = "block";
-  } 
+    languageButtons.style.top = "2dvh";
+    languageButtons.style.bottom = "auto";
+  } else if (section === "one") {
+    languageButtons.style.top = "auto";
+    languageButtons.style.bottom = "2dvh";
+  } else if (section === "two") {
+    languageButtons.style.top = "90dvh";
+    languageButtons.style.bottom = "auto";
+  } else if (section === "three") {
+    languageButtons.style.top = "auto";
+    languageButtons.style.bottom = "2dvh";
+  } else if (section === "four") {
+    languageButtons.style.top = "90dvh";
+    languageButtons.style.bottom = "auto";
+  } else if (section === "five") {
+    languageButtons.style.top = "auto";
+    languageButtons.style.bottom = "2dvh";
+  } else {
+    languageButtons.style.top = "2dvh";
+    languageButtons.style.bottom = "auto";
+  }
 }
 
 function justListen() {
@@ -1541,9 +1563,14 @@ function t(key) {
   return UI_TEXT[currentLanguage][key];
 }
 
-function setLanguage(language) {
-  console.log("AAAH")
+function setLanguage(event, language) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   currentLanguage = language;
+  localStorage.setItem("whisperLanguage", language);
 
   if (language === "it") {
     currentPoemLines = italianPoemLines;
@@ -1552,46 +1579,64 @@ function setLanguage(language) {
   }
 
   applyLanguageText();
+  redrawCurrentSectionText();
 }
-
 function applyLanguageText() {
   document.querySelector("#instruction h1").innerHTML = t("title");
   document.querySelector("#instruction h2").innerHTML = t("subtitle");
-  
+
   instructions1 = t("beginning");
 
-  // Only put the beginning text on actual beginning screens.
-  // Do not overwrite pause / ending / other section text.
-  if (currentSocketSection === "zero" || currentSocketSection === "one") {
-    instructions.innerHTML = t("beginning");
-  }
-
   startButton.innerHTML = t("startButton");
-
-  text.innerHTML = t("step1");
-  text1.innerHTML = t("step2Before");
-  text2.innerHTML = t("step3");
-  text3.innerHTML = t("step4");
-  text4.innerHTML = t("step5");
-
-  recordButton.innerHTML = t("recordStart");
 
   uploadButton.childNodes[0].nodeValue = t("upload") + " ";
   deleteButton.childNodes[0].nodeValue = t("delete") + " ";
 
   text5.innerHTML = t("tooLoud");
-  if (currentSocketSection == "three") {
-    instructions.innerHTML = t("justListen");
-  }
 
   document.querySelectorAll(".languageButton").forEach(button => {
     button.classList.remove("selectedLanguage");
   });
 
   if (currentLanguage === "it") {
-    document.querySelector(".languageButton[onclick=\"setLanguage('it')\"]").classList.add("selectedLanguage");
+    document.querySelector(".languageButton[onclick=\"setLanguage(event, 'it')\"]").classList.add("selectedLanguage");
   } else {
-    document.querySelector(".languageButton[onclick=\"setLanguage('en')\"]").classList.add("selectedLanguage");
+    document.querySelector(".languageButton[onclick=\"setLanguage(event, 'en')\"]").classList.add("selectedLanguage");
+  }
+}
+function redrawCurrentSectionText() {
+  if (currentSocketSection === "zero") {
+    instructions.innerHTML = t("beginning");
+    header.style.visibility = "visible";
+    startButton.style.visibility = "hidden";
+
+  } else if (currentSocketSection === "one") {
+    instructions.innerHTML = t("beginning");
+    header.style.visibility = "visible";
+    startButton.innerHTML = t("startButton");
+    startButton.style.visibility = "visible";
+
+  } else if (currentSocketSection === "two") {
+    text.innerHTML = t("step1");
+    text1.innerHTML = t("step2Before");
+    text2.innerHTML = t("step3");
+    text3.innerHTML = t("step4");
+    text4.innerHTML = t("step5");
+    recordButton.innerHTML = t("recordStart");
+
+  } else if (currentSocketSection === "three") {
+    instructions.innerHTML = t("justListen");
+    header.style.visibility = "hidden";
+    startButton.style.visibility = "hidden";
+
+  } else if (currentSocketSection === "four") {
+    text.innerHTML = t("secondSection");
+    recordButton.innerHTML = t("recordStart");
+
+  } else if (currentSocketSection === "five") {
+    instructions.innerHTML = t("ending");
+    header.style.visibility = "hidden";
+    startButton.style.visibility = "hidden";
   }
 }
 // let pieceStarted = false;
