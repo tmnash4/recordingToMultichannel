@@ -680,6 +680,8 @@ function makeNodeDiscrete(node, channelCount) {
 }
 
 function playOneNormalMovingSound() {
+
+  
   if (!audioReady()) return;
 
   const pool = getNormalPlaybackPool();
@@ -713,43 +715,42 @@ function getGrainPlaybackPool() {
 
   return backupBuffers;
 }
-
 function playOneGrainMovingSound() {
   if (!audioReady()) return;
 
   const pool = getGrainPlaybackPool();
 
   if (pool.length === 0) {
-    console.log("No second-section audience files or backup files loaded.");
-    setStatus("No second-section audience files or backup files loaded.");
+    console.log("No second-section audience files loaded.");
+    setStatus("No second-section audience files loaded.");
     return;
   }
 
   const file = chooseRandom(pool);
 
-  if (!file.buffer || !file.buffer.loaded) {
-    console.log("File buffer is not loaded yet:", file.url);
-    setStatus("That file is not loaded yet. Try again in a moment.");
+  if (!file.url) {
+    console.log("This grain file has no URL:", file);
     return;
   }
 
   const correctionDb = Tone.gainToDb(file.gain || 1);
 
-  const grain = new Tone.GrainPlayer(file.buffer);
+  const grain = new Tone.GrainPlayer(file.url, () => {
+    grain.start();
+  });
 
-  // More obviously granular / obscured
-  grain.grainSize = randomBetween(0.045, 0.14);
-  grain.overlap = randomBetween(0.015, 0.06);
-  grain.playbackRate = randomBetween(0.35, 0.8);
-  grain.detune = randomInteger(-900, 400);
-  grain.reverse = Math.random() < 0.65;
-  grain.loop = true;
-
+  // These are closer to your old working settings
+  grain.grainSize = 0.9;
+  grain.overlap = 2.9;
+  grain.reverse = true;
+  grain.fadeIn = 0.5;
+  grain.fadeOut = 0.5;
+  grain.loop = false;
   grain.volume.value = -18 + correctionDb;
 
-  startFourSpeakerGrainMovement(grain, randomInteger(6000, 12000));
+  startFourSpeakerGrainMovement(grain, randomInteger(6000, 12000), false);
 }
-function startFourSpeakerGrainMovement(grain, durationMs) {
+function startFourSpeakerGrainMovement(grain, durationMs, shouldStart = true) {
   const gains = [];
 
   for (let i = 0; i < NUM_SPEAKERS; i++) {
@@ -767,7 +768,9 @@ function startFourSpeakerGrainMovement(grain, durationMs) {
   let angle = randomBetween(0, 360);
   let speed = randomSignedSpeed();
 
-  grain.start();
+  if (shouldStart) {
+    grain.start();
+  }
 
   const moveInterval = setInterval(() => {
     angle = normalizeAngle(angle + speed * 0.05);
@@ -795,8 +798,6 @@ function startFourSpeakerGrainMovement(grain, durationMs) {
     stopOneMovingPlayer(grain, gains, moveInterval);
   }, durationMs);
 }
-
-
 function startFourSpeakerMovement(player, durationMs) {
   const gains = [];
 
